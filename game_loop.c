@@ -16,10 +16,32 @@
 #include "game_actions.h"
 #include "graphic_engine.h"
 
+
+/**
+ * @brief Inicializa el struct Game introducido y devuelve OK si ha sido creado y ERROR si ha habido errores
+ * @author Profesores PPROG
+ * @param Game*  
+ * @param Graphic_engine **gengine
+ * @param char * filename
+ * @return Status
+ */
 int game_loop_init(Game *game, Graphic_engine **gengine, char *file_name);
 
+/**
+ * @brief Inicializa el struct Game introducido y devuelve OK si ha sido creado y ERROR si ha habido errores
+ * @author Profesores PPROG
+ * @param Game*  
+ * @param Graphic_engine *gengine
+ * @return Status
+ */
 void game_loop_cleanup(Game game, Graphic_engine *gengine);
 
+/**
+ * @brief MAIN : Function calls with the objective of running the game...
+ * @author Profesores PPROG
+ * @param char * filename
+ * @return int
+ */
 int main(int argc, char *argv[]) {
   Game game;
   Graphic_engine *gengine;

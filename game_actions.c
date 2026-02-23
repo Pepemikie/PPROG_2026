@@ -1,10 +1,10 @@
 /**
  * @brief It implements the game update through user actions
  *
- * @file game.c
- * @author Profesores PPROG
+ * @file game_actions.c
+ * @authorJose Miguel Romero Oubina
  * @version 0
- * @date 27-01-2025
+ * @date 14-02-2026
  * @copyright GNU Public License
  */
 
@@ -13,31 +13,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "space.h"
+#include "player.h"
+#include "object.h"
 
 /**
    Private functions
 */
-
+/*Does nothing when the command is not recognized.*/
 void game_actions_unknown(Game *game);
 
+/*is meant to handle exiting the game*/
 void game_actions_exit(Game *game);
 
+/*Moves the player to the south space if there is one*/
 void game_actions_next(Game *game);
 
+/*Moves the player to the north space if there is one.*/
 void game_actions_back(Game *game);
 
-void game_actions_right(Game *game);
-
-void game_actions_left(Game *game);
-
+/*Makes the player pick up the object in the current space.*/
 void game_actions_take(Game *game);
 
+/*Makes the player drop their carried object into the current space.*/
 void game_actions_drop(Game *game);
 
 /**
    Game actions implementation
 */
-
+/*Checks the command code and calls the corresponding action function to update the game.*/
 Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
 
@@ -61,12 +65,12 @@ Status game_actions_update(Game *game, Command *command) {
     case BACK:
       game_actions_back(game);
       break;
-    
-     case TAKE:
+
+    case TAKE:
       game_actions_take(game);
       break;
 
-     case DROP:
+    case DROP:
       game_actions_drop(game);
       break;
 
@@ -86,86 +90,107 @@ void game_actions_unknown(Game *game) {}
 void game_actions_exit(Game *game) {}
 
 void game_actions_next(Game *game) {
-  Id current_id = NO_ID;
+  Id current_id = NO_ID;/*intitializating*/
   Id space_id = NO_ID;
 
   space_id = game_get_player_location(game);
-  if (space_id == NO_ID) {
+  if (space_id == NO_ID) {/*error control*/
     return;
   }
 
   current_id = space_get_south(game_get_space(game, space_id));
-  if (current_id != NO_ID) {
+  if (current_id != NO_ID) {/*error control*/
     game_set_player_location(game, current_id);
   }
 
-  return;
+  return;/*return nothing*/
 }
 
 void game_actions_back(Game *game) {
-  Id current_id = NO_ID;
+  Id current_id = NO_ID;/*initializating*/
   Id space_id = NO_ID;
 
   space_id = game_get_player_location(game);
 
-  if (NO_ID == space_id) {
+  if (NO_ID == space_id) {/*error control*/
     return;
   }
 
   current_id = space_get_north(game_get_space(game, space_id));
-  if (current_id != NO_ID) {
+  if (current_id != NO_ID) {/*error control*/
     game_set_player_location(game, current_id);
   }
 
   return;
 }
 
-void game_actions_take(Game *game) {
-  Id object_id = NO_ID;
-  Id player_id = NO_ID;
+/*create take and drop actions*/
+  void game_actions_take(Game *game) {
+    /*inicialitating*/
+  Id player_location = NO_ID;
   Space *current_space = NULL;
-
-  if (!game) return;
-
-  object_id = game_get_object_location(game);
-  player_id = game_get_player_location(game);
-
-  /* Si el objeto está en el mismo espacio que el jugador, lo coge */
-  if ((NO_ID != object_id) && (object_id == player_id)) {
-    /* Asignar el objeto al jugador */
-    player_set_object(game->player, object_get_id(game->object));
-    
-    /* Borrar el objeto del espacio */
-    current_space = game_get_space(game, player_id);
-    if (current_space) {
-      space_set_object(current_space, NO_ID);
-    }
+  Id object_id = NO_ID;
+  Player *player = NULL;
+  
+  player_location = game_get_player_location(game);
+  if (player_location == NO_ID) {/*error control*/
+    return;
+  }
+  
+  current_space = game_get_space(game, player_location);
+  if (current_space == NULL) {/*error control*/
+    return;
+  }
+  
+  object_id = space_get_object(current_space);
+  if (object_id == NO_ID) {/*check if it is an object*/
+    printf("There is no object here\n");
+    return;
+  }
+  
+  player = game_get_player(game);
+  if (player == NULL) {/*error control*/
+    return;
   }
 
-  return;
+  player_set_object_id(player, object_id);/*player obtains object id*/
+  space_set_object(current_space, NO_ID);/*object id in space transforms into nothing*/
 }
 
 void game_actions_drop(Game *game) {
-  Id player_object = NO_ID;
-  Id player_id = NO_ID;
+    /*inicialitating*/
+  Id player_location = NO_ID;
   Space *current_space = NULL;
-
-  if (!game) return;
-
-  player_object = player_get_object(game->player);
-  player_id = game_get_player_location(game);
-
-  /* Si el jugador tiene un objeto, lo suelta en el espacio actual */
-  if (player_object != NO_ID) {
-    /* Borrar el objeto del inventario del jugador */
-    player_set_object(game->player, NO_ID);
-    
-    /* Agregar el objeto al espacio actual */
-    current_space = game_get_space(game, player_id);
-    if (current_space) {
-      space_set_object(current_space, player_object);
-    }
+  Player *player = NULL;
+  Id carried_object = NO_ID;
+  
+  player_location = game_get_player_location(game);
+  if (player_location == NO_ID) {/*error control*/
+    return;
   }
+  
+  current_space = game_get_space(game, player_location);
+  if (current_space == NULL) {/*error control*/
+    return;
+  }
+  
+  player = game_get_player(game);
+  if (player == NULL) {/*error control*/
+    return;
+  }
+  
+  carried_object = player_get_object_id(player);
+  if (carried_object == NO_ID) {/*checks if the player has the object*/
+    printf("You do not have an object\n");
+    return;
+  }
+  
+  if (space_get_object(current_space) != NO_ID) {/*checks if there is an object on the same spot as the player*/
+    printf("There is an object here, drop yours elsewhere...\n");
+    return;
+  }
+  
+  space_set_object(current_space, carried_object);
+  player_set_object_id(player, NO_ID);
 
-  return;
 }

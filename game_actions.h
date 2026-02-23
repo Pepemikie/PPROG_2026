@@ -12,11 +12,17 @@
 #define GAME_ACTIONS_H
 
 #include "command.h"
-#include "player.h"
-#include "object.h"
 #include "game.h"
 #include "types.h"
 
+/**
+* @brief Checks the command code and calls the corresponding action function to update the game.
+*
+*@author Jose Miguel Romero Oubina
+*@param Game struct
+*@param Command struct
+*@return OK
+*/
 Status game_actions_update(Game *game, Command *cmd);
 
 #endif

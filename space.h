@@ -149,11 +149,11 @@ Id space_get_west(Space* space);
 Status space_set_object(Space* space, Id value);
 
 /**
- * @brief It gets the ID of the object in the space
+ * @brief It gets whether the space has an object or not
  * @author Profesores PPROG
  *
  * @param space a pointer to the space
- * @return the ID of the object in the space, or NO_ID if there is no object
+ * @return a boolean, specifying if in the space there is an object (TRUE) or not (FALSE)
  */
 Id space_get_object(Space* space);
 

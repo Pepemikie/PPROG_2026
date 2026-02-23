@@ -1,63 +1,106 @@
+/**
+ * @brief It implements the object module
+ *
+ * @file object.c
+ * @author Jose Miguel Romero Oubina
+ * @version 1
+ * @date 04-02-2026
+ * @copyright GNU Public License
+ */
 
+#include "object.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "object.h"
 
+/**
+ * @brief Object
+ *
+ * This struct stores all the information of a object.
+ */
 struct _Object {
-  Id id;
-  char name[WORD_SIZE];
+  Id id;                    /*!< Id number of the object, it must be unique */
+  char name[WORD_SIZE + 1]; /*!< Name of the object */
 };
 
-/** Crea un objeto nuevo inicializando su ID y nombre */
+/** Allocates memory for a new object, sets its ID, and initializes its name to empty.*/
 Object* object_create(Id id) {
-  Object *new_object = NULL;
+  Object* newObject = NULL;
 
+  /* Checks if the given ID is valid */
   if (id == NO_ID) return NULL;
 
-  new_object = (Object *) malloc(sizeof (Object));
-  if (new_object == NULL) return NULL;
+  /* Allocates memory for the object */
+  newObject = (Object*)calloc(1, sizeof(Object));
+  if (newObject == NULL) {
+    return NULL;
+  }
 
-  new_object->id = id;
-  new_object->name[0] = '\0';
+/* Initializes the object ID and sets name as empty string */
+  newObject->id = id;
+  newObject->name[0] = '\0';
 
-  return new_object;
+  return newObject;
 }
 
-/** Libera la memoria de un objeto */
+/*Frees the memory used by the object.*/
 Status object_destroy(Object* object) {
-  if (!object) return ERROR;
+  /* Checks if the object exists */
+  if (!object) {
+    return ERROR;
+  }
 
+/* Frees the memory and sets pointer to NULL */
   free(object);
+  object = NULL;
   return OK;
 }
 
-/** Devuelve el ID del objeto */
+/*Returns the ID of the object.*/
 Id object_get_id(Object* object) {
-  if (!object) return NO_ID;
+  /* Returns NO_ID if the object is NULL */
+  if (!object) {
+    return NO_ID;
+  }
+  /* Returns the object’s ID */
   return object->id;
 }
 
-/** Cambia el nombre del objeto */
+/*Sets the name of the object.*/
 Status object_set_name(Object* object, char* name) {
-  if (!object || !name) return ERROR;
+  /* Checks if object or name is NULL */
+  if (!object || !name) {
+    return ERROR;
+  }
 
-  if (!strcpy(object->name, name)) return ERROR;
-
+  /* Copies the new name into the object */
+  if (!strcpy(object->name, name)) {
+    return ERROR;
+  }
   return OK;
 }
 
-/** Devuelve el nombre del objeto */
+/*Returns the name of the object.*/
 const char* object_get_name(Object* object) {
-  if (!object) return NULL;
+  /* Returns NULL if the object doesn’t exist */
+  if (!object) {
+    return NULL;
+  }
+  /* Returns the object’s name */
   return object->name;
 }
 
-/** Imprime los datos del objeto para depuración */
+/*Prints the object’s ID and name to stdout.*/
 Status object_print(Object* object) {
-  if (!object) return ERROR;
+  /*Id idaux = NO_ID; (unused variable)*/
 
+/* Checks if object is NULL */
+  if (!object) {
+    return ERROR;
+  }
+
+/* Prints object ID and name to the standard output */
   fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name);
 
   return OK;

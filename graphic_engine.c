@@ -2,9 +2,9 @@
  * @brief It implements a textual graphic engine
  *
  * @file graphic_engine.c
- * @author Profesores PPROG
+ * @author Jose Miguel Romero Oubina
  * @version 0
- * @date 24-01-2026
+ * @date 12-02-2026
  * @copyright GNU Public License
  */
 
@@ -16,10 +16,11 @@
 #include "command.h"
 #include "libscreen.h"
 #include "space.h"
-#include "player.h"
 #include "types.h"
+#include "player.h"
+#include "object.h"
 
-#define WIDTH_MAP 60
+#define WIDTH_MAP 48
 #define WIDTH_DES 29
 #define WIDTH_BAN 25
 #define HEIGHT_MAP 13
@@ -67,7 +68,7 @@ void graphic_engine_destroy(Graphic_engine *ge) {
 }
 
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
-  Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID,id_east = NO_ID, id_west = NO_ID, obj_loc = NO_ID;
+  Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID, obj_loc = NO_ID;
   Space *space_act = NULL;
   char obj = '\0';
   char str[255];
@@ -80,9 +81,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     space_act = game_get_space(game, id_act);
     id_back = space_get_north(space_act);
     id_next = space_get_south(space_act);
-    id_east = space_get_east(space_act);
-    id_west = space_get_west(space_act);
-    obj_loc = game_get_object_location(game);
 
     if (game_get_object_location(game) == id_back)
       obj = '+';
@@ -90,13 +88,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       obj = ' ';
 
     if (id_back != NO_ID) {
-      sprintf(str, "                      |         %2d|", (int)id_back);
+      sprintf(str, "  |         %2d|", (int)id_back);
       screen_area_puts(ge->map, str);
-      sprintf(str, "                      |     %c     |", obj);
+      sprintf(str, "  |     %c     |", obj);
       screen_area_puts(ge->map, str);
-      sprintf(str, "                      +-----------+");
+      sprintf(str, "  +-----------+");
       screen_area_puts(ge->map, str);
-      sprintf(str, "                            ^");
+      sprintf(str, "        ^");
       screen_area_puts(ge->map, str);
     }
 
@@ -106,46 +104,14 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       obj = ' ';
 
     if (id_act != NO_ID) {
-      char obj_west = ' ';
-      char obj_east = ' ';
-      if (game_get_object_location(game) == id_west)
-        obj_west = '+';
-      if (game_get_object_location(game) == id_east)
-        obj_east = '+';
-
-      /* If there is a west neighbor -> draw west then center */
-      if (id_west != NO_ID) {
-        sprintf(str, "  +-----------+       +-----------+");
-        screen_area_puts(ge->map, str);
-        sprintf(str, "  |       %2d |   <   | ^C>     %2d|", (int)id_west, (int)id_act);
-        screen_area_puts(ge->map, str);
-        sprintf(str, "  |     %c     |       |     %c     |", obj_west, (game_get_object_location(game) == id_act) ? '+' : ' ');
-        screen_area_puts(ge->map, str);
-        sprintf(str, "  +-----------+       +-----------+");
-        screen_area_puts(ge->map, str);
-      }
-      /* else if there is an east neighbor -> draw center then east */
-      else if (id_east != NO_ID) {
-        sprintf(str, "                      +-----------+       +-----------+");
-        screen_area_puts(ge->map, str);
-        sprintf(str, "                      | ^C>     %2d|   >   |        %2d|", (int)id_act, (int)id_east);
-        screen_area_puts(ge->map, str);
-        sprintf(str, "                      |     %c     |       |     %c     |", (game_get_object_location(game) == id_act) ? '+' : ' ', obj_east);
-        screen_area_puts(ge->map, str);
-        sprintf(str, "                      +-----------+       +-----------+");
-        screen_area_puts(ge->map, str);
-      }
-      /* else only center */
-      else {
-        sprintf(str, "                      +-----------+");
-        screen_area_puts(ge->map, str);
-        sprintf(str, "                      | ^C>     %2d|", (int)id_act);
-        screen_area_puts(ge->map, str);
-        sprintf(str, "                      |     %c     |", (game_get_object_location(game) == id_act) ? '+' : ' ');
-        screen_area_puts(ge->map, str);
-        sprintf(str, "                      +-----------+");
-        screen_area_puts(ge->map, str);
-      }
+      sprintf(str, "  +-----------+");
+      screen_area_puts(ge->map, str);
+      sprintf(str, "  | ^C>     %2d|", (int)id_act);
+      screen_area_puts(ge->map, str);
+      sprintf(str, "  |     %c     |", obj);
+      screen_area_puts(ge->map, str);
+      sprintf(str, "  +-----------+");
+      screen_area_puts(ge->map, str);
     }
 
     if (game_get_object_location(game) == id_next)
@@ -154,18 +120,15 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       obj = ' ';
 
     if (id_next != NO_ID) {
-      sprintf(str, "                            v");
+      sprintf(str, "        v");
       screen_area_puts(ge->map, str);
-      sprintf(str, "                      +-----------+");
+      sprintf(str, "  +-----------+");
       screen_area_puts(ge->map, str);
-      sprintf(str, "                      |         %2d|", (int)id_next);
+      sprintf(str, "  |         %2d|", (int)id_next);
       screen_area_puts(ge->map, str);
-      sprintf(str, "                      |     %c     |", obj);
-      screen_area_puts(ge->map, str);
-      sprintf(str, "                      +-----------+       ");
+      sprintf(str, "  |     %c     |", obj);
       screen_area_puts(ge->map, str);
     }
-    /* west handled with center above */
   }
 
   /* Paint in the description area */
@@ -178,30 +141,19 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* Paint in the banner area */
   screen_area_puts(ge->banner, " The haunted castle game ");
 
- 
+  /* Paint in the help area */
   screen_area_clear(ge->help);
-  screen_area_puts(ge->help, "  The commands you can use are:");
-  screen_area_puts(ge->help, "  next (n), back (b), take (t), drop (d), exit (e)");
+  sprintf(str, " The commands you can use are:");
+  screen_area_puts(ge->help, str);
+  sprintf(str, "     next or n, back or b, exit or e, take or t, drop or d");
+  screen_area_puts(ge->help, str);
 
-  /* 2. Limpiar y pintar el área de descripción (DESCRIPT) */
-  
-  screen_area_clear(ge->descript); 
-  if (player_get_object(game_get_player(game)) != NO_ID) {
-    screen_area_puts(ge->descript, "  Object location: player has it");
-  } else if (obj_loc != NO_ID) {
-    sprintf(str, "  Object location: %d", (int)obj_loc);
-    screen_area_puts(ge->descript, str);
-  } else {
-    screen_area_puts(ge->descript, "  Object: not available");
-  }
-
-  /* 3. Limpiar y pintar el área de feedback (donde sale el último comando) */
-  screen_area_clear(ge->feedback);
+  /* Paint in the feedback area */
   last_cmd = command_get_code(game_get_last_command(game));
-  sprintf(str, "  %s (%s)", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS]);
+  sprintf(str, " %s (%s)", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS]);
   screen_area_puts(ge->feedback, str);
 
-  /* 4. Dibujar todo en la terminal */
+  /* Dump to the terminal */
   screen_paint();
   printf("prompt:> ");
 }

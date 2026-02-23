@@ -2,9 +2,9 @@
  * @brief It implements the command interpreter
  *
  * @file command.c
- * @author Profesores PPROG
+ * @author Jose Miguel Romero Oubina
  * @version 0
- * @date 24-01-2026
+ * @date 14-02-2026
  * @copyright GNU Public License
  */
 
@@ -17,25 +17,27 @@
 
 #define CMD_LENGHT 30
 
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "Exit"}, {"n", "Next"}, {"b", "Back"},{"t", "Take"},{"d", "Drop"}};
+/**
+ * Dictionary with control commands and its respective job or char * for comparison, for use in command_get_user_input
+ */
+char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "Exit"}, {"n", "Next"}, {"b", "Back"}, {"t", "Take"}, {"d", "Drop"}};
 
 /**
  * @brief Command
- *
- * This struct stores all the information related to a command.S
+ * 
+ * This struct stores all the information related to a command.
  */
 struct _Command {
   CommandCode code; /*!< Name of the command */
 };
 
-/** space_create allocates memory for a new space
- *  and initializes its members
+/** Initializes a Command struct, reserves dynamic memory for it and returns a pointer to this 
  */
 Command* command_create() {
   Command* newCommand = NULL;
 
-  newCommand = (Command*)malloc(sizeof(Command));
-  if (newCommand == NULL) {
+  newCommand = (Command*)calloc(1,sizeof(Command));/*allocates memory*/
+  if (newCommand == NULL) {/* error control*/
     return NULL;
   }
 
@@ -44,19 +46,19 @@ Command* command_create() {
 
   return newCommand;
 }
-
+/*Destroys and frees the memory occupied by a Command struct*/
 Status command_destroy(Command* command) {
-  if (!command) {
+  if (!command) {/* error control*/
     return ERROR;
   }
 
   free(command);
-  command = NULL;
+  command = NULL;/*command = NULL just in case*/
   return OK;
 }
-
+/*Sets the CommandCode introduced as the new value for the Command pointer introduced.*/
 Status command_set_code(Command* command, CommandCode code) {
-  if (!command) {
+  if (!command) {/*error control*/
     return ERROR;
   }
 
@@ -64,25 +66,25 @@ Status command_set_code(Command* command, CommandCode code) {
 
   return OK;
 }
-
+/*Obtains the contents of a Command struct pointer*/
 CommandCode command_get_code(Command* command) {
-  if (!command) {
+  if (!command) {/*error control*/
     return NO_CMD;
   }
   return command->code;
 }
-
+/*Reads what the user types and sets the command to UNKNOWN if it doesn’t match anything, or to the correct command if it does.*/
 Status command_get_user_input(Command* command) {
-  char input[CMD_LENGHT] = "", *token = NULL;
+  char input[CMD_LENGHT] = "", *token = NULL;/*initializating*/
   int i = UNKNOWN - NO_CMD + 1;
   CommandCode cmd;
 
-  if (!command) {
+  if (!command) {/*error control*/
     return ERROR;
   }
 
   if (fgets(input, CMD_LENGHT, stdin)) {
-    token = strtok(input, " \n");
+    token = strtok(input, " \n");/*check the command*/
     if (!token) {
       return command_set_code(command, UNKNOWN);
     }
@@ -99,5 +101,4 @@ Status command_get_user_input(Command* command) {
   }
   else
     return command_set_code(command, EXIT);
-  
 }
