@@ -121,8 +121,8 @@ void game_actions_back(Game *game) {
 }
 
 void game_actions_take(Game *game) {
-  Id object_id = NO_ID;
   Id player_id = NO_ID;
+  Id object_id = NO_ID;
   Space *current_space = NULL;
 
   if (!game) return;
@@ -130,15 +130,16 @@ void game_actions_take(Game *game) {
   object_id = game_get_object_location(game);
   player_id = game_get_player_location(game);
 
-  /* Si el objeto está en el mismo espacio que el jugador, lo coge */
+  
   if ((NO_ID != object_id) && (object_id == player_id)) {
-    /* Asignar el objeto al jugador */
-    player_set_object(game->player, object_get_id(game->object));
-    
-    /* Borrar el objeto del espacio */
+   
+    player_set_object(game_get_player(game), object_get_id(game_get_object(game)));
+
+
     current_space = game_get_space(game, player_id);
     if (current_space) {
-      space_set_object(current_space, NO_ID);
+      
+      space_del_object(current_space, object_get_id(game_get_object(game)));
     }
   }
 
@@ -152,18 +153,18 @@ void game_actions_drop(Game *game) {
 
   if (!game) return;
 
-  player_object = player_get_object(game->player);
+  player_object = player_get_object(game_get_player(game));
   player_id = game_get_player_location(game);
 
   /* Si el jugador tiene un objeto, lo suelta en el espacio actual */
   if (player_object != NO_ID) {
     /* Borrar el objeto del inventario del jugador */
-    player_set_object(game->player, NO_ID);
+    player_set_object(game_get_player(game), NO_ID);
     
     /* Agregar el objeto al espacio actual */
     current_space = game_get_space(game, player_id);
     if (current_space) {
-      space_set_object(current_space, player_object);
+      space_add_object(current_space, player_object);
     }
   }
 

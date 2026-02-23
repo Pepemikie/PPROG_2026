@@ -12,6 +12,7 @@
 #define SPACE_H
 
 #include "types.h"
+#include "set.h"
 
 typedef struct _Space Space;
 
@@ -166,5 +167,11 @@ Id space_get_object(Space* space);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status space_print(Space* space);
+
+Status space_add_object(Space* space, Id id);
+
+Status space_del_object(Space* space, Id id);
+
+Bool space_has_object(Space* space, Id id);
 
 #endif

@@ -14,6 +14,8 @@ struct _Player {
   char name[WORD_SIZE];
   Id location;
   Id object; 
+  int health;
+  char gdesc[P_GDESC_SIZE];
 };
 
 Player* player_create(Id id) {
@@ -32,6 +34,8 @@ Player* player_create(Id id) {
   new_player->name[0] = '\0';
   new_player->location = NO_ID;
   new_player->object = NO_ID;
+  new_player->health = 10;
+  new_player->gdesc[0]= '\0';
 
   return new_player;
 }
@@ -99,7 +103,40 @@ Id player_get_object(Player* player) {
     return NO_ID;
   }
   return player->object;
+
 }
+
+int player_get_health(Player* p) {
+  return (p) ? p->health : -1;
+}
+
+Status player_set_health(Player* p, int health) {
+  if (!p || health < 0) return ERROR;
+  p->health = health;
+  return OK;
+}
+
+
+const char* player_get_gdesc(Player* p) {
+  if (!p) {
+    return NULL;
+  }
+  return p->gdesc;
+}
+
+
+Status player_set_gdesc(Player* p, char* gdesc) {
+  if (!p || !gdesc) {
+    return ERROR;
+  }
+
+  
+  strncpy(p->gdesc, gdesc, P_GDESC_SIZE - 1);
+  p->gdesc[P_GDESC_SIZE - 1] = '\0'; 
+
+  return OK;
+}
+
 
 Status player_print(Player* player) {
   if (!player) {

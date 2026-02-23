@@ -16,6 +16,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct _Game {
+  Player *player;
+  Object *object;
+  Space *spaces[MAX_SPACES];
+  int n_spaces;
+  Command *last_cmd;
+  Bool finished;
+  Bool object_adquirido;
+} Game;
+
 /**
    Private functions
 */
@@ -34,21 +44,36 @@ void game_object_set_bool(Game *game, Bool object_bool)
    Game interface implementation
 */
 
-Status game_create(Game *game) {
+
+
+/**
+ * @brief Crea una nueva instancia de Game y reserva memoria
+ * @return Un puntero al nuevo Game o NULL si hay error
+ */
+Game* game_create() {
+  Game *game = NULL;
   int i;
+
+  /* Reservamos memoria para la estructura privada */
+  game = (Game *) malloc(sizeof(Game));
+  if (game == NULL) {
+    return NULL;
+  }
 
   for (i = 0; i < MAX_SPACES; i++) {
     game->spaces[i] = NULL;
   }
 
+  /* Inicializamos los campos (como vimos en F6) */
   game->n_spaces = 0;
-  game->player = player_create(0);
-  game->object = object_create(0);
+  game->player = player_create(1); 
+  game->object = object_create(1);
   game->last_cmd = command_create();
   game->finished = FALSE;
 
-  return OK;
+  return game;
 }
+
 
 Status game_create_from_file(Game *game, char *filename) {
   if (game_create(game) == ERROR) {
@@ -118,23 +143,33 @@ Id game_get_player_location(Game *game)
    
  }
 
+
 Id game_get_object_location(Game *game) {
   int i;
-  Id obj_id;
+  Id obj_id = NO_ID;
 
-  if (!game) return NO_ID;
+  if (!game) {
+    return NO_ID;
+  }
 
-  /* Conseguimos el ID del objeto que vive en el juego */
+ 
   obj_id = object_get_id(game->object);
 
-  /* Buscamos por todos los espacios hasta encontrar el que tiene ese ID */
+  /* 2. Recorremos el array de espacios */
   for (i = 0; i < game->n_spaces; i++) {
-    if (space_get_object(game->spaces[i]) == obj_id) {
+  
+    if (space_has_object(game->spaces[i], obj_id) == TRUE) {
+ 
       return space_get_id(game->spaces[i]);
     }
   }
 
   return NO_ID;
+}
+
+Object* game_get_object(Game* game) {
+    if (!game) return NULL;
+    return game->object;
 }
 
 Status game_set_object_location(Game *game, Id id) {
@@ -149,7 +184,7 @@ Status game_set_object_location(Game *game, Id id) {
   if (s == NULL) return ERROR;
 
   /* En lugar de TRUE, le pasamos el ID real del objeto del juego */
-  return space_set_object(s, object_get_id(game->object));
+  return space_add_object(s, object_get_id(game->object));
 }
 
 Command* game_get_last_command(Game *game) { return game->last_cmd; }

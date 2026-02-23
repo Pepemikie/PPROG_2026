@@ -6,6 +6,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#define P_GDESC_SIZE 7 
+
 #include "types.h"
 
 /* Definición de la estructura como un tipo opaco */
@@ -44,5 +46,12 @@ Id player_get_object(Player* player);
  * @return OK o ERROR
  */
 Status player_print(Player* player);
+
+
+int player_get_health(Player* p);
+Status player_set_health(Player* p, int health);
+
+const char* player_get_gdesc(Player* p);
+Status player_set_gdesc(Player* p, char* gdesc);
 
 #endif

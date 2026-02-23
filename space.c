@@ -26,7 +26,7 @@ struct _Space {
   Id south;                 /*!< Id of the space at the south */
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
-  Id object;              /*!< Whether the space has an object or not */
+  Set *objects;              /*!< Whether the space has an object or not */
 };
 
 /** space_create allocates memory for a new space
@@ -50,7 +50,7 @@ Space* space_create(Id id) {
   newSpace->south = NO_ID;
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
-  newSpace->object = NO_ID;
+  newSpace->objects = set_create();
 
   return newSpace;
 }
@@ -59,6 +59,8 @@ Status space_destroy(Space* space) {
   if (!space) {
     return ERROR;
   }
+
+  set_destroy(space->objects);
 
   free(space);
   return OK;
@@ -149,19 +151,27 @@ Id space_get_west(Space* space) {
   return space->west;
 }
 
-Status space_set_object(Space* space, Id value) {
-  if (!space) {
-    return ERROR;
-  }
-  space->object = value;
-  return OK;
+
+Status space_add_object(Space* space, Id id) {
+  if (!space || id == NO_ID) return ERROR;
+  
+
+  return set_add(space->objects, id);
 }
 
-Id space_get_object(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
-  return space->object;
+
+Status space_del_object(Space* space, Id id) {
+  if (!space || id == NO_ID) return ERROR;
+  
+  return set_del(space->objects, id);
+}
+
+
+Bool space_has_object(Space* space, Id id) {
+  if (!space || id == NO_ID) return FALSE;
+  
+ 
+  return (set_find(space->objects, id) != -1);
 }
 
 Status space_print(Space* space) {
@@ -201,12 +211,12 @@ Status space_print(Space* space) {
     fprintf(stdout, "---> No west link.\n");
   }
 
-  /* 3. Print if there is an object in the space or not */
-  if (space_get_object(space)) {
-    fprintf(stdout, "---> Object in the space.\n");
-  } else {
-    fprintf(stdout, "---> No object in the space.\n");
-  }
-
+ 
+if (space->objects != NULL) {
+  fprintf(stdout, "---> Objects in the space:\n");
+  set_print(space->objects); 
+} else {
+  fprintf(stdout, "---> No objects set in this space.\n");
+}
   return OK;
 }

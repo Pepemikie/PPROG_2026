@@ -2,10 +2,6 @@
  * @brief It defines the game loop
  *
  * @file game_loop.c
- * @author Profesores PPROG
- * @version 0
- * @date 24-01-2026
- * @copyright GNU Public License
  */
 
 #include <stdio.h>
@@ -16,21 +12,23 @@
 #include "game_actions.h"
 #include "graphic_engine.h"
 
-int game_loop_init(Game *game, Graphic_engine **gengine, char *file_name);
-
-void game_loop_cleanup(Game game, Graphic_engine *gengine);
+/* Prototipos actualizados para usar punteros */
+int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name);
+void game_loop_cleanup(Game *game, Graphic_engine *gengine);
 
 int main(int argc, char *argv[]) {
-  Game game;
-  Graphic_engine *gengine;
+  /* ARREGLO F1: Game ahora es un puntero */
+  Game *game = NULL; 
+  Graphic_engine *gengine = NULL;
+  Command *last_cmd = NULL;
   int result;
-  Command *last_cmd;
 
   if (argc < 2) {
     fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]);
     return 1;
   }
 
+  /* Pasamos la dirección del puntero para que se asigne memoria dentro */
   result = game_loop_init(&game, &gengine, argv[1]);
 
   if (result == 1) {
@@ -41,12 +39,13 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  last_cmd = game_get_last_command(&game);
+  /* Como 'game' ya es puntero, le quitamos el '&' en todas las llamadas */
+  last_cmd = game_get_last_command(game);
 
-  while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(&game) == FALSE)) {
-    graphic_engine_paint_game(gengine, &game);
+  while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(game) == FALSE)) {
+    graphic_engine_paint_game(gengine, game);
     command_get_user_input(last_cmd);
-    game_actions_update(&game, last_cmd);
+    game_actions_update(game, last_cmd);
   }
 
   game_loop_cleanup(game, gengine);
@@ -54,20 +53,29 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-int game_loop_init(Game *game, Graphic_engine **gengine, char *file_name) {
-  if (game_create_from_file(game, file_name) == ERROR) {
+int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name) {
+  /* ARREGLO F1: Creamos el objeto dinámicamente */
+  *game = game_create(); 
+  if (*game == NULL) return 1;
+
+  if (game_create_from_file(*game, file_name) == ERROR) {
     return 1;
   }
 
   if ((*gengine = graphic_engine_create()) == NULL) {
-    game_destroy(game);
-    return 1;
+    game_destroy(*game);
+    return 2;
   }
 
   return 0;
 }
 
-void game_loop_cleanup(Game game, Graphic_engine *gengine) {
-  game_destroy(&game);
-  graphic_engine_destroy(gengine);
+/* ARREGLO F1: Ahora recibe un puntero simple Game* */
+void game_loop_cleanup(Game *game, Graphic_engine *gengine) {
+  if (game) {
+    game_destroy(game);
+  }
+  if (gengine) {
+    graphic_engine_destroy(gengine);
+  }
 }
