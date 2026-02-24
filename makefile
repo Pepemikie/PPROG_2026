@@ -1,50 +1,26 @@
-# @brief Compila y une los archivos necesarios para el juego
+# @brief Compile and merge the files needed for the game.
 # @file makefile
-# @author JORGE GARCIA GARRIDO
-# @date 10-02-2025
+# @author Jose Miguel Romero Oubina
+# @date 23-02-2026
 # @version 1
 
+CC=gcc
+CFLAGS=-Wall -g -pedantic -ansi
+LIBS= -lscreen -L. 
+SOURCE =command.c game.c game_actions.c game_loop.c space.c graphic_engine.c game_reader.c object.c player.c character.c set.c
+OBJ=	command.o game.o game_actions.o game_loop.o space.o graphic_engine.o game_reader.o object.o player.o character.o set.o
+EXE= castle_game
 
-CC = gcc #define el compilador
-CFLAGS = -Wall -g #Flags del compilador: -Wall muestra los warnings, .g información para depuración
-LDFLAGS = -L. -lscreen #busca librerias en el directorio actual, enlaza con libscreen
-OBJFILES = game_loop.o game.o space.o command.o graphic_engine.o game_actions.o game_reader.o object.o player.o set.o#archivos objeto
+all: $(EXE)
 
-#Regla para generar el ejecutable del juego
-castle: $(OBJFILES)
-	$(CC) $(CFLAGS) -o castle $(OBJFILES) $(LDFLAGS)
+$(EXE): $(OBJ)
+	$(CC) $(OBJ) -o $@ $(LIBS)
 
-#Reglas para generar los archivos objeto
-space.o: space.c space.h 
-	$(CC) $(CFLAGS) -c space.c
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-game.o: game.c game.h
-	$(CC) $(CFLAGS) -c game.c
-
-command.o: command.c command.h 
-	$(CC) $(CFLAGS) -c command.c
-
-graphic_engine.o: graphic_engine.c graphic_engine.h command.h libscreen.h space.h types.h
-	$(CC) $(CFLAGS) -c graphic_engine.c
-
-game_actions.o: game_actions.c game_actions.h 
-	$(CC) $(CFLAGS) -c game_actions.c
-
-game_reader.o: game_reader.c game_reader.h
-	$(CC) $(CFLAGS) -c game_reader.c
-
-object.o: object.c object.h
-	$(CC) $(CFLAGS) -c object.c
-
-player.o: player.c player.h
-	$(CC) $(CFLAGS) -c player.c
-
-game_loop.o: game_loop.c game.h command.h game_actions.h graphic_engine.h
-	$(CC) $(CFLAGS) -c game_loop.c
-
-set.o: set.c set.h 
-	$(CC) $(CFLAGS) -c set.c
-
-#Regla para limpiar los archivos objeto y ejecutables
 clean:
-	rm -f *.o castle
+	rm -rf $(OBJ) $(EXE)
+
+run:
+	./$(EXE) castle.dat
