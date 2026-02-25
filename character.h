@@ -30,7 +30,7 @@ Character* character_create(Id id);
  * @brief It destroys a character, freeing the allocated memory
  * @author  Jorge Garcia Garrido
  *
- * @param player a pointer to the character that must be destroyed
+ * @param c a pointer to the character that must be destroyed
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status character_destroy(Character* c);
@@ -40,7 +40,7 @@ Status character_destroy(Character* c);
  * @brief It gets the id of a character
  * @author  Jorge Garcia Garrido
  *
- * @param player a pointer to the character
+ * @param c a pointer to the character
  * @return the id of character
  */
 Id character_get_id(Character* c);
@@ -49,7 +49,7 @@ Id character_get_id(Character* c);
  * @brief It gets the name of a character
  * @author  Jorge Garcia Garrido
  *
- * @param player a pointer to the character
+ * @param c a pointer to the character
  * @return  a string with the name of the character
  */
 const char* character_get_name(Character* c);
@@ -58,30 +58,76 @@ const char* character_get_name(Character* c);
  * @brief It sets the name of a character
  * @author Jorge Garcia Garrido
  *
- * @param player a pointer to the character
+ * @param c a pointer to the character
  * @param name a string with the name to store
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status character_set_name(Character* c, char* name);
 
+/**
+ * @brief It gets the health of a character
+ * @author  Jorge Garcia Garrido
+ *
+ * @param c a pointer to the character
+ * @return  an integer with the life points of the character
+ */
 int character_get_health(Character* c);
 
 /**
  * @brief It sets the health of the character
  * @author Jorge Garcia Garrido
  *
- * @param player a pointer to the player
- * @param object_id is the object's id that is going to be passed to the player's 
+ * @param c a pointer to the character
+ * @param health is the character's health that is going to be passed to the character's 
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status character_set_health(Character* c, int health);
 
+/**
+ * @brief It gets the mood of a character
+ * @author  Jorge Garcia Garrido
+ *
+ * @param c a pointer to the character
+ * @return  TRUE if it is friendly, FALSE otherwise
+ */
 Bool character_is_friendly(Character* c);
+
+/**
+ * @brief It sets the mood of the character
+ * @author Jorge Garcia Garrido
+ *
+ * @param c a pointer to the character
+ * @param friendly is the character's mood that is going to be passed to the character's 
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
 Status character_set_friendly(Character* c, Bool friendly);
 
+/**
+ * @brief It gets the message of a character
+ * @author  Jorge Garcia Garrido
+ *
+ * @param c a pointer to the character
+ * @return  an string with the message of the character
+ */
 const char* character_get_message(Character* c);
+
+/**
+ * @brief It sets the message of the character
+ * @author Jorge Garcia Garrido
+ *
+ * @param c a pointer to the character
+ * @param message is the character's message that is going to be passed to the character's 
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
 Status character_set_message(Character* c, char* message);
 
+/**
+ * @brief It prints the data of a character
+ * @author  Jorge Garcia Garrido
+ *
+ * @param c a pointer to the character
+ * @return  OK, if everything goes well or ERROR if there was some mistake
+ */
 Status character_print(Character* c);
 
 #endif
