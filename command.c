@@ -25,6 +25,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "E
  * This struct stores all the information related to a command.S
  */
 struct _Command {
+ /* char *arg;*/
   CommandCode code; /*!< Name of the command */
 };
 
@@ -41,7 +42,7 @@ Command* command_create() {
 
   /* Initialization of an empty command*/
   newCommand->code = NO_CMD;
-
+  /*newCommand->arg = NULL;*/
   return newCommand;
 }
 
@@ -72,6 +73,12 @@ CommandCode command_get_code(Command* command) {
   return command->code;
 }
 
+/*
+chat *command_get_arg (Command *command) {
+return command->arg;
+}
+*/
+
 Status command_get_user_input(Command* command) {
   char input[CMD_LENGHT] = "", *token = NULL;
   int i = UNKNOWN - NO_CMD + 1;
@@ -80,6 +87,11 @@ Status command_get_user_input(Command* command) {
   if (!command) {
     return ERROR;
   }
+
+/*if(command->arg){
+  free(command->arg);
+  command->arg = NULL;
+}*/
 
   if (fgets(input, CMD_LENGHT, stdin)) {
     token = strtok(input, " \n");
@@ -95,6 +107,12 @@ Status command_get_user_input(Command* command) {
         i++;
       }
     }
+    /*token = strtok(NULL, " \n");
+    if(token){
+      command->arg = strdup(token);  
+    }
+    */
+
     return command_set_code(command, cmd);
   }
   else
