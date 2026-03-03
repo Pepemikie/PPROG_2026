@@ -26,6 +26,7 @@ Command* command_create();
 Status command_destroy(Command* command);
 Status command_set_code(Command* command, CommandCode code);
 CommandCode command_get_code(Command* command);
+/*chat *command_get_arg (Command *command);*/
 Status command_get_user_input(Command* command);
 
 #endif
