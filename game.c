@@ -152,7 +152,6 @@ Id game_get_object_location(Game *game) {
     return NO_ID;
   }
 
- 
   obj_id = object_get_id(game->object);
 
   /* 2. Recorremos el array de espacios */

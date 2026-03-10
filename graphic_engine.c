@@ -84,7 +84,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     id_west = space_get_west(space_act);
     obj_loc = game_get_object_location(game);
 
-    if (game_get_object_location(game) == id_back)
+    if (game_get_object_location(game) == id_back)/*////////////////////*/
       obj = '+';
     else
       obj = ' ';

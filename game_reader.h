@@ -26,7 +26,6 @@
   * @param filename the name of the file containing the game spaces data
   * @return OK, if everything goes well or ERROR if there was some mistake
   */
-
- Status game_load_spaces(Game *game, char *filename);
+ Status game_reader_load_spaces(Game *game, char *filename);
 
  #endif

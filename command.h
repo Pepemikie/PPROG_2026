@@ -73,7 +73,14 @@ Status command_set_code(Command* command, CommandCode code);
  */
 CommandCode command_get_code(Command* command);
 
-/*chat *command_get_arg (Command *command);*/
+/**
+ * @brief Obtains the argument of a Command struct pointer
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param Command*   : pointer to an existing Command struct pointer
+ * @return Char*: a char string with the argument
+ */
+char *command_get_arg (Command *command);
 
 /**
  * @brief Will take a pointer to an initialized Command struct, it tries to get user input and checks if that input has new line characters, 

@@ -1,7 +1,11 @@
 /**
- * @brief It defines the game loop
+ * @brief It implements the main game loop, where the game is initialized, updated and cleaned up
  *
  * @file game_loop.c
+ * @author Jorge Garcia Garrido
+ * @version 1
+ * @date 09-03-2026
+ * @copyright GNU Public License
  */
 
 #include <stdio.h>
@@ -12,12 +16,13 @@
 #include "game_actions.h"
 #include "graphic_engine.h"
 
-/* Prototipos actualizados para usar punteros */
+/*Prototype updated for pointers*/
 int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name);
 void game_loop_cleanup(Game *game, Graphic_engine *gengine);
 
 int main(int argc, char *argv[]) {
-  /* ARREGLO F1: Game ahora es un puntero */
+  /*F1 fixed, now game is a pointer*/
+  /*Initializing*/
   Game *game = NULL; 
   Graphic_engine *gengine = NULL;
   Command *last_cmd = NULL;

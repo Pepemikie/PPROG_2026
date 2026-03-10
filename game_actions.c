@@ -2,9 +2,9 @@
  * @brief It implements the game update through user actions
  *
  * @file game.c
- * @author Profesores PPROG
- * @version 0
- * @date 27-01-2025
+ * @author Jose Miguel Romero Oubina
+ * @version 1
+ * @date 03-03-2026
  * @copyright GNU Public License
  */
 
@@ -60,27 +60,27 @@ Status game_actions_update(Game *game, Command *command) {
 
   switch (cmd) {
     case UNKNOWN:
-      game_actions_unknown(game);
+      game_actions_unknown(game);/*runs the unknown command action*/
       break;
 
     case EXIT:
-      game_actions_exit(game);
+      game_actions_exit(game);/*runs the exit command action*/
       break;
 
     case NEXT:
-      game_actions_next(game);
+      game_actions_next(game);/*runs the next command action*/
       break;
 
     case BACK:
-      game_actions_back(game);
+      game_actions_back(game);/*runs the back command action*/
       break;
     
      case TAKE:
-      game_actions_take(game);
+      game_actions_take(game);/*runs the take command action*/
       break;
 
      case DROP:
-      game_actions_drop(game);
+      game_actions_drop(game);/*runs the drop command action*/
       break;
 
     default:
@@ -102,14 +102,14 @@ void game_actions_next(Game *game) {
   Id current_id = NO_ID;/*intitializating*/
   Id space_id = NO_ID;
 
-  space_id = game_get_player_location(game);
+  space_id = game_get_player_location(game);/*space gets the player's location so it can be updated*/
   if (space_id == NO_ID) {/*error control*/
     return;
   }
 
-  current_id = space_get_south(game_get_space(game, space_id));
+  current_id = space_get_south(game_get_space(game, space_id));/*current_id gets the south space id to move forwards*/
   if (current_id != NO_ID) {/*error control*/
-    game_set_player_location(game, current_id);
+    game_set_player_location(game, current_id);/*if it cannot happen, set the player's location to the current space*/
   }
 
   return;/*return nothing*/
@@ -119,51 +119,40 @@ void game_actions_back(Game *game) {
   Id current_id = NO_ID;/*initializating*/
   Id space_id = NO_ID;
 
-  space_id = game_get_player_location(game);
+  space_id = game_get_player_location(game);/*space gets the player's location so it can be updated*/
 
-  if (NO_ID == space_id) {/*error control*/
+  if (space_id == NO_ID) {/*error control*/
     return;
   }
 
-  current_id = space_get_north(game_get_space(game, space_id));
+  current_id = space_get_north(game_get_space(game, space_id));/*current_id gets the north space id to move backwards*/
   if (current_id != NO_ID) {/*error control*/
-    game_set_player_location(game, current_id);
+    game_set_player_location(game, current_id);/*if it cannot happen, set the player's location to the current space*/
   }
 
-  return;
+  return;/*return nothing*/
 }
 
-/*PREGUNTAR A JORGE*/
+/*//////////////////////WILL HAVE TO CHANGE IT IN THE NEXT ITERATION/////////////////////////*/
 void game_actions_take(Game *game) {
   /*inicialitating*/
-
-  /*Id player_location = NO_ID;*/
-  Id player_id = NO_ID; /*en vez de usar player_id, podemos llamar a toda la estructura de player*/
-  /*Player *player = NULL;*/
+  Id player_id = NO_ID;
   Id object_id = NO_ID;
   Space *current_space = NULL;
 
-  if (!game) return;
+  if (!game) return;/*error control*/
 
-  object_id = game_get_object_location(game);
+  object_id = game_get_object_location(game);/*gets the location of the object*/
 
-  /*porq le se le asigna la localización de player al id de player?
-    eso no cambiaría el id del jugador si hay dos player en un mismo sitio?
-  
-    
-    */
-  player_id = game_get_player_location(game);
+  player_id = game_get_player_location(game);/*gets the location of the player*/
 
   
-  if ((NO_ID != object_id) && (object_id == player_id)) {
-   
-    player_set_object(game_get_player(game), object_get_id(game_get_object(game)));
+  if ((NO_ID != object_id) && (object_id == player_id)) {/*if object exists and is in the same space as the player*/
+    player_set_object(game_get_player(game), object_get_id(game_get_object(game)));/*sets the player's object to the taken object*/
 
-
-    current_space = game_get_space(game, player_id);
+    current_space = game_get_space(game, player_id);/*current_space gets the space where the player is located*/
     if (current_space) {
-      
-      space_del_object(current_space, object_get_id(game_get_object(game)));
+      space_del_object(current_space, object_get_id(game_get_object(game)));/*removes the object from the space*/
     }
   }
 
@@ -171,24 +160,23 @@ void game_actions_take(Game *game) {
 }
 
 void game_actions_drop(Game *game) {
+  /*inicialitating*/
   Id player_object = NO_ID;
   Id player_id = NO_ID;
   Space *current_space = NULL;
 
-  if (!game) return;
+  if (!game) return;/*error control*/
 
-  player_object = player_get_object(game_get_player(game));
-  player_id = game_get_player_location(game);
+  player_object = player_get_object(game_get_player(game));/*gets the object the player is carrying*/
+  player_id = game_get_player_location(game);/*gets the location of the player*/
 
-  /* Si el jugador tiene un objeto, lo suelta en el espacio actual */
-  if (player_object != NO_ID) {
-    /* Borrar el objeto del inventario del jugador */
-    player_set_object(game_get_player(game), NO_ID);
+  if (player_object != NO_ID) {/*if the player has an object, he drops it in the current space*/
+    player_set_object(game_get_player(game), NO_ID);/*removes the object from the player's inventory*/
     
     /* Agregar el objeto al espacio actual */
-    current_space = game_get_space(game, player_id);
+    current_space = game_get_space(game, player_id);/*current_space gets the space where the player is located*/
     if (current_space) {
-      space_add_object(current_space, player_object);
+      space_add_object(current_space, player_object);/*adds the object to the space*/
     }
   }
 
