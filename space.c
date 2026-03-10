@@ -26,7 +26,8 @@ struct _Space {
   Id south;                 /*!< Id of the space at the south */
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
-  Set *objects;              /*!< Whether the space has an object or not */
+  Set *objects;
+  Id character;              /*!< Whether the space has an object or not */
 };
 
 /** space_create allocates memory for a new space
@@ -51,6 +52,7 @@ Space* space_create(Id id) {
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
   newSpace->objects = set_create();
+  newSpace->character = NO_ID;
 
   return newSpace;
 }
@@ -174,49 +176,52 @@ Bool space_has_object(Space* space, Id id) {
   return (set_find(space->objects, id) != -1);
 }
 
+
+Status space_set_character(Space* space, Id id) {
+  if (!space) {
+    return ERROR;
+  }
+  space->character = id;
+  return OK;
+}
+
+
+Id space_get_character(Space* space) {
+  if (!space) {
+    return NO_ID;
+  }
+  return space->character;
+}
+
+/* space.c */
+
 Status space_print(Space* space) {
   Id idaux = NO_ID;
 
-  /* Error Control */
   if (!space) {
     return ERROR;
   }
 
-  /* 1. Print the id and the name of the space */
+  /* 1. Imprimir ID y Nombre */
   fprintf(stdout, "--> Space (Id: %ld; Name: %s)\n", space->id, space->name);
 
-  /* 2. For each direction, print its link */
+  /* 2. Imprimir Direcciones */
   idaux = space_get_north(space);
-  if (idaux != NO_ID) {
-    fprintf(stdout, "---> North link: %ld.\n", idaux);
-  } else {
-    fprintf(stdout, "---> No north link.\n");
-  }
+  fprintf(stdout, "---> North link: %ld\n", idaux);
   idaux = space_get_south(space);
-  if (idaux != NO_ID) {
-    fprintf(stdout, "---> South link: %ld.\n", idaux);
-  } else {
-    fprintf(stdout, "---> No south link.\n");
-  }
+  fprintf(stdout, "---> South link: %ld\n", idaux);
   idaux = space_get_east(space);
-  if (idaux != NO_ID) {
-    fprintf(stdout, "---> East link: %ld.\n", idaux);
-  } else {
-    fprintf(stdout, "---> No east link.\n");
-  }
+  fprintf(stdout, "---> East link: %ld\n", idaux);
   idaux = space_get_west(space);
-  if (idaux != NO_ID) {
-    fprintf(stdout, "---> West link: %ld.\n", idaux);
-  } else {
-    fprintf(stdout, "---> No west link.\n");
-  }
+  fprintf(stdout, "---> West link: %ld\n", idaux);
 
- 
-if (space->objects != NULL) {
-  fprintf(stdout, "---> Objects in the space:\n");
-  set_print(space->objects); 
-} else {
-  fprintf(stdout, "---> No objects set in this space.\n");
-}
+  /* 3. Imprimir Objetos (F3) */
+  fprintf(stdout, "---> Objects: ");
+  set_print(space->objects);
+
+  /* 4. ARREGLO F6: Imprimir Personaje */
+  /* Mostramos el ID del personaje que vive en esta habitación */
+  fprintf(stdout, "---> Character ID: %ld\n", space->character);
+
   return OK;
 }

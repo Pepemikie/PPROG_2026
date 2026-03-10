@@ -1,21 +1,16 @@
 /**
- * @brief It implements functions to manage a set of Ids
- *
+ * @brief Implementación de las funciones del módulo Set
  * @file set.c
- * @author Jorge Garcia Garrido
- * @version 0
- * @date 23-02-2026
- * @copyright GNU Public License
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "set.h"
 
-/*Struct that is hidden to the rest of the program */
+/* Definición de la estructura interna (opaca para el resto del programa) */
 struct _Set {
-  Id ids[MAX_SET]; /*Array of ids*/
-  int n_ids;       /*Total amount of ids*/
+  Id ids[MAX_SET]; /* Array de identificadores */
+  int n_ids;       /* Número actual de elementos */
 };
 
 Set* set_create() {

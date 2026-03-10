@@ -9,9 +9,12 @@
  */
 
 #ifndef GRAPHIC_ENGINE_H
+
+#include <string.h>
 #define GRAPHIC_ENGINE_H
 
 #include "game.h"
+
 
 typedef struct _Graphic_engine Graphic_engine;
 
