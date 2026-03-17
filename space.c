@@ -1,5 +1,5 @@
 /**
- * @brief It implements the space module
+ *   It implements the space module
  *
  * @file space.c
  * @author Profesores PPROG
@@ -14,198 +14,207 @@
 #include <stdlib.h>
 #include <string.h>
 
-/**
- * @brief Space
- *
- * This struct stores all the information of a space.
- */
 struct _Space {
-  Id id;                    /*!< Id number of the space, it must be unique */
-  char name[WORD_SIZE + 1]; /*!< Name of the space */
-  Id north;                 /*!< Id of the space at the north */
-  Id south;                 /*!< Id of the space at the south */
-  Id east;                  /*!< Id of the space at the east */
-  Id west;                  /*!< Id of the space at the west */
+  Id id;
+  char name[WORD_SIZE + 1];
+  Id north;
+  Id south;
+  Id east;
+  Id west;
   Set *objects;
-  Id character;              /*!< Whether the space has an object or not */
+  Id character;
+  char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1];
 };
 
-/** space_create allocates memory for a new space
- *  and initializes its members
- */
-Space* space_create(Id id) {
-  Space* newSpace = NULL;
+/*   It creates a new Space, allocating memory and initializing its members */
+Space *space_create(Id id) {
+  Space *newSpace = NULL;
+  int i;
 
-  /* Error control */
-  if (id == NO_ID) return NULL;
+  if (id == NO_ID) return NULL; /* error control */
 
-  newSpace = (Space*)calloc(1, sizeof(Space));
-  if (newSpace == NULL) {
-    return NULL;
-  }
+  newSpace = (Space *)calloc(1, sizeof(Space)); /* allocates and zeroes memory */
+  if (newSpace == NULL) return NULL;
 
-  /* Initialization of an empty space*/
+  /* initializes all fields by default */
   newSpace->id = id;
   newSpace->name[0] = '\0';
   newSpace->north = NO_ID;
   newSpace->south = NO_ID;
-  newSpace->east = NO_ID;
-  newSpace->west = NO_ID;
-  newSpace->objects = set_create();
+  newSpace->east  = NO_ID;
+  newSpace->west  = NO_ID;
   newSpace->character = NO_ID;
+
+  newSpace->objects = set_create(); /* creates the object set */
+  if (!newSpace->objects) {
+    free(newSpace);
+    return NULL;
+  }
+
+  for (i = 0; i < SPACE_GDESC_LINES; i++)
+    strcpy(newSpace->gdesc[i], "         "); /* fills gdesc lines with spaces */
 
   return newSpace;
 }
 
-Status space_destroy(Space* space) {
-  if (!space) {
-    return ERROR;
-  }
+/*   It destroys a Space, freeing the allocated memory */
+Status space_destroy(Space *space) {
+  if (!space) return ERROR;
 
-  set_destroy(space->objects);
+  if (space->objects) set_destroy(space->objects); /* destroys the object set */
 
   free(space);
   return OK;
 }
 
-Id space_get_id(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
+/*   It gets the id of a Space */
+Id space_get_id(Space *space) {
+  if (!space) return NO_ID;
   return space->id;
 }
 
-Status space_set_name(Space* space, char* name) {
-  if (!space || !name) {
-    return ERROR;
-  }
-
-  if (!strcpy(space->name, name)) {
-    return ERROR;
-  }
-  return OK;
-}
-
-const char* space_get_name(Space* space) {
-  if (!space) {
-    return NULL;
-  }
+/*   It gets the name of a Space */
+const char *space_get_name(Space *space) {
+  if (!space) return NULL;
   return space->name;
 }
 
-Status space_set_north(Space* space, Id id) {
-  if (!space || id == NO_ID) {
-    return ERROR;
-  }
+/*   It sets the name of a Space */
+Status space_set_name(Space *space, char *name) {
+  if (!space || !name) return ERROR;
+  if (strlen(name) >= WORD_SIZE) return ERROR; /* checks name length */
+  strcpy(space->name, name);
+  return OK;
+}
+
+/*   It sets the id of the space to the north */
+Status space_set_north(Space *space, Id id) {
+  if (!space) return ERROR;
   space->north = id;
   return OK;
 }
 
-Id space_get_north(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
+/*   It gets the id of the space to the north */
+Id space_get_north(Space *space) {
+  if (!space) return NO_ID;
   return space->north;
 }
 
-Status space_set_south(Space* space, Id id) {
-  if (!space || id == NO_ID) {
-    return ERROR;
-  }
+/*   It sets the id of the space to the south */
+Status space_set_south(Space *space, Id id) {
+  if (!space) return ERROR;
   space->south = id;
   return OK;
 }
 
-Id space_get_south(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
+/*   It gets the id of the space to the south */
+Id space_get_south(Space *space) {
+  if (!space) return NO_ID;
   return space->south;
 }
 
-Status space_set_east(Space* space, Id id) {
-  if (!space || id == NO_ID) {
-    return ERROR;
-  }
+/*   It sets the id of the space to the east */
+Status space_set_east(Space *space, Id id) {
+  if (!space) return ERROR;
   space->east = id;
   return OK;
 }
 
-Id space_get_east(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
+/*   It gets the id of the space to the east */
+Id space_get_east(Space *space) {
+  if (!space) return NO_ID;
   return space->east;
 }
 
-Status space_set_west(Space* space, Id id) {
-  if (!space || id == NO_ID) {
-    return ERROR;
-  }
+/*   It sets the id of the space to the west */
+Status space_set_west(Space *space, Id id) {
+  if (!space) return ERROR;
   space->west = id;
   return OK;
 }
 
-Id space_get_west(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
+/*   It gets the id of the space to the west */
+Id space_get_west(Space *space) {
+  if (!space) return NO_ID;
   return space->west;
 }
 
-
-Status space_add_object(Space* space, Id id) {
+/*   It adds an object to the Space */
+Status space_add_object(Space *space, Id id) {
   if (!space || id == NO_ID) return ERROR;
-  
-
-  return set_add(space->objects, id);
+  return set_add(space->objects, id); /* delegates to the set module */
 }
 
-
-Status space_del_object(Space* space, Id id) {
+/*   It removes an object from the Space */
+Status space_del_object(Space *space, Id id) {
   if (!space || id == NO_ID) return ERROR;
-  
-  return set_del(space->objects, id);
+  return set_del(space->objects, id); /* delegates to the set module */
 }
 
-
-Bool space_has_object(Space* space, Id id) {
+/*   It checks whether an object is in the Space */
+Bool space_has_object(Space *space, Id id) {
   if (!space || id == NO_ID) return FALSE;
-  
- 
-  return (set_find(space->objects, id) != -1);
+  if (set_find(space->objects, id) == -1) return FALSE; /* not found */
+  return TRUE;
 }
 
+/*   It gets the array of object ids stored in the Space */
+Id *space_get_objects(Space *space) {
+  if (!space) return NULL;
+  return set_get_ids(space->objects); /* delegates to the set module */
+}
 
-Status space_set_character(Space* space, Id id) {
-  if (!space) {
-    return ERROR;
-  }
-  space->character = id;
+/*   It gets the number of objects in the Space */
+int space_get_number_of_objects(Space *space) {
+  if (!space) return -1;
+  return set_get_n_ids(space->objects); /* delegates to the set module */
+}
+
+/*   It sets the character located in the Space */
+Status space_set_character(Space *space, Id id) {
+  if (!space) return ERROR;
+  space->character = id; /* assigns the character id to the space */
   return OK;
 }
 
-
-Id space_get_character(Space* space) {
-  if (!space) {
-    return NO_ID;
-  }
+/*   It gets the id of the character located in the Space */
+Id space_get_character(Space *space) {
+  if (!space) return NO_ID;
   return space->character;
 }
 
-/* space.c */
+/*   It sets the graphic description of a Space */
+Status space_set_gdesc(Space *space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]) {
+  int i;
+  if (!space || !gdesc) return ERROR;
 
-Status space_print(Space* space) {
+  for (i = 0; i < SPACE_GDESC_LINES; i++) {
+    if (strlen(gdesc[i]) <= SPACE_GDESC_LENGTH) { /* checks line length before copying */
+      strcpy(space->gdesc[i], gdesc[i]);
+    } else {
+      return ERROR;
+    }
+  }
+  return OK;
+}
+
+/*   It gets a line of the graphic description of a Space */
+char *space_get_gdesc(Space *space, int line) {
+  if (!space) return NULL;
+  if (line < 0 || line >= SPACE_GDESC_LINES) return NULL; /* checks line index bounds */
+  return space->gdesc[line];
+}
+
+#ifdef DEBUG
+/*   It prints the data of a Space */
+Status space_print(Space *space) {
   Id idaux = NO_ID;
 
-  if (!space) {
-    return ERROR;
-  }
+  if (!space) return ERROR;
 
-  /* 1. Imprimir ID y Nombre */
   fprintf(stdout, "--> Space (Id: %ld; Name: %s)\n", space->id, space->name);
 
-  /* 2. Imprimir Direcciones */
+  /* prints all directional links */
   idaux = space_get_north(space);
   fprintf(stdout, "---> North link: %ld\n", idaux);
   idaux = space_get_south(space);
@@ -215,13 +224,13 @@ Status space_print(Space* space) {
   idaux = space_get_west(space);
   fprintf(stdout, "---> West link: %ld\n", idaux);
 
-  /* 3. Imprimir Objetos (F3) */
   fprintf(stdout, "---> Objects: ");
-  set_print(space->objects);
+  if (set_print(space->objects) == ERROR) { /* prints all objects in the space */
+    fprintf(stdout, "ERROR printing objects\n");
+  }
 
-  /* 4. ARREGLO F6: Imprimir Personaje */
-  /* Mostramos el ID del personaje que vive en esta habitación */
   fprintf(stdout, "---> Character ID: %ld\n", space->character);
 
   return OK;
 }
+#endif

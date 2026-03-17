@@ -1,6 +1,10 @@
 /**
- * @brief Define la interfaz para el manejo de conjuntos (sets)
+ * @brief It defines the set module interface
+ *
  * @file set.h
+ * @author  Jorge Garcia Garrido
+ * @version 0
+ * @copyright GNU Public License
  */
 
 #ifndef SET_H
@@ -8,61 +12,94 @@
 
 #include "types.h"
 
-/* Definimos el número máximo de elementos en el conjunto */
 #define MAX_SET 10
 
-/* Definición del tipo para el conjunto como una estructura opaca */
 typedef struct _Set Set;
 
 /**
- * @brief Crea un nuevo conjunto vacío
- * @return un puntero al nuevo conjunto o NULL en caso de error
+ * @brief It creates a new empty Set, allocating memory and initializing its members
+ * @author  Jorge Garcia Garrido
+ *
+ * @return a new pointer to a Set struct, initialized
  */
 Set* set_create();
 
 /**
- * @brief Destruye un conjunto y libera su memoria
- * @param set puntero al conjunto a destruir
- * @return OK si se destruye correctamente, ERROR en caso contrario
+ * @brief It destroys a Set, freeing the allocated memory
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set that must be destroyed
+ * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status set_destroy(Set* set);
 
 /**
- * @brief Añade un elemento al conjunto si no existe ya
- * @param set puntero al conjunto
- * @param id el identificador a añadir
- * @return OK si se añade o ya existía, ERROR si está lleno o hay error
+ * @brief It adds an element to the Set if it does not already exist
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @param id the identification number to be added
+ * @return OK, if everything goes well or ERROR if the Set is full or there was some mistake
  */
 Status set_add(Set* set, Id id);
 
 /**
- * @brief Elimina un elemento del conjunto
- * @param set puntero al conjunto
- * @param id el identificador a eliminar
- * @return OK si se elimina, ERROR si no se encuentra o hay error
+ * @brief It removes an element from the Set
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @param id the identification number to be removed
+ * @return OK, if everything goes well or ERROR if the element is not found or there was some mistake
  */
 Status set_del(Set* set, Id id);
 
 /**
- * @brief Busca si un ID está en el conjunto
- * @param set puntero al conjunto
- * @param id el identificador a buscar
- * @return El índice del elemento (0 a n-1) o -1 si no se encuentra
+ * @brief It searches for an id in the Set
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @param id the identification number to search for
+ * @return the index of the element (0 to n-1), or -1 if not found
  */
 int set_find(Set* set, Id id);
 
 /**
- * @brief Devuelve cuántos elementos hay en el conjunto
- * @param set puntero al conjunto
- * @return El número de elementos o -1 si hay error
+ * @brief It gets the number of elements in the Set
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @return the number of elements stored, or -1 if there was some mistake
  */
 int set_get_n_ids(Set* set);
 
 /**
- * @brief Imprime el contenido del conjunto (para depuración)
- * @param set puntero al conjunto
- * @return OK o ERROR
+ * @brief It gets the id stored at a given position in the Set
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @param array_position the index of the element to retrieve
+ * @return the id at the given position, or NO_ID if there was some mistake
+ */
+Id set_get_id(Set *set, int array_position);
+
+/**
+ * @brief It gets the array of ids stored in the Set
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @return a pointer to the array of ids stored in the Set
+ */
+Id* set_get_ids(Set *set);
+
+#ifdef DEBUG
+/**
+ * @brief It prints the contents of a Set
+ * @author  Jorge Garcia Garrido
+ *
+ * @param set a pointer to the Set
+ * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status set_print(Set* set);
+#endif
 
 #endif

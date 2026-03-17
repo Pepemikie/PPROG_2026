@@ -1,8 +1,17 @@
-
+/**
+ *   It implements the object functionality
+ *
+ * @file object.c
+ * @author Jose Miguel Romero Oubina
+ * @version 0
+ * @date 10-03-2026
+ * @copyright GNU Public License
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "object.h"
 
 struct _Object {
@@ -10,55 +19,49 @@ struct _Object {
   char name[WORD_SIZE];
 };
 
-/** Crea un objeto nuevo inicializando su ID y nombre */
+/*   It creates a new Object, allocating memory and initializing its members */
 Object* object_create(Id id) {
   Object *new_object = NULL;
-
-  if (id == NO_ID) return NULL;
-
-  new_object = (Object *) malloc(sizeof (Object));
+  if (id == NO_ID) return NULL; /* error control */
+  new_object = (Object *) malloc(sizeof (Object)); /* allocates memory for the object */
   if (new_object == NULL) return NULL;
-
   new_object->id = id;
-  new_object->name[0] = '\0';
-
+  new_object->name[0] = '\0';/*////////////////////////SE DEBE USAR MACRO PARA EL [0]?*/
   return new_object;
 }
 
-/** Libera la memoria de un objeto */
+/*   It destroys an Object, freeing the allocated memory */
 Status object_destroy(Object* object) {
   if (!object) return ERROR;
-
-  free(object);
+  free(object); /* frees the object */
   return OK;
 }
 
-/** Devuelve el ID del objeto */
+/*   It gets the id of an Object */
 Id object_get_id(Object* object) {
   if (!object) return NO_ID;
   return object->id;
 }
 
-/** Cambia el nombre del objeto */
+/*   It sets the name of an Object */
 Status object_set_name(Object* object, char* name) {
   if (!object || !name) return ERROR;
-
-  if (!strcpy(object->name, name)) return ERROR;
-
+  if (!strncpy(object->name, name, WORD_SIZE - 1)) return ERROR; /* copies name safely */
+  object->name[WORD_SIZE - 1] = '\0';
   return OK;
 }
 
-/** Devuelve el nombre del objeto */
+/*   It gets the name of an Object */
 const char* object_get_name(Object* object) {
   if (!object) return NULL;
   return object->name;
 }
 
-/** Imprime los datos del objeto para depuración */
+#ifdef DEBUG
+/*   It prints the data of an Object */
 Status object_print(Object* object) {
   if (!object) return ERROR;
-
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name);
-
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name); /* prints id and name */
   return OK;
 }
+#endif

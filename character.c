@@ -1,15 +1,16 @@
 /**
- * @brief It implements the character module
+ *   It implements the character module
  *
  * @file character.c
- * @author Jorge Garcia Garrido 
- * @version 0
- * @date 23-02-2026
+ * @author Jorge Garcia Garrido
+ * @version 1
+ * @date 10-03-2026
  * @copyright GNU Public License
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "character.h"
 
 /*Defined Character struct*/
@@ -23,81 +24,139 @@ struct _Character {
   Id location; /*The location of the character*/
 };
 
-/*Initialises everything by default and allocates memory for a character*/
+/*   It creates a new character, allocating memory and initializing its members */
 Character* character_create(Id id) {
-  Character *c = NULL;
+  Character *new_character = NULL;
   if (id == NO_ID) return NULL;/*Error control*/
 
-  c = (Character*) malloc(sizeof(Character));/*Allocates memory for the character*/
-  if (!c) return NULL;/*Error control*/
+  new_character = (Character*) malloc(sizeof(Character));/*Allocates memory for the character*/
+  if (! new_character) return NULL;/*Error control*/
 
   /*Initialises the character Id, the description, the life points, the friendly mood and the message by default*/
-  c->id = id;
-  strcpy(c->name, "");
-  strcpy(c->gdesc, "      "); /* 6 spacebars */
-  c->health = 10;             /* Initial health points */
-  c->friendly = TRUE;
-  strcpy(c->message, "");
+  new_character->id = id;
+  strcpy( new_character->name, "");
+  strcpy( new_character->gdesc, "      "); /* 6 spacebars */
+  new_character->health = 10;             /* Initial health points */
+  new_character->friendly = TRUE;
+  strcpy( new_character->message, "");
 
-  return c;/*returns the pointer of the struct with all initilizated*/
+  return new_character;/*returns the pointer of the struct with all initilizated*/
 }
 
-/*Frees the character information*/
+/*   It destroys a character, freeing the allocated memory */
 Status character_destroy(Character* c) {
   if (!c) return ERROR;/*Checks if the character exists*/
   free(c);/*frees the character*/
   return OK;
 }
 
-/*Example of the implementation of Getter/Setter*/
+/*   It gets the id of a character */
+Id character_get_id(Character* c){
+  if(!c)
+    return -1;
 
-/*Checks if the character exists and retur its health*/
-int character_get_health(Character* c) {
-  return (c) ? c->health : -1;/*Checks if Character exists, if it is so, returns c->health; otherwise, return -1*/
+  return c->id;
 }
 
-/*Sets the characters health to the health passed by arguments*/
+/*   It gets the name of a character */
+const char* character_get_name(Character* c){
+  if(!c)
+    return NULL;
+
+  return c->name;
+}
+
+/*   It sets the name of a character */
+Status character_set_name(Character* c, char* name){
+    if (!c) return ERROR;
+    strncpy(c->name, name, WORD_SIZE); /* Copies name safely */
+    c->name[WORD_SIZE - 1] = '\0'; /*to guarantee strncpy*/
+  return OK;
+}
+
+/*   It gets the description of a character */
+char *character_get_gdesc(Character *c) {
+    if (!c) {
+        return NULL;
+    }
+    return c->gdesc;
+}
+
+/*   It sets the description of a character */
+Status character_set_gdesc(Character *c, char *gdesc) {
+    if (!c || !gdesc) { /* Error control */
+        return ERROR;
+    }
+    strcpy(c->gdesc, gdesc); /* Copies the description into the struct */
+
+    return OK;
+}
+
+/*   It gets the health of a character */
+int character_get_health(Character* c) {
+  if(!c)
+    return -1;
+
+  return c->health;/*Checks if Character exists, if it is so, returns c->health; otherwise, return -1*/
+}
+
+/*   It sets the health of the character */
 Status character_set_health(Character* c, int health) {
   if (!c || health < 0) return ERROR;/*Error control*/
   c->health = health;/*Gives the life points passed by argyment to the character's health */
   return OK;
 }
 
+/*   It gets the mood of a character */
+Bool character_is_friendly(Character* c) {
+  if(!c)
+    return FALSE;
+
+  return c->friendly;
+}
+
+/*   It sets the mood of the character */
+Status character_set_friendly(Character* c, Bool friendly) {
+  if (!c) return ERROR;
+  c->friendly = friendly; /* Assigns the friendly value to the character */
+  return OK;
+}
+
+/*   It gets the message of a character */
+const char* character_get_message(Character* c) {
+    if(!c)
+    return NULL;
+
+  return c->message;
+}
+
+/*   It sets the message of the character */
+Status character_set_message(Character* c, char* message) {
+  if (!c || !message) return ERROR;
+  strncpy(c->message, message, WORD_SIZE - 1); /* Copies message safely */
+  c->message[WORD_SIZE - 1] = '\0'; /*to guarantee strncpy*/
+  return OK;
+}
+
+/*   It gets the location of a character */
+Id character_get_location(Character *c) {
+  if (!c) return NO_ID;
+  return c->location;
+}
+
+/*   It sets the location of a character */
+Status character_set_location(Character *c, Id location) {
+  if (!c) return ERROR;
+  c->location = location; /* Assigns the location id to the character */
+  return OK;
+}
+
 #ifdef DEBUG
+/*   It prints the data of a character */
 Status character_print(Character* c) {
   if (!c) return ERROR;
-  fprintf(stdout, "--> Character [ID: %ld, Name: %s, Health: %d, Friendly: %d]\n", 
-          c->id, c->name, c->health, c->friendly);
+  fprintf(stdout, "--> Character [ID: %ld, Name: %s, Desc: %s, Health: %d,  Friendly: %d, Message: %s]\n", 
+          c->id, c->name, c->gdesc,  c->health, c->friendly, c->message);
   return OK;
 }
 #endif
-
-/* Implementación de los getters que faltan en character.c */
-Bool character_get_is_friendly(Character* c) {
-  return (c) ? c->friendly : FALSE;
-}
-
-const char* character_get_message(Character* c) {
-  return (c) ? c->message : NULL;
-}
-
-Bool character_is_friendly(Character* character) {
-  if (!character) return FALSE;
-  return character->friendly;
-}
-
-Status character_set_friendly(Character* c, Bool friendly) {
-  if (!c) return ERROR;
-  c->friendly = friendly;
-  return OK;
-}
-
-Status character_set_message(Character* c, char* message) {
-  if (!c || !message) return ERROR;
-  strncpy(c->message, message, WORD_SIZE - 1);
-  return OK;
-}
-Id character_get_location(Character* c) {
-  if (!c) return NO_ID;
-  return c->location; 
-}
