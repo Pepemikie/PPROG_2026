@@ -104,25 +104,6 @@ int character_get_health(Character* c);
 Status character_set_health(Character* c, int health);
 
 /**
- * @brief It gets the location of a character
- * @author Jorge Garcia Garrido
- *
- * @param c a pointer to the character
- * @return the id of the space where the character is located
- */
-Id character_get_location(Character *c);
-
-/**
- * @brief It sets the location of a character
- * @author Jorge Garcia Garrido
- *
- * @param c a pointer to the character
- * @param location the id of the space where the character is going to be placed
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status character_set_location(Character *c, Id location);
-
-/**
  * @brief It gets the mood of a character
  * @author  Jorge Garcia Garrido
  *

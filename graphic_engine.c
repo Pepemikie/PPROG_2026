@@ -261,7 +261,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       }
     }
   }
-
+/*////////////////////REVISAR PARA CHARACTER////////////////////*/
   /* 2. DESCRIPTION AREA */
   screen_area_clear(ge->descript);
 
@@ -284,7 +284,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   for (i = 0; i < MAX_CHARACTERS; i++) {
     character = game_get_character_by_index(game, i);
     if (!character) break;
-    char_loc = character_get_location(character);
+    char_loc = game_get_character_location(game, character_get_id(character));
     if (char_loc != NO_ID) {
       int health = character_get_health(character);
       if (health > 0)

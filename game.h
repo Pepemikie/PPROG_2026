@@ -207,6 +207,8 @@ Status game_add_space(Game *game, Space *space);
  */
 Status game_add_object(Game *game, Object *object);
 
+Id game_get_character_location(Game *game, Id character_id);
+
 /**
  * @brief It gets the character located in a given space
  * @author Profesores PPROG
@@ -266,7 +268,7 @@ Status game_add_character(Game *game, Character *character);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_set_character_location(Game *game, Id space_id, Id character_id);
-
+/*/////////////////////REVISAR//////////////////*/
 #ifdef DEBUG
 /**
  * @brief It prints the data of the game

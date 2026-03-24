@@ -21,7 +21,6 @@ struct _Character {
   int health;             /* Life points*/
   Bool friendly;          /*Defines if the character is your friend or not*/
   char message[WORD_SIZE];/*Storage the message*/
-  Id location; /*The location of the character*/
 };
 
 /*   It creates a new character, allocating memory and initializing its members */
@@ -135,19 +134,6 @@ Status character_set_message(Character* c, char* message) {
   if (!c || !message) return ERROR;
   strncpy(c->message, message, WORD_SIZE - 1); /* Copies message safely */
   c->message[WORD_SIZE - 1] = '\0'; /*to guarantee strncpy*/
-  return OK;
-}
-
-/*   It gets the location of a character */
-Id character_get_location(Character *c) {
-  if (!c) return NO_ID;
-  return c->location;
-}
-
-/*   It sets the location of a character */
-Status character_set_location(Character *c, Id location) {
-  if (!c) return ERROR;
-  c->location = location; /* Assigns the location id to the character */
   return OK;
 }
 

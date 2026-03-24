@@ -169,9 +169,9 @@ Status game_reader_load_characters(Game *game, char *filename) {
         character_set_gdesc(character, gdesc);
         character_set_health(character, health);
         character_set_friendly(character, (Bool)friendly);
+        game_set_character_location(game, location_id, id);
         character_set_message(character, message);
         game_add_character(game, character);
-        game_set_character_location(game, location_id, id);
       }
     }
   }

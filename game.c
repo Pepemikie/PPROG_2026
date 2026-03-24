@@ -247,19 +247,30 @@ Status game_add_character(Game *game, Character *character) {
   return OK;
 }
 
-/*   It sets the location of a character in the game */
+/*It sets the location of a character in the game */
 Status game_set_character_location(Game *game, Id space_id, Id character_id) {
-  int i;
-  if (!game || space_id == NO_ID || character_id == NO_ID) return ERROR;
+  Space *s = NULL;
 
-  for (i = 0; i < MAX_CHARACTERS && game->characters[i] != NULL; i++) { /* iterates until matching id is found */
-    if (character_get_id(game->characters[i]) == character_id) {
-      character_set_location(game->characters[i], space_id); /* sets character location */
-      space_set_character(game_get_space(game, space_id), character_id); /* links character to space */
-      return OK;
-    }
+  if(!game || space_id == NO_ID || character_id == NO_ID) return ERROR;
+
+  s = game_get_space(game, space_id); /* retrieves the target space */
+
+  if (!s) return ERROR;
+
+  space_set_character(s, character_id); /* sets character in the space */
+
+  return OK;
+}
+
+Id game_get_character_location(Game *game, Id character_id) {
+  int i;
+  if (!game || character_id == NO_ID) return NO_ID;
+
+  for (i = 0; i < game->n_spaces; i++) {
+    if (space_get_character(game->spaces[i]) == character_id)
+      return space_get_id(game->spaces[i]);
   }
-  return ERROR;
+  return NO_ID;
 }
 
 /*   It gets the character located in a given space */
@@ -267,8 +278,8 @@ Character *game_get_character_in_space(Game *game, Id space_id) {
   int i;
   if (!game || space_id == NO_ID) return NULL;
 
-  for (i = 0; i < MAX_CHARACTERS && game->characters[i] != NULL; i++) { /* iterates until matching location is found */
-    if (character_get_location(game->characters[i]) == space_id)
+  for (i = 0; i < MAX_CHARACTERS && game->characters[i] != NULL; i++) {
+    if (character_get_id(game->characters[i]) == space_get_character(game_get_space(game, space_id)))
       return game->characters[i];
   }
   return NULL;
