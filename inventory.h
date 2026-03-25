@@ -3,7 +3,7 @@
  *
  * @file inventory.h
  * @author Jose Miguel Romero Oubina
- * @version 0
+ * @version 1.2
  * @date 25-03-2026
  * @copyright GNU Public License
  */
@@ -13,17 +13,18 @@
 
 #include <stdio.h>
 #include "types.h"
-#include "object.h"
+#include "set.h"
 
 typedef struct _Inventory Inventory;
 
 /**
  * @brief It creates a new Inventory, allocating memory and initializing its members
  * @author Jose Miguel Romero Oubina
- *
+ * 
+ * @param max_objects the maximum number of objects that the inventory can hold
  * @return a new pointer to an Inventory struct, initialized
  */
-Inventory *inventory_create();
+Inventory *inventory_create(int max_objects);
 
 /**
  * @brief It destroys an Inventory, freeing the allocated memory
@@ -42,7 +43,7 @@ Status inventory_destroy(Inventory *inventory);
  * @param object a pointer to the Object to be added
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Status inventory_add_object(Inventory *inventory, Object *object);
+Status inventory_add_object(Inventory *inventory, Id object_id);
 
 /**
  * @brief It removes an object from the inventory by its id
@@ -65,34 +66,43 @@ Status inventory_del_object(Inventory *inventory, Id object_id);
 Bool inventory_has_object(Inventory *inventory, Id object_id);
 
 /**
+ * @brief It gets the objects in the inventory
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param inventory a pointer to the Inventory to check
+ * @return a pointer to the Set containing the objects in the inventory or NULL if there was some mistake
+ */
+Set *inventory_get_objects(Inventory *inventory);
+
+/**
+ * @brief Sets the maximum number of objects the inventory can hold
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param inventory a pointer to the Inventory to check
+ * @param max_objs the maximum number of objects the inventory can hold
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status inventory_set_max_objs(Inventory *inventory, int max_objs);
+
+/**
+ * @brief Gets the maximum number of objects the inventory can hold
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param inventory a pointer to the Inventory to check
+ * @return the maximum number of objects the inventory can hold or -1 if there was some mistake
+ */
+int inventory_get_max_objs(Inventory *inventory);
+
+/**
  * @brief It gets the number of objects in the inventory
  * @author Jose Miguel Romero Oubina
  *
  * @param inventory a pointer to the Inventory from which to get the number of objects
  * @return the number of objects in the inventory or -1 if there was some mistake
  */
-int inventory_get_number_of_object(Inventory *inventory);
+int inventory_get_number_of_objects(Inventory *inventory);
 
-/**
- * @brief It gets an object from the inventory by its index
- * @author Jose Miguel Romero Oubina
- *
- * @param inventory a pointer to the Inventory from which to get the object
- * @param index the index of the object to get
- * @return a pointer to the Object at the specified index or NULL if there was some mistake
- */
-Object *inventory_get_object_by_index(Inventory *inventory, int index);
-
-/**
- * @brief It gets an object from the inventory by its id
- * @author Jose Miguel Romero Oubina
- *
- * @param inventory a pointer to the Inventory from which to get the object
- * @param object_id the identification number for the object to get
- * @return a pointer to the Object with the specified id or NULL if there was some mistake
- */
-Object *inventory_get_object_id(Inventory *inventory, Id object_id);
-
+#ifdef DEBUG
 /**
  * @brief It prints the inventory
  * @author Jose Miguel Romero Oubina
@@ -101,5 +111,5 @@ Object *inventory_get_object_id(Inventory *inventory, Id object_id);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status inventory_print(Inventory *inventory);
-
+#endif
 #endif
