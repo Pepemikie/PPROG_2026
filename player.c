@@ -2,9 +2,9 @@
  *   It implements the player module
  *
  * @file player.c
- * @author Profesores PPROG
- * @version 0
- * @date 27-01-2025
+ * @author Jose Miguel Romero Oubina
+ * @version 2
+ * @date 25-03-2026
  * @copyright GNU Public License
  */
 
@@ -19,7 +19,7 @@ struct _Player {
   Id id;
   char name[WORD_SIZE];
   Id location;
-  Id object; 
+  Inventory *backpack; 
   int health;
   char gdesc[P_GDESC_SIZE];
 };
@@ -38,7 +38,7 @@ Player* player_create(Id id) {
   new_player->id = id;
   new_player->name[0] = '\0';
   new_player->location = NO_ID;
-  new_player->object = NO_ID;
+  new_player->backpack = inventory_create(MAX_BACKPACK_SIZE);
   new_player->health = 10;
   new_player->gdesc[0]= '\0';
   return new_player;
@@ -48,6 +48,9 @@ Player* player_create(Id id) {
 Status player_destroy(Player* player) {
   if (!player) {
     return ERROR; /* error control */
+  }
+  if (player->backpack) {
+    inventory_destroy(player->backpack);
   }
   free(player);
   return OK;
@@ -98,21 +101,49 @@ Id player_get_location(Player* player) {
   return player->location;
 }
 
-/*   It sets the object carried by a Player */
-Status player_set_object(Player* player, Id object) {
-  if (!player) {
-    return ERROR;
+/*   It adds an object to the player's inventory */
+Status player_add_object(Player* player, Id object) {
+  if (!player || object == NO_ID || !player->backpack) {
+    return ERROR;/*error control*/
   }
-  player->object = object; /* assigns the object id to the player */
-  return OK;
+
+  /*al tener un solo elmento, antes solo asigamos. ahora añadimos un espcio y metemos el objeto*/
+  return inventory_add_object(player->backpack, object);
 }
 
-/*   It gets the object carried by a Player */
-Id player_get_object(Player* player) {
-  if (!player) {
+/*   It removes an object from the player's inventory */
+Status player_del_object(Player* player, Id object) {
+  if (!player || object == NO_ID || !player->backpack) {
+    return ERROR;/*error control*/
+  }
+  return inventory_del_object(player->backpack, object);
+}
+
+/*   It checks if a Player has a specific object in their inventory */
+Bool player_has_object(Player* player, Id object) {
+  if (!player || object == NO_ID || !player->backpack) {
+    return FALSE;/*error control*/
+  }
+  return inventory_has_object(player->backpack, object);
+}
+
+/*   It gets the id of an object in the player's inventory by its index */
+Id player_get_object(Player* player, int index) {
+  if (!player || index < 0 || !player->backpack) {
+    return NO_ID;/*error control*/
+  }
+  if (index >= inventory_get_max_objs(player->backpack)) {
     return NO_ID;
   }
-  return player->object;
+  return set_get_id(inventory_get_objects(player->backpack), index);
+}
+
+/*   It gets the player's inventory */
+Inventory* player_get_backpack(Player* player) {
+  if (!player) {/*error control*/
+    return NULL;
+  }
+  return player->backpack;
 }
 
 /*   It gets the health of a Player */
@@ -154,8 +185,8 @@ Status player_print(Player* player) {
   if (!player) {
     return ERROR;
   }
-  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Object: %ld; Health: %d; Desc: %s)\n", 
-  player->id, player->name, player->location, player->object, player->health, player->gdesc); /* prints all player fields */
+  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %ld; Health: %d; Desc: %s)\n", 
+  player->id, player->name, player->location, inventory_get_number_of_objects(player->backpack), player->health, player->gdesc); /* prints all player fields */
   return OK;
 }
 #endif

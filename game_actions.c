@@ -155,7 +155,7 @@ Status game_actions_back(Game *game) {
 
   return ERROR;/*return nothing*/
 }
-
+/*///////////////////////////////////////////////////////////////////////*/
 /*   Makes the player pick up the named object in the current space */
 Status game_actions_take(Game *game) {
   /*inicialitating*/
@@ -163,7 +163,6 @@ Status game_actions_take(Game *game) {
   Id object_id = NO_ID;
   Space *current_space = NULL;
   Object *obj = NULL;
-  
   int num_objects = 0;
   int i=0;
   Id *objects = NULL;
@@ -191,9 +190,8 @@ Status game_actions_take(Game *game) {
   if(!arg || arg[0] == '\0'){
     return ERROR;
   }
-  /*comprobacion de si lleva ya un objeto*/
-  if (player_get_object(game_get_player(game)) != NO_ID)
-    return ERROR;
+
+  if (inventory_is_full(player_get_backpack(game_get_player(game)))) return ERROR;
 
   num_objects = space_get_number_of_objects(current_space);/*///AÑADIDO NUEVO////////////*/
 
@@ -211,8 +209,8 @@ Status game_actions_take(Game *game) {
       }
 
       if (object_id != NO_ID) { /* object found: assign to player and remove from space */
-        player_set_object(game_get_player(game), object_id);
-        game_set_object_location(game, NO_ID, object_id);
+        /* Add the object ID to the inventory, remove it from the space */
+        if (player_add_object(game_get_player(game), object_id) == ERROR) return ERROR;
         space_del_object(current_space, object_id);
         return OK;
       }
@@ -221,7 +219,7 @@ Status game_actions_take(Game *game) {
 
   return ERROR;
 }
-
+/*///////////////////////////////////////////////////////////////////////////////*/
 /*   Makes the player drop the named object into the current space */
 Status game_actions_drop(Game *game) {
   /*Initialitating*/
@@ -231,52 +229,52 @@ Status game_actions_drop(Game *game) {
   Command *last_cmd = NULL;
   char *arg = NULL;
 
-  if (!game) return ERROR;/*error control*/
+/*mew initializing*/
+  Set *inv_set = NULL;
+  Object *obj = NULL;
+  Id *ids = NULL;
+  int n = 0;
+  int i = 0;
 
+  if (!game) return ERROR;/*error control*/
   
   player_location = game_get_player_location(game);
-
-  if (player_location == NO_ID) 
-    return ERROR;
+  if (player_location == NO_ID) return ERROR;
 
   current_space = game_get_space(game, player_location);
-
-  if (!current_space) 
-    return ERROR;
+  if (!current_space) return ERROR;
 
   last_cmd = game_get_last_command(game);
-
-  if (!last_cmd)
-    return ERROR;
+  if (!last_cmd) return ERROR;
 
   arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
 
-  if (!arg || arg[0] == '\0')
-    return ERROR;
+  /* Get the player's inventory */
+  inv_set = inventory_get_objects(player_get_backpack(game_get_player(game)));/*/////////////////////////////////////////*/
+  if (!inv_set) return ERROR;
 
-  /*carried objct gets the id of the object carried from the player*/
-  carried_object_id = player_get_object(game_get_player(game));
-  
-  if (carried_object_id != NO_ID) {
+  /* Search the inventory for an object whose name matches the argument */
+  n = set_get_n_ids(inv_set);
+  ids = set_get_ids(inv_set);   /* assumes set exposes its ID array */
+  if (!ids || n <= 0) return ERROR;
 
-    Object *carried_obj = game_get_object(game, carried_object_id);
-
-  /* Verificar que el argumento coincide */
-    if (!carried_obj || strcasecmp(object_get_name(carried_obj), arg) != 0) {
-      return ERROR;
-    }
-
-    player_location = game_get_player_location(game);
-    current_space = game_get_space(game, player_location);
-
-    if (current_space) {
-      /* Primero quitamos el objeto del jugador */
-      if (player_set_object(game_get_player(game), NO_ID) == OK) {
-        /* Solo añadimos al espacio si se quitó correctamente */
-        space_add_object(current_space, carried_object_id); /* adds object to space */
-      }
+  for (i = 0; i < n; i++) {
+    obj = game_get_object(game, ids[i]);
+    if (obj != NULL && strcasecmp(object_get_name(obj), arg) == 0) {
+      carried_object_id = ids[i];
+      break;
     }
   }
+
+  if (carried_object_id == NO_ID) return ERROR; /* object not found in inventory */
+
+  /* Eliminamos del player y añadimos al espacio */
+  if (player_del_object(game_get_player(game), carried_object_id) == ERROR) return ERROR;
+
+  space_add_object(current_space, carried_object_id);
+  game_set_object_location(game, player_location, carried_object_id);
+
   return OK;
 }
 
@@ -339,7 +337,7 @@ Status game_actions_attack(Game *game) {
   /* Buscamos al personaje en la sala actual */
   c = game_get_character_in_space(game, loc);
 
-  if(character_is_friendly(c) || !c) return ERROR;/*error control: no se puede atacar a un personaje amigo*/
+  if(!c || character_is_friendly(c)) return ERROR;/*error control: no se puede atacar a un personaje amigo*/
 
   /* Solo atacamos si hay enemigo, no es amigo y tiene vida */
   if (c && !character_is_friendly(c) && character_get_health(c) > 0) {
@@ -371,13 +369,13 @@ Status game_actions_chat(Game *game) {
   loc = game_get_player_location(game);
   c = game_get_character_in_space(game, loc);
 
+  if(!c || !character_is_friendly(c)) return ERROR;
+
   /* Solo hablamos si es amigo */
   if (c && character_is_friendly(c)) {
     /* Guardamos el mensaje para que el motor gráfico lo vea */
     game_set_last_message(game, character_get_message(c)); /* stores character message in game */
   }
  
-  if(!character_is_friendly(c) || !c) return ERROR;
-
   return OK;
 }

@@ -23,7 +23,6 @@ struct _Game {
   int n_spaces;
   Command *last_cmd;
   Bool finished;
-  Bool object_adquirido;
   char last_message[WORD_SIZE];
   Status last_status;
 };
@@ -34,12 +33,6 @@ struct _Game {
 
 /*   It gets the id of the space at a given position in the spaces array */
 Id game_get_space_id_at(Game *game, int position);
-
-/*   It sets the object_adquirido flag of the game */
-void game_object_set_bool(Game *game, Bool object_bool) {
-  if (!game) return;
-  game->object_adquirido = object_bool;
-}
 
 /**
    Game interface implementation
@@ -138,6 +131,9 @@ Id game_get_object_location(Game *game, Id object_id) {
 
   if (!game || object_id == NO_ID) return NO_ID;
 
+  if (player_has_object(game->player, object_id) == TRUE)
+    return player_get_location(game->player);
+
   for (i = 0; i < game->n_spaces; i++) { /* iterates spaces until the object is found */
     if (space_has_object(game->spaces[i], object_id) == TRUE)
       return space_get_id(game->spaces[i]);
@@ -200,7 +196,6 @@ Command *game_get_last_command(Game *game) {
 /*   It sets the last command introduced by the user */
 Status game_set_last_command(Game *game, Command *command) {
   if (!game){
-    game->last_status = ERROR;
     return ERROR;
   }
   game->last_cmd = command;

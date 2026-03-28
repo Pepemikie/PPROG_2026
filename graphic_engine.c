@@ -221,6 +221,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Character *character = NULL;
   Object *obj = NULL;
 
+  Set *inv_set = NULL;
+  Id *ids = NULL;
+  int n = 0;
+  char obj_line[512];
+
   if (!ge || !game) return;
 
   /* 1. MAP AREA */
@@ -261,7 +266,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       }
     }
   }
-/*////////////////////REVISAR PARA CHARACTER////////////////////*/
+
   /* 2. DESCRIPTION AREA */
   screen_area_clear(ge->descript);
 
@@ -271,10 +276,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     obj = game_get_object_by_index(game, i);
     if (!obj) break;
     obj_loc = game_get_object_location(game, object_get_id(obj));
-    if (obj_loc != NO_ID)
-      sprintf(str, "  %-10s: %d", object_get_name(obj), (int)obj_loc);
-    else
-      sprintf(str, "  %-10s: player", object_get_name(obj));
+    sprintf(str, "  %-10s: %d", object_get_name(obj), (int)obj_loc);
     screen_area_puts(ge->descript, str);
   }
   screen_area_puts(ge->descript, " ");
@@ -301,13 +303,28 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   sprintf(str, " Player: %d (%d hp)", (int)player_get_location(player), player_get_health(player));
   screen_area_puts(ge->descript, str);
 
-  if (player_get_object(player) != NO_ID) {
-    obj = game_get_object(game, player_get_object(player));
-    sprintf(str, " Player has: %s", obj ? object_get_name(obj) : "Unknown");
-  } else {
-    sprintf(str, " Player has no objects");
+  inv_set = inventory_get_objects(player_get_backpack(player));
+  if(inv_set != NULL){/*gets number of objects in inventory */
+    n = set_get_n_ids(inv_set);
+  }else{
+    n = 0;/*no objects in inventory */
   }
-  screen_area_puts(ge->descript, str);
+
+  if (n <= 0) {
+    screen_area_puts(ge->descript, " Player has no objects");
+  } else {
+    ids = set_get_ids(inv_set);
+    strcpy(obj_line, " Player has:");
+    for (i = 0; i < n; i++) {
+      obj = game_get_object(game, ids[i]);
+      if (obj) {
+        strcat(obj_line, " ");
+        strcat(obj_line, object_get_name(obj));
+        if (i < n - 1) strcat(obj_line, ",");
+      }
+    }
+    screen_area_puts(ge->descript, obj_line);
+  }
 
   /* Chat message — displays and clears last message if present */
   screen_area_puts(ge->descript, " ");

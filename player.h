@@ -2,17 +2,19 @@
  * @brief It defines the player module interface
  *
  * @file player.h
- * @author Profesores PPROG
- * @version 0
- * @date 27-01-2025
+ * @author Jose Miguel Romero Oubina
+ * @version 2
+ * @date 25-03-2026
  * @copyright GNU Public License
  */
 #ifndef PLAYER_H
 #define PLAYER_H
 
 #define P_GDESC_SIZE 7
+#define MAX_BACKPACK_SIZE 3
 
 #include "types.h"
+#include "inventory.h"
 
 typedef struct _Player Player;
 
@@ -81,35 +83,56 @@ Status player_set_location(Player* player, Id location);
  */
 Id player_get_location(Player* player);
 
-/**
- * @brief It sets the object carried by a Player
- * @author Profesores PPROG
- *
- * @param player a pointer to the Player
- * @param object the id of the object to be assigned to the Player
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status player_set_object(Player* player, Id object);
+
 
 /**
- * @brief It gets the object carried by a Player
- * @author Profesores PPROG
+ * @brief It adds an object to the player's inventory
+ * @author Jose Miguel Romero Oubina
  *
  * @param player a pointer to the Player
- * @return the id of the object carried by the Player, or NO_ID if none
- */
-Id player_get_object(Player* player);
-
-#ifdef DEBUG
-/**
- * @brief It prints the data of a Player
- * @author Profesores PPROG
- *
- * @param player a pointer to the Player
+ * @param object the id of the object to be added
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Status player_print(Player* player);
-#endif
+Status player_add_object(Player* player, Id object);
+
+/**
+ * @brief It removes an object from the player's inventory
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param player a pointer to the Player
+ * @param object the id of the object to be removed
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status player_del_object(Player* player, Id object);
+
+/**
+ * @brief It checks if a Player has a specific object in their inventory
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param player a pointer to the Player
+ * @param object the id of the object to check
+ * @return TRUE, if the Player has the object, FALSE if they don't or if there was some mistake
+ */
+Bool player_has_object(Player* player, Id object);
+
+/**
+ * @brief It gets the id of an object in the player's inventory by its index
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param player a pointer to the Player
+ * @param index the position of the object in the inventory (0-based)
+ * @return the id of the object at the given index, or NO_ID if there was some mistake
+ */
+Id player_get_object(Player* player, int index);
+
+/**
+ * @brief It gets the player's inventory
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param player a pointer to the Player
+ * @return a pointer to the Inventory struct representing the player's backpack, or NULL if there was some mistake
+ */
+Inventory* player_get_backpack(Player* player);
 
 /**
  * @brief It gets the health of a Player
@@ -149,4 +172,14 @@ const char* player_get_gdesc(Player* player);
  */
 Status player_set_gdesc(Player* player, char* gdesc);
 
+#ifdef DEBUG
+/**
+ * @brief It prints the data of a Player
+ * @author Profesores PPROG
+ *
+ * @param player a pointer to the Player
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status player_print(Player* player);
+#endif
 #endif

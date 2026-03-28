@@ -16,6 +16,7 @@
 #include "object.h"
 #include "game.h"
 #include "types.h"
+#include "inventory.h"
 
 /**
  * @brief It updates the game state according to the command introduced by the user

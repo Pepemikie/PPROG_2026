@@ -55,7 +55,7 @@ Status inventory_destroy(Inventory *inventory){
 Status inventory_add_object(Inventory *inventory, Id object_id){
     if (!inventory || object_id == NO_ID) return ERROR; /* error control */
     
-    if (set_get_n_ids(inventory->objs) >= inventory->max_objs) return ERROR;
+    if (inventory_is_full(inventory)) return ERROR;
 
     return set_add(inventory->objs, object_id);
 }
@@ -86,6 +86,18 @@ Set *inventory_get_objects(Inventory *inventory){
     return inventory->objs;
 }
 
+/* Sets the objects in the inventory */
+Status inventory_set_objects(Inventory *inventory, Set *objects) {
+  if (inventory == NULL || objects == NULL) {
+    return ERROR;
+  }
+
+  set_destroy(inventory->objs);
+  inventory->objs = objects;
+
+  return OK;
+}
+
 /* Sets the maximum number of objects the inventory can hold */
 Status inventory_set_max_objs(Inventory *inventory, int max_objs) {
     if (!inventory || max_objs <= 0) return ERROR;
@@ -111,6 +123,24 @@ int inventory_get_number_of_objects(Inventory *inventory){
 
     /*devuelve el numero de elementos, no tiene porq ser el tamaño completo*/
     return set_get_n_ids(inventory->objs);
+}
+
+/*   It checks if the inventory is full */
+Bool inventory_is_full(Inventory *inventory) {
+    if (!inventory) return FALSE; /* error control */
+    if (set_get_n_ids(inventory->objs) >= inventory->max_objs) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/*   It checks if the inventory is empty */
+Bool inventory_is_empty(Inventory *inventory) {
+    if (!inventory) return TRUE; /* error control */
+    if (set_get_n_ids(inventory->objs) == 0) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 #ifdef DEBUG

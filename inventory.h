@@ -75,6 +75,16 @@ Bool inventory_has_object(Inventory *inventory, Id object_id);
 Set *inventory_get_objects(Inventory *inventory);
 
 /**
+ * @brief It sets the objects in the inventory
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param inventory a pointer to the Inventory to check
+ * @param objects a pointer to the Set containing the objects to set
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status inventory_set_objects(Inventory *inventory, Set *objects);
+
+/**
  * @brief Sets the maximum number of objects the inventory can hold
  * @author Jose Miguel Romero Oubina
  *
@@ -101,6 +111,24 @@ int inventory_get_max_objs(Inventory *inventory);
  * @return the number of objects in the inventory or -1 if there was some mistake
  */
 int inventory_get_number_of_objects(Inventory *inventory);
+
+/**
+ * @brief It checks if the inventory is full
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param inventory a pointer to the Inventory from which to get the number of objects
+ * @return TRUE if the inventory is full, FALSE if it is not or if there was some mistake
+ */
+Bool inventory_is_full(Inventory *inventory);
+
+/**
+ * @brief It checks if the inventory is empty
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param inventory a pointer to the Inventory from which to get the number of objects
+ * @return TRUE if the inventory is empty, FALSE if it is not or if there was some mistake
+ */
+Bool inventory_is_empty(Inventory *inventory);
 
 #ifdef DEBUG
 /**
