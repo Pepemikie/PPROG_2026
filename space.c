@@ -17,10 +17,6 @@
 struct _Space {
   Id id;
   char name[WORD_SIZE + 1];
-  Id north;
-  Id south;
-  Id east;
-  Id west;
   Set *objects;
   Id character;
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1];
@@ -39,10 +35,6 @@ Space *space_create(Id id) {
   /* initializes all fields by default */
   newSpace->id = id;
   newSpace->name[0] = '\0';
-  newSpace->north = NO_ID;
-  newSpace->south = NO_ID;
-  newSpace->east  = NO_ID;
-  newSpace->west  = NO_ID;
   newSpace->character = NO_ID;
 
   newSpace->objects = set_create(); /* creates the object set */
@@ -85,58 +77,6 @@ Status space_set_name(Space *space, char *name) {
   if (strlen(name) >= WORD_SIZE) return ERROR; /* checks name length */
   strcpy(space->name, name);
   return OK;
-}
-
-/*   It sets the id of the space to the north */
-Status space_set_north(Space *space, Id id) {
-  if (!space) return ERROR;
-  space->north = id;
-  return OK;
-}
-
-/*   It gets the id of the space to the north */
-Id space_get_north(Space *space) {
-  if (!space) return NO_ID;
-  return space->north;
-}
-
-/*   It sets the id of the space to the south */
-Status space_set_south(Space *space, Id id) {
-  if (!space) return ERROR;
-  space->south = id;
-  return OK;
-}
-
-/*   It gets the id of the space to the south */
-Id space_get_south(Space *space) {
-  if (!space) return NO_ID;
-  return space->south;
-}
-
-/*   It sets the id of the space to the east */
-Status space_set_east(Space *space, Id id) {
-  if (!space) return ERROR;
-  space->east = id;
-  return OK;
-}
-
-/*   It gets the id of the space to the east */
-Id space_get_east(Space *space) {
-  if (!space) return NO_ID;
-  return space->east;
-}
-
-/*   It sets the id of the space to the west */
-Status space_set_west(Space *space, Id id) {
-  if (!space) return ERROR;
-  space->west = id;
-  return OK;
-}
-
-/*   It gets the id of the space to the west */
-Id space_get_west(Space *space) {
-  if (!space) return NO_ID;
-  return space->west;
 }
 
 /*   It adds an object to the Space */
