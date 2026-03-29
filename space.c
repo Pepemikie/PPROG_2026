@@ -148,21 +148,21 @@ char *space_get_gdesc(Space *space, int line) {
 #ifdef DEBUG
 /*   It prints the data of a Space */
 Status space_print(Space *space) {
-  Id idaux = NO_ID;
+  /*Id idaux = NO_ID;*/
 
   if (!space) return ERROR;
 
   fprintf(stdout, "--> Space (Id: %ld; Name: %s)\n", space->id, space->name);
 
   /* prints all directional links */
-  idaux = space_get_north(space);
+  /*idaux = space_get_north(space);
   fprintf(stdout, "---> North link: %ld\n", idaux);
   idaux = space_get_south(space);
   fprintf(stdout, "---> South link: %ld\n", idaux);
   idaux = space_get_east(space);
   fprintf(stdout, "---> East link: %ld\n", idaux);
   idaux = space_get_west(space);
-  fprintf(stdout, "---> West link: %ld\n", idaux);
+  fprintf(stdout, "---> West link: %ld\n", idaux);*/
 
   fprintf(stdout, "---> Objects: ");
   if (set_print(space->objects) == ERROR) { /* prints all objects in the space */

@@ -13,6 +13,8 @@
 #include <string.h>
 
 #include "inventory.h"
+#include "set.h"
+
 
 struct _Inventory{
     Set *objs;

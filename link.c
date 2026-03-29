@@ -1,10 +1,10 @@
 /**
- *   It implements the space module
+ *   It implements the link module
  *
- * @file space.c
- * @author Profesores PPROG
- * @version 0
- * @date 24-01-2026
+ * @file link.c
+ * @author Jose Miguel Romero Oubina
+ * @version 1
+ * @date 28-03-2026
  * @copyright GNU Public License
  */
 
@@ -26,7 +26,6 @@ struct _Link {
 /*   It creates a new Link, allocating memory and initializing its members */
 Link *link_create(Id id) {
   Link *newLink = NULL;
-  int i;
 
   if (id == NO_ID) return NULL; /* error control */
 

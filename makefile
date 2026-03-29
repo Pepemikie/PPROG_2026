@@ -8,9 +8,9 @@ CC=gcc
 CFLAGS=-Wall -g -pedantic
 CFLAGS_DEBUG=-Wall -g -pedantic -DDEBUG
 LIBS= -lscreen -L. 
-SOURCE =command.c game.c game_actions.c game_loop.c space.c graphic_engine.c game_reader.c object.c player.c character.c set.c inventory.c
-OBJ=	command.o game.o game_actions.o game_loop.o space.o graphic_engine.o game_reader.o object.o player.o character.o set.o inventory.o
-OBJ_DEBUG = command_d.o game_d.o game_actions_d.o game_loop_d.o space_d.o graphic_engine_d.o game_reader_d.o object_d.o player_d.o character_d.o set_d.o inventory_d.o
+SOURCE =command.c game.c game_actions.c game_loop.c space.c graphic_engine.c game_reader.c object.c player.c character.c set.c inventory.c link.c
+OBJ=	command.o game.o game_actions.o game_loop.o space.o graphic_engine.o game_reader.o object.o player.o character.o set.o inventory.o link.o
+OBJ_DEBUG = command_d.o game_d.o game_actions_d.o game_loop_d.o space_d.o graphic_engine_d.o game_reader_d.o object_d.o player_d.o character_d.o set_d.o inventory_d.o link_d.o
 
 EXE= castle_game
 EXE_DEBUG= castle_game_debug
