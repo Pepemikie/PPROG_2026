@@ -122,12 +122,17 @@ Status game_actions_next(Game *game) {
   Id current_id = NO_ID;/*intitializating*/
   Id space_id = NO_ID;
 
+  if (!game) return ERROR;
+
   space_id = game_get_player_location(game);;/*space gets the player's location so it can be updated*/
   if (space_id == NO_ID) {/*error control*/
     return ERROR;
   }
 
-  current_id = space_get_south(game_get_space(game, space_id));/*current_id gets the south space id to move forwards*/
+  if (!game_connection_is_open(game, space_id, S)) return ERROR;
+
+
+  current_id = game_get_connection(game, space_id, S);
   if (current_id != NO_ID) {/*error control*/
     game_set_player_location(game, current_id);/*if it cannot happen, set the player's location to the current space*/
     return OK;
@@ -141,13 +146,16 @@ Status game_actions_back(Game *game) {
   Id current_id = NO_ID;/*initializating*/
   Id space_id = NO_ID;
 
-  space_id = game_get_player_location(game);/*space gets the player's location so it can be updated*/
+  if (!game) return ERROR;
 
+  space_id = game_get_player_location(game);/*space gets the player's location so it can be updated*/
   if (NO_ID == space_id) {/*error control*/
     return ERROR;
   }
 
-  current_id = space_get_north(game_get_space(game, space_id));/*current_id gets the north space id to move backwards*/
+  if (!game_connection_is_open(game, space_id, N)) return ERROR;
+
+  current_id = game_get_connection(game, space_id, N);/*current_id gets the north space id to move backwards*/
   if (current_id != NO_ID) {/*error control*/
     game_set_player_location(game, current_id);/*if it cannot happen, set the player's location to the current space*/
     return OK;
@@ -282,17 +290,15 @@ Status game_actions_drop(Game *game) {
 Status game_actions_left(Game *game) {
   Id current_id = NO_ID;
   Id left_id = NO_ID;
-  Space *current_space = NULL;
 
   if (!game) return ERROR;
 
   current_id = game_get_player_location(game);
   if (current_id == NO_ID) return ERROR;
-
-  current_space = game_get_space(game, current_id);
-  if(current_space != NULL)
-    left_id = space_get_west(current_space); /* Obtenemos el ID del Oeste */
-
+ 
+  if (!game_connection_is_open(game, current_id, W)) return ERROR;
+  
+  left_id = game_get_connection(game, current_id, W);/*left_id gets the west space id to move left*/
   if (left_id != NO_ID) {
     game_set_player_location(game, left_id);
     return OK;
@@ -305,16 +311,14 @@ Status game_actions_left(Game *game) {
 Status game_actions_right(Game *game) {
   Id current_id = NO_ID;
   Id  right_id = NO_ID;
-  Space *current_space = NULL;
 
   if (!game) return ERROR;
 
   current_id = game_get_player_location(game);
   if (current_id == NO_ID) return ERROR;
 
-  current_space = game_get_space(game, current_id);
-  if(current_space != NULL)
-    right_id = space_get_east(current_space); /* Obtenemos el ID del Este */
+  if (!game_connection_is_open(game, current_id, E)) return ERROR;
+  right_id = game_get_connection(game, current_id, E); /* Obtenemos el ID del Este */
 
   if (right_id != NO_ID) {
     game_set_player_location(game, right_id);
@@ -379,3 +383,4 @@ Status game_actions_chat(Game *game) {
  
   return OK;
 }
+

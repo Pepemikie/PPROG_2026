@@ -17,10 +17,12 @@
 #include "space.h"
 #include "types.h"
 #include "character.h"
+#include "link.h"
 
 #define MAX_SPACES 100
-#define MAX_OBJECTS 5
+#define MAX_OBJECTS 10
 #define MAX_CHARACTERS 2
+#define MAX_LINKS 400 /*4 links por casilla (sea abierto o cerrado)*/
 
 typedef struct _Game Game;
 
@@ -268,7 +270,39 @@ Status game_add_character(Game *game, Character *character);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_set_character_location(Game *game, Id space_id, Id character_id);
-/*/////////////////////REVISAR//////////////////*/
+
+/**
+ * @brief It adds a link to the game
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param link a pointer to the Link to be added
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_add_link(Game *game, Link *link);
+
+/**
+ * @brief It gets the id of the destination space given an origin space and a direction
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param space_id the id of the origin space
+ * @param direction the direction of the link
+ * @return the id of the destination space, or NO_ID if not found
+ */
+Id game_get_connection(Game *game, Id space_id, Direction direction);
+
+/**
+ * @brief It checks if the link in a given direction from a space is open
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param space_id the id of the origin space
+ * @param direction the direction of the link
+ * @return TRUE if the link is open, FALSE otherwise
+ */
+Bool game_connection_is_open(Game *game, Id space_id, Direction direction);
+
 #ifdef DEBUG
 /**
  * @brief It prints the data of the game

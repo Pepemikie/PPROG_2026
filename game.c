@@ -25,12 +25,14 @@ struct _Game {
   Bool finished;
   char last_message[WORD_SIZE];
   Status last_status;
+  Link *link[MAX_LINKS];
+  int n_links;
 };
 
 /**
    Private functions
 */
-
+/*/////////////////////////////////////////////////////*/
 /*   It gets the id of the space at a given position in the spaces array */
 Id game_get_space_id_at(Game *game, int position);
 
@@ -49,7 +51,7 @@ Game *game_create() {
   for (i = 0; i < MAX_SPACES; i++) game->spaces[i] = NULL; /* initializes spaces to NULL */
 
   game->n_spaces = 0;
-  game->player = player_create(1); /* creates the player with default id */
+  game->player = player_create(1); /* creates the player with default id *//*CAMBIAR CON EL MULTIPLAYER, YA QUE LEE DESDE EL .DAT*/
   game->last_cmd = command_create();
   game->finished = FALSE;
   game->last_status = OK;
@@ -57,6 +59,8 @@ Game *game_create() {
 
   for (i = 0; i < MAX_OBJECTS; i++) game->objects[i] = NULL; /* initializes objects to NULL */
   for (i = 0; i < MAX_CHARACTERS; i++) game->characters[i] = NULL; /* initializes characters to NULL */
+  for (i = 0; i < MAX_LINKS; i++) game->link[i] = NULL; /* initializes links to NULL */
+  game->n_links = 0;
 
   return game;
 }
@@ -90,6 +94,9 @@ Status game_destroy(Game *game) {
 
   for (i = 0; i < MAX_CHARACTERS && game->characters[i] != NULL; i++)
     character_destroy(game->characters[i]); /* destroys all characters */
+
+  for (i = 0; i < MAX_LINKS && game->link[i] != NULL; i++)
+    link_destroy(game->link[i]); /* destroys all links */
 
   free(game);
   return OK;
@@ -286,7 +293,7 @@ Character *game_get_character_by_index(Game *game, int index) {
   return game->characters[index];
 }
 
-/*   It sets the last message displayed in the game */
+/*  It sets the last message displayed in the game */
 Status game_set_last_message(Game *game, const char *message) {
   if (!game || !message) return ERROR;
   strncpy(game->last_message, message, WORD_SIZE - 1); /* copies message safely */
@@ -294,11 +301,54 @@ Status game_set_last_message(Game *game, const char *message) {
   return OK;
 }
 
-/*   It gets the last message displayed in the game */
+/*  It gets the last message displayed in the game */
 const char *game_get_last_message(Game *game) {
   if (!game) return NULL;
   return game->last_message;
 }
+
+/*  It adds a link to the game */
+Status game_add_link(Game *game, Link *link) {
+  int i;
+  if (!game || !link) return ERROR;
+
+  for (i = 0; i < MAX_LINKS && game->link[i] != NULL; i++); /* finds first empty slot */
+
+  if (i >= MAX_LINKS) return ERROR;
+
+  game->link[i] = link;
+  game->n_links++; /*sacado del game_add_spaces, para los bucles for*/
+  return OK;
+}
+
+/*  It gets the id of the space connected to a given space in a specific direction */
+Id game_get_connection(Game *game, Id space_id, Direction direction) {
+  int i;
+
+  if (!game || space_id == NO_ID || direction == UNKNOWN_DIR) return NO_ID; /*error control*/
+
+  for (i = 0; i < game->n_links; i++) {
+    if (game->link[i] != NULL && link_get_origin(game->link[i]) == space_id && link_get_direction(game->link[i]) == direction) {
+      return link_get_destination(game->link[i]);
+    }
+  }
+  return NO_ID;
+}
+
+/*  It checks if the connection to a given space in a specific direction is open */
+Bool game_connection_is_open(Game *game, Id space_id, Direction direction) {
+  int i;
+
+  if (!game || space_id == NO_ID || direction == UNKNOWN_DIR) return FALSE;/*error control*/
+
+  for (i = 0; i < game->n_links; i++) {/*igual que game_get_connection*/
+    if (game->link[i] != NULL && link_get_origin(game->link[i]) == space_id && link_get_direction(game->link[i]) == direction) {
+      return link_get_open(game->link[i]);
+    }
+  }
+  return FALSE;
+}
+
 
 #ifdef DEBUG
 /*   It prints the data of the game */
