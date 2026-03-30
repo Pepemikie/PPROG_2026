@@ -72,6 +72,7 @@ Status game_create_from_file(Game *game, char *filename) {
   if (game_reader_load_spaces(game, filename) == ERROR) return ERROR; /* loads spaces from file */
   if (game_reader_load_objects(game, filename) == ERROR) return ERROR; /* loads objects from file */
   if (game_reader_load_characters(game, filename) == ERROR) return ERROR; /* loads characters from file */
+  if (game_reader_load_links(game, filename) == ERROR) return ERROR; /* loads links from file */
 
   game_set_player_location(game, game_get_space_id_at(game, 0)); /* places player in the first space */
 

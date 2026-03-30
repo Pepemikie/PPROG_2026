@@ -73,8 +73,8 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
 
   if (!area || !middle) return;
 
-  west = game_get_space(game, space_get_west(middle)); /* retrieves adjacent spaces */
-  east = game_get_space(game, space_get_east(middle));
+  west = game_get_space(game, game_get_connection(game, space_get_id(middle), W)); /* retrieves adjacent spaces */
+  east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
   sprintf(str, "%s  +---------------+  %s",
@@ -234,12 +234,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     act = game_get_space(game, id_act);
     if (!act) return;
 
-    id_back = space_get_north(act); /* retrieves north and south neighbours */
-    id_next = space_get_south(act);
+    id_back = game_get_connection(game, space_get_id(act), N); /* retrieves north and south neighbours */
+    id_next = game_get_connection(game, space_get_id(act), S);
 
     /* paints up to three rows of spaces depending on available neighbours */
     if (id_next == NO_ID && id_back != NO_ID) {
-      id_top = space_get_north(game_get_space(game, id_back));
+      id_top = game_get_connection(game, id_back, N);
       if (id_top != NO_ID) {
         graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_top), FALSE);
         screen_area_puts(ge->map, " ");
@@ -259,7 +259,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     }
 
     if (id_back == NO_ID && id_next != NO_ID) {
-      id_next = space_get_south(game_get_space(game, id_next));
+      id_next = game_get_connection(game, id_next, S);
       if (id_next != NO_ID) {
         screen_area_puts(ge->map, " ");
         graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
@@ -349,6 +349,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_puts(ge->feedback, str);
 
   /* 6. Render */
-  screen_paint();
+  screen_paint(BLACK);
   printf("prompt:> ");
 }

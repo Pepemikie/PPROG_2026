@@ -34,13 +34,23 @@ Status game_reader_load_spaces(Game *game, char *filename);
 Status game_reader_load_objects(Game *game, char *filename);
 
 /**
- * @brief It reads the characters from a file, creates each character with its name, description and other attributes, and adds them to the game
- * @author Jose Miguel Romero Oubina
+ * @brief It reads the characters from a file, creates each character with its name, description and other attributes,   and adds them to the game
+ * @author Inaki López Rocha
  *
  * @param game a pointer to the Game struct
  * @param filename a string with the name of the file to read from
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_reader_load_characters(Game *game, char *filename);
+
+/**
+ * @brief It reads the links from a file, creates each link with its attributes, and adds them to the game
+ * @author Inaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param filename a string with the name of the file to read from
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_reader_load_links(Game *game, char *filename);
 
 #endif
