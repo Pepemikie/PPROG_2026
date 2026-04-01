@@ -202,7 +202,16 @@ Status game_reader_load_links(Game *game, char *filename) {
       toks = strtok(NULL, "|");
       destination = atol(toks);
       toks = strtok(NULL, "|");
-      direction = (Direction)atoi(toks);
+      if (strcmp(toks, "N") == 0)
+      direction = N;
+      else if (strcmp(toks, "S") == 0)
+      direction = S;
+      else if (strcmp(toks, "E") == 0)
+      direction = E;
+      else if (strcmp(toks, "W") == 0)
+      direction = W;
+      else
+      direction = UNKNOWN_DIR;
       toks = strtok(NULL, "|");
       open = (Bool)atoi(toks);
 #ifdef DEBUG

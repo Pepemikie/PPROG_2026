@@ -340,12 +340,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "  next or n, back or b, left or l, right or r, take or t, drop or d, attack or a, chat or c, exit or e");
+  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e");
 
   /* 5. FEEDBACK — shows last command and its result status */
   screen_area_clear(ge->feedback);
   last_cmd = command_get_code(game_get_last_command(game));
-  sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd - NO_CMD][CMDL], cmd_to_str[last_cmd - NO_CMD][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
+  sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
   screen_area_puts(ge->feedback, str);
 
   /* 6. Render */

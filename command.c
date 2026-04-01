@@ -20,7 +20,16 @@
 /**
  * Dictionary with control commands and its respective job or char * for comparison, for use in command_get_user_input
  */
-char *cmd_to_str[N_CMD][N_CMDT] = {{"", "No command"}, {"", "Unknown"}, {"e", "Exit"}, {"n", "Next"}, {"b", "Back"},{"t", "Take"},{"d", "Drop"}, {"l", "Left"}, {"r", "Right"}, {"a", "Attack"}, {"c", "chat"}};
+char *cmd_to_str[N_CMD][N_CMDT] = {
+ {"", "Unknown"},   // 0 → UNKNOWN
+ {"e", "Exit"},     // 1 → EXIT
+ {"t", "Take"},     // 2 → TAKE
+ {"d", "Drop"},     // 3 → DROP
+ {"a", "Attack"},   // 4 → ATTACK
+ {"c", "Chat"},     // 5 → CHAT
+ {"m", "Move"},      // 6 → MOVE
+ {"i", "Inspect"}    // 7 → INSPECT
+};
 /*Command struct*/
 struct _Command {
   char *arg;
@@ -81,7 +90,7 @@ char *command_get_arg (Command *command) {
 /*   It reads the user input and sets the corresponding CommandCode in the Command struct */
 Status command_get_user_input(Command* command) {
   char input[CMD_LENGHT] = "", *token = NULL;/*initializating*/
-  int i = UNKNOWN - NO_CMD + 1;
+  int i = 0;
   CommandCode cmd;
   if (!command) {/*error control*/
     return ERROR;
@@ -98,7 +107,7 @@ Status command_get_user_input(Command* command) {
     cmd = UNKNOWN;
     while (cmd == UNKNOWN && i < N_CMD) { /* iterates through the command dictionary */
       if (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL])) {
-        cmd = i + NO_CMD; /* match found, assigns the command */
+        cmd = i; /* match found, assigns the command */
       } else {
         i++;
       }
