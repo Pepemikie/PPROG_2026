@@ -250,6 +250,19 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (id_back != NO_ID) {
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE);
       screen_area_puts(ge->map, "                           ^");
+
+    }
+    else {
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
     }
 
     graphic_engine_paint_spaces_row(ge->map, game, act, TRUE); /* paints active space */
@@ -257,6 +270,19 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (id_next != NO_ID) {
       screen_area_puts(ge->map, "                           v");
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
+    }
+
+    else {
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
     }
 /*/////////////////////cambiar a que se muestre espacio vacio*/
     /*if (id_back == NO_ID && id_next != NO_ID) {
