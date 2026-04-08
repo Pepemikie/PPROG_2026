@@ -73,7 +73,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
 
   if (!area || !middle) return;
 
-  west = game_get_space(game, game_get_connection(game, space_get_id(middle), W)); /* retrieves adjacent spaces */
+  west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));  /*retrieves adjacent spaces*/
   east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
@@ -210,7 +210,8 @@ void graphic_engine_destroy(Graphic_engine *ge) {
 
 /*   It renders the current state of the game on screen */
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
-  Id id_act = NO_ID, id_back = NO_ID, id_top = NO_ID, id_next = NO_ID;
+  Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID;
+  /*Id id_top = NO_ID;*/
   Id obj_loc = NO_ID, char_loc = NO_ID;
   Space *act = NULL;
   char str[512];
@@ -238,13 +239,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     id_next = game_get_connection(game, space_get_id(act), S);
 
     /* paints up to three rows of spaces depending on available neighbours */
-    if (id_next == NO_ID && id_back != NO_ID) {
+    /*if (id_next == NO_ID && id_back != NO_ID) {
       id_top = game_get_connection(game, id_back, N);
       if (id_top != NO_ID) {
         graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_top), FALSE);
         screen_area_puts(ge->map, " ");
       }
-    }
+    }*/
 
     if (id_back != NO_ID) {
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE);
@@ -257,14 +258,14 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       screen_area_puts(ge->map, "                           v");
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
     }
-
-    if (id_back == NO_ID && id_next != NO_ID) {
+/*/////////////////////cambiar a que se muestre espacio vacio*/
+    /*if (id_back == NO_ID && id_next != NO_ID) {
       id_next = game_get_connection(game, id_next, S);
       if (id_next != NO_ID) {
         screen_area_puts(ge->map, " ");
         graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
       }
-    }
+    }*/
   }
 
   /* 2. DESCRIPTION AREA */

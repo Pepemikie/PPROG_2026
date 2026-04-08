@@ -299,14 +299,59 @@ Status game_actions_inspect(Game *game) {
   return ERROR;
 }
 
-/*///////////////////////////////////////////////////////////////////////////////*/
 /*   Makes the player attack the enemy character in the current space */
 Status game_actions_attack(Game *game) {
+  Player *p = NULL;
+  Character *c = NULL;
+  Id loc = NO_ID;
+  int r;
+
+  if (!game) return ERROR;
+
+  p = game_get_player(game);
+  loc = game_get_player_location(game);
+  /* Buscamos al personaje en la sala actual */
+  c = game_get_character_in_space(game, loc);
+
+  if(!c || character_is_friendly(c)) return ERROR;/*error control: no se puede atacar a un personaje amigo*/
+
+  /* Solo atacamos si hay enemigo, no es amigo y tiene vida */
+  if (c && !character_is_friendly(c) && character_get_health(c) > 0) {
+    r = rand() % 10; /* Número entre 0 y 9 */
+    
+  if (r >= 0 && r <= 4) {
+  /* Gana el adversario: pierde el jugador */
+    player_set_health(p, player_get_health(p) - 1);
+  
+  /* Si el jugador llega a 0, termina el juego */
+    if (player_get_health(p) <= 0) {
+      game_set_finished(game, TRUE); /* marks game as finished */
+    }
+  } else {
+  /* Gana el jugador: pierde el personaje */
+    character_set_health(c, character_get_health(c) - 1);
+    }
+  }
   return OK;
 }
 
-/*///////////////////////////////////////////////////////////////////////////////*/
 /*   Makes the player interact with a friendly character by chat */
 Status game_actions_chat(Game *game) {
+  Character *c = NULL;
+  Id loc = NO_ID;
+
+  if (!game) return ERROR;
+
+  loc = game_get_player_location(game);
+  c = game_get_character_in_space(game, loc);
+
+  if(!c || !character_is_friendly(c)) return ERROR;
+
+  /* Solo hablamos si es amigo */
+  if (c && character_is_friendly(c)) {
+    /* Guardamos el mensaje para que el motor gráfico lo vea */
+    game_set_last_message(game, character_get_message(c)); /* stores character message in game */
+  }
+ 
   return OK;
 }

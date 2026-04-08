@@ -12,7 +12,7 @@
 #o:22|shield|16
 #o:23|cap|121
 #o:24|apple|13
-#c:31|BadGuy|Enemy |4|0|121|Achoo!|
+#c:31|BadGuy|Enemy |4|0|131|Achoo!|
 #c:32|GoodGuy|Friend|8|1|132|I like trains|
 
 #l:1|link11-12|11|12|S|1
