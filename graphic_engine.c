@@ -37,8 +37,9 @@ struct _Graphic_engine {
   Area *map, *descript, *banner, *help, *feedback;
 };
 
-/*   It paints a row of three horizontally adjacent spaces centered on the given space */
-static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act);
+/*   It paints a row of three horizontally adjacent spaces centered on the given space.
+ *   If show_sides is FALSE, only the middle cell is painted; west and east are hidden. */
+static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides);
 
 /*   It builds a string with the names of all objects in a given space */
 static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str);
@@ -61,8 +62,9 @@ Graphic_engine *graphic_engine_create() {
   return ge;
 }
 
-/*   It paints a row of three horizontally adjacent spaces centered on the given space */
-static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act) {
+/*   It paints a row of three horizontally adjacent spaces centered on the given space.
+ *   If show_sides is FALSE, west and east neighbours are not rendered (treated as absent). */
+static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides) {
   Space *west = NULL, *east = NULL;
   Character *character = NULL;
   const char *character_gdesc = NULL;
@@ -73,8 +75,12 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
 
   if (!area || !middle) return;
 
-  west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));  /*retrieves adjacent spaces*/
-  east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
+  /* Only look up side spaces when the caller allows it (i.e. active row) */
+  if (show_sides == TRUE) {
+    west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));
+    east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
+  }
+  /* If show_sides is FALSE, west and east remain NULL → rendered as blank columns */
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
   sprintf(str, "%s  +---------------+  %s",
@@ -113,7 +119,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   for (i = 0; i < SPACE_GDESC_LINES; i++) { /* prints each graphic description line for all three spaces */
     wg = (!west) ? NULL : space_get_gdesc(west,   i);
     mg =                  space_get_gdesc(middle, i);
-    eg = (!east) ? NULL : space_get_gdesc(east,   i);
+    eg = (!east ) ? NULL : space_get_gdesc(east,   i);
 
     if (!west) {
       sprintf(west_str, "                 ");
@@ -211,7 +217,6 @@ void graphic_engine_destroy(Graphic_engine *ge) {
 /*   It renders the current state of the game on screen */
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID;
-  /*Id id_top = NO_ID;*/
   Id obj_loc = NO_ID, char_loc = NO_ID;
   Space *act = NULL;
   char str[512];
@@ -238,19 +243,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     id_back = game_get_connection(game, space_get_id(act), N); /* retrieves north and south neighbours */
     id_next = game_get_connection(game, space_get_id(act), S);
 
-    /* paints up to three rows of spaces depending on available neighbours */
-    /*if (id_next == NO_ID && id_back != NO_ID) {
-      id_top = game_get_connection(game, id_back, N);
-      if (id_top != NO_ID) {
-        graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_top), FALSE);
-        screen_area_puts(ge->map, " ");
-      }
-    }*/
-
     if (id_back != NO_ID) {
-      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE);
+      /* North row: show_sides=FALSE — don't reveal its E/W neighbours */
+      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE, FALSE);
       screen_area_puts(ge->map, "                           ^");
-
     }
     else {
       screen_area_puts(ge->map, " ");
@@ -265,13 +261,14 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       screen_area_puts(ge->map, " ");
     }
 
-    graphic_engine_paint_spaces_row(ge->map, game, act, TRUE); /* paints active space */
+    /* Active row: show_sides=TRUE — player is here, reveal E/W neighbours */
+    graphic_engine_paint_spaces_row(ge->map, game, act, TRUE, TRUE);
 
     if (id_next != NO_ID) {
       screen_area_puts(ge->map, "                           v");
-      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
+      /* South row: show_sides=FALSE — don't reveal its E/W neighbours */
+      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE, FALSE);
     }
-
     else {
       screen_area_puts(ge->map, " ");
       screen_area_puts(ge->map, " ");
@@ -284,14 +281,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       screen_area_puts(ge->map, " ");
       screen_area_puts(ge->map, " ");
     }
-/*/////////////////////cambiar a que se muestre espacio vacio*/
-    /*if (id_back == NO_ID && id_next != NO_ID) {
-      id_next = game_get_connection(game, id_next, S);
-      if (id_next != NO_ID) {
-        screen_area_puts(ge->map, " ");
-        graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE);
-      }
-    }*/
   }
 
   /* 2. DESCRIPTION AREA */
