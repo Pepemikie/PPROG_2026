@@ -2,7 +2,7 @@
 # @file makefile
 # @author Jose Miguel Romero Oubina
 # @date 23-02-2026
-# @version 1
+# @version 2
 
 CC=gcc
 CFLAGS=-Wall -g -pedantic
@@ -57,3 +57,11 @@ rundebug:
 
 runtest:
 	./$(EXE_SET_TEST); ./$(EXE_CHARACTER_TEST); ./$(EXE_SPACE_TEST)
+
+doxygen:
+	doxygen Doxyfile
+
+cleandoc:
+	rm -rf doc
+
+cleanall: clean cleandoc
