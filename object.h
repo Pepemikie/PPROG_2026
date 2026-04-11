@@ -4,7 +4,7 @@
  * @file object.h
  * @author Profesores PPROG
  * @version 0
- * @date 27-01-2025
+ * @date 27-01-2026
  * @copyright GNU Public License
  */
 
@@ -60,6 +60,25 @@ Status object_set_name(Object* object, char* name);
  * @return a string with the name of the Object
  */
 const char* object_get_name(Object* object);
+
+/**
+ * @brief It sets the description of an Object
+ * @author Profesores PPROG
+ *
+ * @param object a pointer to the Object
+ * @param description a string with the description to store
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status object_set_description(Object* object, char* description);
+
+/**
+ * @brief It gets the description of an Object
+ * @author Profesores PPROG
+ *
+ * @param object a pointer to the Object
+ * @return a string with the description of the Object
+ */
+const char* object_get_description(Object* object);
 
 #ifdef DEBUG
 /**

@@ -277,7 +277,7 @@ Status game_actions_inspect(Game *game) {
   for (i = 0; i < n; i++) {
     obj = game_get_object(game, objs[i]);
     if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
-      printf("You see %s\n", object_get_name(obj));
+      printf("%s\n", object_get_description(obj));
       return OK;
     }
   }
@@ -290,7 +290,7 @@ Status game_actions_inspect(Game *game) {
     for (i = 0; i < n_ids; i++) {
       obj = game_get_object(game, ids[i]);
       if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
-        printf("You see %s\n", object_get_name(obj));
+        printf("%s\n", object_get_description(obj));
         return OK;
       }
     }

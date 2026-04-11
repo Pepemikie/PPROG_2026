@@ -4,6 +4,7 @@
  * @file set.h
  * @author  Jorge Garcia Garrido
  * @version 0
+ * @date 18-02-2026
  * @copyright GNU Public License
  */
 

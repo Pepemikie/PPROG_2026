@@ -81,6 +81,7 @@ Status game_reader_load_objects(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
+  char description[WORD_SIZE] = "";
   char *toks = NULL;
   Id id = NO_ID, space_id = NO_ID;
   Object *obj = NULL;
@@ -92,17 +93,20 @@ Status game_reader_load_objects(Game *game, char *filename) {
 
   while (fgets(line, WORD_SIZE, file)) {
     if (strncmp("#o:", line, 3) == 0) { /* identifies object lines */
-      toks = strtok(line + 3, "|"); /* parses id, name and location */
+      toks = strtok(line + 3, "|"); /* parses id, name, description and location */
       id = atol(toks);
       toks = strtok(NULL, "|");
       strcpy(name, toks);
       toks = strtok(NULL, "|");
+      strcpy(description, toks);
+      toks = strtok(NULL, "|");
       space_id = atol(toks);
 #ifdef DEBUG
-      printf("Leido: o:%ld|%s|%ld\n", id, name, space_id);
+      printf("Leido: o:%ld|%s|%s|%ld\n", id, name, description, space_id);
 #endif
       if ((obj = object_create(id))) { /* sets object attributes and places it in the game */
         object_set_name(obj, name);
+        object_set_description(obj, description);
         game_add_object(game, obj);
         game_set_object_location(game, space_id, id);
       }

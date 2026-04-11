@@ -8,10 +8,10 @@
 #s:15|Interior|14|-1|16|-1|         |         |         |         |         |
 #s:16|Garden|15|-1|-1|-1| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
 
-#o:21|rock|11
-#o:22|shield|16
-#o:23|cap|121
-#o:24|apple|13
+#o:21|rock|A heavy rock|11
+#o:22|shield|A sturdy shield|16
+#o:23|cap|A wizard's cap|121
+#o:24|apple|A red apple|13
 #c:31|BadGuy|Enemy |4|0|131|Achoo!|
 #c:32|GoodGuy|Friend|8|1|132|I like trains|
 

@@ -39,6 +39,10 @@ int main(int argc, char** argv) {
   if (all || test == 6) test2_object_get_name();
   if (all || test == 7) test1_object_get_id();
   if (all || test == 8) test2_object_get_id();
+  if (all || test == 9) test1_object_set_description();
+  if (all || test == 10) test2_object_set_description();
+  if (all || test == 11) test1_object_get_description();
+  if (all || test == 12) test2_object_get_description();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -95,4 +99,31 @@ void test1_object_get_id() {
 void test2_object_get_id() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_get_id(o) == NO_ID);
+}
+
+/* Tests setting the object description */
+void test1_object_set_description() {
+  Object *o = object_create(1);
+  PRINT_TEST_RESULT(object_set_description(o, "A shiny sword") == OK);
+  object_destroy(o);
+}
+
+/* Tests setting the object description with invalid parameters */
+void test2_object_set_description() {
+  Object *o = NULL;
+  PRINT_TEST_RESULT(object_set_description(o, "A shiny sword") == ERROR);
+}
+
+/* Tests getting the object description */
+void test1_object_get_description() {
+  Object *o = object_create(1);
+  object_set_description(o, "A shiny sword");
+  PRINT_TEST_RESULT(strcmp(object_get_description(o), "A shiny sword") == 0);
+  object_destroy(o);
+}
+
+/* Tests getting the object description with invalid parameters */
+void test2_object_get_description() {
+  Object *o = NULL;
+  PRINT_TEST_RESULT(object_get_description(o) == NULL);
 }
