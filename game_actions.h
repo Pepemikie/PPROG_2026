@@ -20,9 +20,8 @@
 
 /**
  * @brief It updates the game state according to the command introduced by the user
- * @author Jorge Garcia Garrido & Jose Miguel Romero Oubina
- 
- *
+ * @author Jose Miguel Romero Oubina
+ * 
  * @param game a pointer to the Game struct
  * @param cmd a pointer to the Command struct with the user input
  * @return OK, if everything goes well or ERROR if there was some mistake
