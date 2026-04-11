@@ -1,57 +1,153 @@
-/** 
- * @brief Declara los tests para el módulo Character
+/**
+ * @brief It declares the tests for the Character module
  * @file character_test.h
- * @author Jorge Garcia Garrido
- * @date 15-03-2026
+ * @author Iñaki López Rocha
+ * @version 2.0
+ * @date 25-03-2026
+ * @copyright GNU Public License
  */
 
 #ifndef CHARACTER_TEST_H
 #define CHARACTER_TEST_H
 
 /**
- * @test Prueba la creación de un personaje
- * @pre ID del personaje
- * @post Puntero no nulo al personaje
+ * @brief Tests the creation of a character
+ * @author Profesores Pprog
  */
 void test1_character_create();
+
+/**
+ * @brief Tests the creation of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_create();
 
 /**
- * @test Prueba el nombre del personaje
+ * @brief Tests setting the name of a character
+ * @author Profesores Pprog
  */
 void test1_character_set_name();
+
+/**
+ * @brief Tests setting the name of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_set_name();
+/**
+ * @brief Tests getting the name of a character
+ * @author Profesores Pprog
+ */
 void test1_character_get_name();
+
+/**
+ * @brief Tests getting the name of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_get_name();
 
 /**
- * @test Prueba la vida del personaje
+ * @brief Tests getting the id of a character
+ * @author Profesores Pprog
+ */
+void test1_character_get_id();
+
+/**
+ * @brief Tests getting the id of a character with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_character_get_id();
+
+/**
+ * @brief Tests setting the health of a character
+ * @author Profesores Pprog
  */
 void test1_character_set_health();
+
+/**
+ * @brief Tests setting the health of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_set_health();
+/**
+ * @brief Tests getting the health of a character
+ * @author Profesores Pprog
+ */
 void test1_character_get_health();
+
+/**
+ * @brief Tests getting the health of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_get_health();
 
 /**
- * @test Prueba la amistad del personaje
+ * @brief Tests setting the friendly status of a character
+ * @author Profesores Pprog
  */
 void test1_character_set_friendly();
+
+/**
+ * @brief Tests setting the friendly status of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_set_friendly();
+/**
+ * @brief Tests checking if a character is friendly
+ * @author Profesores Pprog
+ */
 void test1_character_is_friendly();
+
+/**
+ * @brief Tests checking if a character is friendly with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_is_friendly();
 
 /**
- * @test Prueba los mensajes del personaje
+ * @brief Tests setting the message of a character
+ * @author Profesores Pprog
  */
 void test1_character_set_message();
+
+/**
+ * @brief Tests setting the message of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_set_message();
+/**
+ * @brief Tests getting the message of a character
+ * @author Profesores Pprog
+ */
 void test1_character_get_message();
+
+/**
+ * @brief Tests getting the message of a character with invalid parameters
+ * @author Profesores Pprog
+ */
 void test2_character_get_message();
 
 /**
- * @test Prueba la localización del personaje
+ * @brief Tests setting the graphic description of a character
+ * @author Profesores Pprog
  */
-void test1_character_set_location();
-void test1_character_get_location();
+void test1_character_set_gdesc();
+
+/**
+ * @brief Tests setting the graphic description of a character with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_character_set_gdesc();
+
+/**
+ * @brief Tests getting the graphic description of a character
+ * @author Profesores Pprog
+ */
+void test1_character_get_gdesc();
+
+/**
+ * @brief Tests getting the graphic description of a character with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_character_get_gdesc();
 
 #endif
