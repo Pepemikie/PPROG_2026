@@ -345,7 +345,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* Chat message — displays and clears last message if present */
   screen_area_puts(ge->descript, " ");
   if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
-    sprintf(str, " Message: %s", game_get_last_message(game));
+    sprintf(str, " Inspect: %s", game_get_last_message(game));
     screen_area_puts(ge->descript, str);
     game_set_last_message(game, ""); /* clears message after displaying */
   }
