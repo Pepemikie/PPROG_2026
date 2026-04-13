@@ -198,6 +198,9 @@ obj/inventory_test.o: src/inventory_test.c
 run:
 	./$(EXE) castle.dat
 
+runlog:
+	./$(EXE) castle.dat -l output.log
+
 #Execution with valgrind
 runv:
 	valgrind --leak-check=full -s --track-origins=yes ./$(EXE) castle.dat
