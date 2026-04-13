@@ -103,9 +103,10 @@ void test1_inventory_number_of_objects() {
 
 /* Tests getting the inventory objects set pointer */
 void test1_inventory_get_objects() {
+  Set *objs = NULL;
   Inventory *inv = inventory_create(2);
   inventory_add_object(inv, 10);
-  Set *objs = inventory_get_objects(inv);
+  objs = inventory_get_objects(inv);
   PRINT_TEST_RESULT(objs != NULL && inventory_has_object(inv, 10) == TRUE);
   inventory_destroy(inv);
 }

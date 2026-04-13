@@ -58,4 +58,25 @@ void test1_object_get_id();
  */
 void test2_object_get_id();
 
+/**
+ * @brief Tests setting the object description
+ * @author Iñaki López Rocha
+ */
+void test1_object_set_description();
+/**
+ * @brief Tests setting the object description with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_set_description();
+/**
+ * @brief Tests getting the object description
+ * @author Iñaki López Rocha
+ */
+void test1_object_get_description();
+/**
+ * @brief Tests getting the object description with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_get_description();
+
 #endif
