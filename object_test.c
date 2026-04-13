@@ -13,7 +13,7 @@
 #include "object_test.h"
 #include "test.h"
 
-#define MAX_TESTS 8
+#define MAX_TESTS 12
 
 int main(int argc, char** argv) {
   int test = 0;

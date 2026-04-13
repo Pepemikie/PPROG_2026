@@ -5,8 +5,8 @@
 # @version 2
 
 CC=gcc
-CFLAGS=-Wall -g -pedantic
-CFLAGS_DEBUG=-Wall -g -pedantic -DDEBUG
+CFLAGS=-Wall -g -ansi -pedantic
+CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG
 LIBS= -lscreen -L. 
 SOURCE =command.c game.c game_actions.c game_loop.c space.c graphic_engine.c game_reader.c object.c player.c character.c set.c inventory.c link.c
 OBJ=	command.o game.o game_actions.o game_loop.o space.o graphic_engine.o game_reader.o object.o player.o character.o set.o inventory.o link.o

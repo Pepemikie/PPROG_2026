@@ -185,7 +185,7 @@ Status player_print(Player* player) {
   if (!player) {
     return ERROR;
   }
-  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %ld; Health: %d; Desc: %s)\n", 
+  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %d; Health: %d; Desc: %s)\n", 
   player->id, player->name, player->location, inventory_get_number_of_objects(player->backpack), player->health, player->gdesc); /* prints all player fields */
   return OK;
 }
