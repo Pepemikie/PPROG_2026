@@ -249,17 +249,16 @@ Status game_actions_move(Game *game) {
 Status game_actions_inspect(Game *game) {
   Command *cmd = NULL;
   char *arg = NULL;
-  Id player_loc = NO_ID;
-  Space *space = NULL;
+  Space *current_space = NULL;
   Id *objs = NULL;
   int i = 0;
   Object *obj = NULL;
-
+  int n_objs = 0;
   Set *inv = NULL;
   Id *ids = NULL;
   int n_ids = 0;
 
-  if (!game) return ERROR;
+  if (!game) return ERROR; /*error control*/
 
   cmd = game_get_last_command(game);
   if (!cmd) return ERROR;
@@ -267,21 +266,23 @@ Status game_actions_inspect(Game *game) {
   arg = command_get_arg(cmd);
   if (!arg) return ERROR;
 
-  player_loc = game_get_player_location(game);
-  space = game_get_space(game, player_loc);
-  if (!space) return ERROR;
+  /*get player location*/
+  current_space = game_get_space(game, game_get_player_location(game));
+  if (!current_space) return ERROR;
 
-  int n = space_get_number_of_objects(space);
-  objs = space_get_objects(space);
+  /*gets the description of the object is it is located in the current space*/
+  n_objs = space_get_number_of_objects(current_space);
+  objs = space_get_objects(current_space);
 
-  for (i = 0; i < n; i++) {
+  for (i = 0; i < n_objs; i++) {
     obj = game_get_object(game, objs[i]);
     if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
-      game_set_last_message(game, object_get_description(obj));
+      game_set_last_object_description(game, object_get_description(obj));
       return OK;
     }
   }
 
+  /*if the object is not in the current space, checks if it is in the player's inventory*/
   inv = inventory_get_objects(player_get_backpack(game_get_player(game)));
   if (inv) {
     ids = set_get_ids(inv);
@@ -290,13 +291,13 @@ Status game_actions_inspect(Game *game) {
     for (i = 0; i < n_ids; i++) {
       obj = game_get_object(game, ids[i]);
       if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
-        game_set_last_message(game, object_get_description(obj));
+        game_set_last_object_description(game, object_get_description(obj));
         return OK;
       }
     }
   }
 
-  return ERROR;
+  return ERROR; /*did not find the object neither in the space nor in the inventory*/
 }
 
 /*   Makes the player attack the enemy character in the current space */

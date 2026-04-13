@@ -345,9 +345,17 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* Chat message — displays and clears last message if present */
   screen_area_puts(ge->descript, " ");
   if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
-    sprintf(str, " Inspect: %s", game_get_last_message(game));
+    sprintf(str, " Message: %s", game_get_last_message(game));
     screen_area_puts(ge->descript, str);
     game_set_last_message(game, ""); /* clears message after displaying */
+  }
+
+  /* Inspect message — displays and clears last message if present */
+  screen_area_puts(ge->descript, " ");
+  if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
+    sprintf(str, " Description: %s", game_get_last_object_description(game));
+    screen_area_puts(ge->descript, str);
+    game_set_last_object_description(game, ""); /* clears description after displaying */
   }
 
   /* 3. BANNER */
@@ -360,10 +368,15 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
 
   /* 5. FEEDBACK — shows last command and its result status */
   screen_area_clear(ge->feedback);
-  last_cmd = command_get_code(game_get_last_command(game));
-  sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
-  screen_area_puts(ge->feedback, str);
-
+  if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
+    last_cmd = command_get_code(game_get_last_command(game));
+    sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
+    screen_area_puts(ge->feedback, str);
+  }
+  else{
+    screen_area_puts(ge->feedback, " No command inserted");
+  }
+  
   /* 6. Render */
   screen_paint(BLACK);
   printf("prompt:> ");

@@ -251,6 +251,25 @@ Status game_set_last_message(Game* game, const char* message);
 const char* game_get_last_message(Game* game);
 
 /**
+ * @brief It sets the last object description displayed in the game
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @param description a string with the description to be stored
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_set_last_object_description(Game *game, const char *description);
+
+/**
+ * @brief It gets the last object description displayed in the game
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @return a string with the last object description stored in the game
+ */
+const char *game_get_last_object_description(Game *game);
+
+/**
  * @brief It adds a character to the game
  * @author Profesores PPROG
  *

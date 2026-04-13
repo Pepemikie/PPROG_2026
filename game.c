@@ -27,6 +27,7 @@ struct _Game {
   Status last_status;
   Link *link[MAX_LINKS];
   int n_links;
+  char last_object_description[WORD_SIZE];
 };
 
 /**
@@ -51,11 +52,12 @@ Game *game_create() {
   for (i = 0; i < MAX_SPACES; i++) game->spaces[i] = NULL; /* initializes spaces to NULL */
 
   game->n_spaces = 0;
-  game->player = player_create(1); /* creates the player with default id *//*CAMBIAR CON EL MULTIPLAYER, YA QUE LEE DESDE EL .DAT*/
-  game->last_cmd = command_create();
+  game->player = player_create(1); /* creates the player with default id */
+  game->last_cmd = command_create(); /* creates an empty command */
   game->finished = FALSE;
   game->last_status = OK;
   strcpy(game->last_message, "");
+  strcpy(game->last_object_description, ""); /* initializes last message and description to empty strings */
 
   for (i = 0; i < MAX_OBJECTS; i++) game->objects[i] = NULL; /* initializes objects to NULL */
   for (i = 0; i < MAX_CHARACTERS; i++) game->characters[i] = NULL; /* initializes characters to NULL */
@@ -306,6 +308,20 @@ Status game_set_last_message(Game *game, const char *message) {
 const char *game_get_last_message(Game *game) {
   if (!game) return NULL;
   return game->last_message;
+}
+
+/*  It sets the last object description displayed in the game */
+Status game_set_last_object_description(Game *game, const char *description) {
+  if (!game || !description) return ERROR;
+  strncpy(game->last_object_description, description, WORD_SIZE - 1); /* copies description safely */
+  game->last_object_description[WORD_SIZE - 1] = '\0';
+  return OK;
+}
+
+/*  It gets the last object description displayed in the game */
+const char *game_get_last_object_description(Game *game) {
+  if (!game) return NULL;
+  return game->last_object_description;
 }
 
 /*  It adds a link to the game */

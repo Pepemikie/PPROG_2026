@@ -24,11 +24,14 @@ struct _Object {
 Object* object_create(Id id) {
   Object *new_object = NULL;
   if (id == NO_ID) return NULL; /* error control */
+
   new_object = (Object *) malloc(sizeof (Object)); /* allocates memory for the object */
   if (new_object == NULL) return NULL;
+
   new_object->id = id;
-  new_object->name[0] = '\0';/*////////////////////////SE DEBE USAR MACRO PARA EL [0]?*/
-  new_object->description[0] = '\0';
+  strcpy(new_object->name, "");
+  strcpy(new_object->description, ""); /* initializes name and description to empty strings */
+
   return new_object;
 }
 
