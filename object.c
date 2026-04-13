@@ -17,21 +17,16 @@
 struct _Object {
   Id id;
   char name[WORD_SIZE];
-  char description[WORD_SIZE];
 };
 
 /*   It creates a new Object, allocating memory and initializing its members */
 Object* object_create(Id id) {
   Object *new_object = NULL;
   if (id == NO_ID) return NULL; /* error control */
-
   new_object = (Object *) malloc(sizeof (Object)); /* allocates memory for the object */
   if (new_object == NULL) return NULL;
-
   new_object->id = id;
-  strcpy(new_object->name, "");
-  strcpy(new_object->description, ""); /* initializes name and description to empty strings */
-
+  new_object->name[0] = '\0';/*////////////////////////SE DEBE USAR MACRO PARA EL [0]?*/
   return new_object;
 }
 
@@ -62,25 +57,11 @@ const char* object_get_name(Object* object) {
   return object->name;
 }
 
-/*   It sets the description of an Object */
-Status object_set_description(Object* object, char* description) {
-  if (!object || !description) return ERROR;
-  if (!strncpy(object->description, description, WORD_SIZE - 1)) return ERROR; /* copies description safely */
-  object->description[WORD_SIZE - 1] = '\0';
-  return OK;
-}
-
-/*   It gets the description of an Object */
-const char* object_get_description(Object* object) {
-  if (!object) return NULL;
-  return object->description;
-}
-
 #ifdef DEBUG
 /*   It prints the data of an Object */
 Status object_print(Object* object) {
   if (!object) return ERROR;
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Description: %s)\n", object->id, object->name, object->description); /* prints id, name and description */
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name); /* prints id and name */
   return OK;
 }
 #endif

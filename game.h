@@ -23,6 +23,7 @@
 #define MAX_OBJECTS 10
 #define MAX_CHARACTERS 2
 #define MAX_LINKS 400 /*4 links por casilla (sea abierto o cerrado)*/
+#define MAX_PLAYERS 2 /* Multiplayer (F11, I3)*/
 
 typedef struct _Game Game;
 
@@ -64,13 +65,60 @@ Status game_destroy(Game *game);
 Space *game_get_space(Game *game, Id id);
 
 /**
- * @brief It gets the player of the game
+ * @brief It gets the ACTUAL player of the game
  * @author Profesores PPROG
  *
  * @param game a pointer to the Game struct
  * @return a pointer to the Player struct
  */
 Player *game_get_player(Game *game);
+
+/**
+ * @brief It adds a player to the game (Multiplayer, F11, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param player a pointer to the Player to be added
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_add_player(Game *game, Player *player);
+
+/**
+ * @brief It gets the current turn index (Multiplayer, F11, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @return the index of the active player
+ */
+int game_get_turn(Game *game);
+
+/**
+ * @brief It sets the current turn (Multiplayer, F11, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param turn the index to set as active turn
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_set_turn(Game *game, int turn);
+
+/**
+ * @brief It advances the turn to the next player (Multiplayer, F11, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_next_turn(Game *game);
+
+/**
+ * @brief It gets the number of players in the game (Multiplayer, F11, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @return the number of players
+ */
+int game_get_num_players(Game *game);
 
 /**
  * @brief It gets an object from the game by its id
@@ -251,25 +299,6 @@ Status game_set_last_message(Game* game, const char* message);
 const char* game_get_last_message(Game* game);
 
 /**
- * @brief It sets the last object description displayed in the game
- * @author Jose Miguel Romero Oubina
- *
- * @param game a pointer to the Game struct
- * @param description a string with the description to be stored
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status game_set_last_object_description(Game *game, const char *description);
-
-/**
- * @brief It gets the last object description displayed in the game
- * @author Jose Miguel Romero Oubina
- *
- * @param game a pointer to the Game struct
- * @return a string with the last object description stored in the game
- */
-const char *game_get_last_object_description(Game *game);
-
-/**
  * @brief It adds a character to the game
  * @author Profesores PPROG
  *
@@ -321,6 +350,16 @@ Id game_get_connection(Game *game, Id space_id, Direction direction);
  * @return TRUE if the link is open, FALSE otherwise
  */
 Bool game_connection_is_open(Game *game, Id space_id, Direction direction);
+
+/**
+ * @brief It marks a Space as discovered (F12, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param space_id the id of the space to discover
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_discover_space(Game *game, Id space_id);
 
 #ifdef DEBUG
 /**

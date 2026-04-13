@@ -172,6 +172,16 @@ const char* player_get_gdesc(Player* player);
  */
 Status player_set_gdesc(Player* player, char* gdesc);
 
+/**
+ * @brief It sets the maximum number of objects that a Player can carry in their inventory (F11, I3)
+ * @author Rodrigo Cruz Asensio
+ * 
+ * @param player a pointer to the Player
+ * @param max_objs the maximum number of objects 
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status player_set_max_objs(Player* player, int max_objs);
+
 #ifdef DEBUG
 /**
  * @brief It prints the data of a Player

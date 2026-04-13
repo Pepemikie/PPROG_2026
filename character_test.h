@@ -1,153 +1,57 @@
-/**
- * @brief It declares the tests for the Character module
+/** 
+ * @brief Declara los tests para el módulo Character
  * @file character_test.h
- * @author Iñaki López Rocha
- * @version 2.0
- * @date 25-03-2026
- * @copyright GNU Public License
+ * @author Jorge Garcia Garrido
+ * @date 15-03-2026
  */
 
 #ifndef CHARACTER_TEST_H
 #define CHARACTER_TEST_H
 
 /**
- * @brief Tests the creation of a character
- * @author Profesores Pprog
+ * @test Prueba la creación de un personaje
+ * @pre ID del personaje
+ * @post Puntero no nulo al personaje
  */
 void test1_character_create();
-
-/**
- * @brief Tests the creation of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_create();
 
 /**
- * @brief Tests setting the name of a character
- * @author Profesores Pprog
+ * @test Prueba el nombre del personaje
  */
 void test1_character_set_name();
-
-/**
- * @brief Tests setting the name of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_set_name();
-/**
- * @brief Tests getting the name of a character
- * @author Profesores Pprog
- */
 void test1_character_get_name();
-
-/**
- * @brief Tests getting the name of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_get_name();
 
 /**
- * @brief Tests getting the id of a character
- * @author Profesores Pprog
- */
-void test1_character_get_id();
-
-/**
- * @brief Tests getting the id of a character with invalid parameters
- * @author Profesores Pprog
- */
-void test2_character_get_id();
-
-/**
- * @brief Tests setting the health of a character
- * @author Profesores Pprog
+ * @test Prueba la vida del personaje
  */
 void test1_character_set_health();
-
-/**
- * @brief Tests setting the health of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_set_health();
-/**
- * @brief Tests getting the health of a character
- * @author Profesores Pprog
- */
 void test1_character_get_health();
-
-/**
- * @brief Tests getting the health of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_get_health();
 
 /**
- * @brief Tests setting the friendly status of a character
- * @author Profesores Pprog
+ * @test Prueba la amistad del personaje
  */
 void test1_character_set_friendly();
-
-/**
- * @brief Tests setting the friendly status of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_set_friendly();
-/**
- * @brief Tests checking if a character is friendly
- * @author Profesores Pprog
- */
 void test1_character_is_friendly();
-
-/**
- * @brief Tests checking if a character is friendly with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_is_friendly();
 
 /**
- * @brief Tests setting the message of a character
- * @author Profesores Pprog
+ * @test Prueba los mensajes del personaje
  */
 void test1_character_set_message();
-
-/**
- * @brief Tests setting the message of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_set_message();
-/**
- * @brief Tests getting the message of a character
- * @author Profesores Pprog
- */
 void test1_character_get_message();
-
-/**
- * @brief Tests getting the message of a character with invalid parameters
- * @author Profesores Pprog
- */
 void test2_character_get_message();
 
 /**
- * @brief Tests setting the graphic description of a character
- * @author Profesores Pprog
+ * @test Prueba la localización del personaje
  */
-void test1_character_set_gdesc();
-
-/**
- * @brief Tests setting the graphic description of a character with invalid parameters
- * @author Profesores Pprog
- */
-void test2_character_set_gdesc();
-
-/**
- * @brief Tests getting the graphic description of a character
- * @author Profesores Pprog
- */
-void test1_character_get_gdesc();
-
-/**
- * @brief Tests getting the graphic description of a character with invalid parameters
- * @author Profesores Pprog
- */
-void test2_character_get_gdesc();
+void test1_character_set_location();
+void test1_character_get_location();
 
 #endif

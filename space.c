@@ -20,6 +20,7 @@ struct _Space {
   Set *objects;
   Id character;
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1];
+  Bool discovered;  /* If a space has been discovered (F12, I3) */                                         
 };
 
 /*   It creates a new Space, allocating memory and initializing its members */
@@ -36,6 +37,7 @@ Space *space_create(Id id) {
   newSpace->id = id;
   newSpace->name[0] = '\0';
   newSpace->character = NO_ID;
+  newSpace->discovered = FALSE;       /* undiscovered by default (F12, I3) */
 
   newSpace->objects = set_create(); /* creates the object set */
   if (!newSpace->objects) {
@@ -143,6 +145,21 @@ char *space_get_gdesc(Space *space, int line) {
   if (!space) return NULL;
   if (line < 0 || line >= SPACE_GDESC_LINES) return NULL; /* checks line index bounds */
   return space->gdesc[line];
+}
+
+/* It sets whether a Space has been discovered (F12, I3) */
+Status space_set_discovered(Space *space, Bool discovered) {
+  if (!space) return ERROR;
+  
+  space->discovered = discovered; /* sets the discovered state of the space */
+  return OK;
+}
+
+/* It gets whether a Space has been discovered (F12, I3) */
+Bool space_get_discovered(Space *space) {
+  if (!space) return FALSE;
+  
+  return space->discovered;           /* returns the discovered state of the space */
 }
 
 #ifdef DEBUG

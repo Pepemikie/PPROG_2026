@@ -16,7 +16,9 @@
 #include <string.h>
 
 struct _Game {
-  Player *player;
+  Player *players[MAX_PLAYERS];     /* Multiplayer (F11, I3) */
+  int n_players;                    /* Multiplayer (F11, I3) */
+  int turn;                         /* Multiplayer (F11, I3) */
   Object *objects[MAX_OBJECTS];
   Space *spaces[MAX_SPACES];
   Character *characters[MAX_CHARACTERS];
@@ -27,7 +29,6 @@ struct _Game {
   Status last_status;
   Link *link[MAX_LINKS];
   int n_links;
-  char last_object_description[WORD_SIZE];
 };
 
 /**
@@ -50,33 +51,45 @@ Game *game_create() {
   if (game == NULL) return NULL;
 
   for (i = 0; i < MAX_SPACES; i++) game->spaces[i] = NULL; /* initializes spaces to NULL */
-
-  game->n_spaces = 0;
-  game->player = player_create(1); /* creates the player with default id */
-  game->last_cmd = command_create(); /* creates an empty command */
-  game->finished = FALSE;
-  game->last_status = OK;
-  strcpy(game->last_message, "");
-  strcpy(game->last_object_description, ""); /* initializes last message and description to empty strings */
-
   for (i = 0; i < MAX_OBJECTS; i++) game->objects[i] = NULL; /* initializes objects to NULL */
   for (i = 0; i < MAX_CHARACTERS; i++) game->characters[i] = NULL; /* initializes characters to NULL */
   for (i = 0; i < MAX_LINKS; i++) game->link[i] = NULL; /* initializes links to NULL */
+  for (i = 0; i < MAX_PLAYERS; i++) game->players[i] = NULL; /* initializes players to NULL. Multiplayer (F11, I3) */
+
+  game->n_spaces = 0;
+  game->n_players = 0; /* Multiplayer (F11, I3) */
+  game->turn = 0;      /* Multiplayer (F11, I3) */
+  game->last_cmd = command_create();
+  game->finished = FALSE;
+  game->last_status = OK;
   game->n_links = 0;
+  game->last_message[0] = '\0'; /* initializes last message to empty string */
 
   return game;
 }
 
 /*   It creates a Game and loads its data from a file */
 Status game_create_from_file(Game *game, char *filename) {
+  int i;
+  Id location = NO_ID;
+
   if (!game || !filename) return ERROR;
 
   if (game_reader_load_spaces(game, filename) == ERROR) return ERROR; /* loads spaces from file */
   if (game_reader_load_objects(game, filename) == ERROR) return ERROR; /* loads objects from file */
   if (game_reader_load_characters(game, filename) == ERROR) return ERROR; /* loads characters from file */
   if (game_reader_load_links(game, filename) == ERROR) return ERROR; /* loads links from file */
+  if (game_reader_load_players(game, filename) == ERROR) return ERROR; /* loads players from file. Multiplayer (F11, I3) */
 
-  game_set_player_location(game, game_get_space_id_at(game, 0)); /* places player in the first space */
+  /* F12, I3: discover all spaces at the beginning */
+  for (i = 0; i < game->n_players; i++) {
+    if (game->players[i]) {
+      location = player_get_location(game->players[i]);
+      if (location != NO_ID) {
+        game_discover_space(game, location);       /* discovers the initial location of each player */
+      }
+    }
+  }
 
   return OK;
 }
@@ -89,7 +102,8 @@ Status game_destroy(Game *game) {
 
   for (i = 0; i < game->n_spaces; i++) space_destroy(game->spaces[i]); /* destroys all spaces */
 
-  player_destroy(game->player);
+  for (i = 0; i < game->n_players; i++) player_destroy(game->players[i]); /* destroys all players. Multiplayer (F11, I3) */
+  
   command_destroy(game->last_cmd);
 
   for (i = 0; i < MAX_OBJECTS && game->objects[i] != NULL; i++)
@@ -117,22 +131,70 @@ Space *game_get_space(Game *game, Id id) {
   return NULL;
 }
 
-/*   It gets the player of the game */
+/*   It gets the ACTUAL player of the game. Multiplayer (F11, I3) */
 Player *game_get_player(Game *game) {
-  if (!game) return NULL;
-  return game->player;
+  if (!game || game->n_players == 0) return NULL;
+  return game->players[game->turn]; /* returns the actual player */
+}
+
+/* It adds a player to the game. Multiplayer (F11, I3) */
+Status game_add_player(Game *game, Player *player) {
+  if (!game || !player) return ERROR;
+  if (game->n_players >= MAX_PLAYERS) return ERROR;
+
+  game->players[game->n_players] = player; /* stores player in next empty slot */
+  game->n_players++;
+  return OK;
+}
+
+/* It gets the current turn index. Multiplayer (F11, I3) */
+int game_get_turn(Game *game) {
+  if (!game) return -1;
+  return game->turn;
+}
+
+/* It sets the current turn index. Multiplayer (F11, I3) */
+Status game_set_turn(Game *game, int turn) {
+  if (!game || turn < 0 || turn >= game->n_players) return ERROR;
+  game->turn = turn;
+  return OK;
+}
+
+/* It advances the turn to the next player. Multiplayer (F11, I3) */
+Status game_next_turn(Game *game) {
+  if (!game || game->n_players == 0) return ERROR;
+  game->turn = (game->turn + 1) % game->n_players; /* cycles through players */
+  return OK;
+}
+
+/* It gets the number of players in the game. Multiplayer (F11, I3) */
+int game_get_num_players(Game *game) {
+  if (!game) return 0;
+  return game->n_players;
 }
 
 /*   It gets the current location of the player */
 Id game_get_player_location(Game *game) {
   if (!game) return NO_ID;
-  return player_get_location(game->player);
+  return player_get_location(game_get_player(game)); /* returns the location of the actual player */
 }
 
 /*   It sets the location of the player */
 Status game_set_player_location(Game *game, Id id) {
+  Status status;
+  Player *player = NULL;
+
   if (!game || id == NO_ID) return ERROR;
-  return player_set_location(game->player, id);
+
+  player = game_get_player(game); /* gives the actual player */
+  if (!player) return ERROR;
+
+  status = player_set_location(player, id); /* sets the location of the actual player */
+  if (status == OK){
+    game_discover_space(game, id); /* discovers the new location of the player (F12, I3) */
+  }
+
+  return status;
 }
 
 /*   It gets the location of an object by its id */
@@ -141,9 +203,11 @@ Id game_get_object_location(Game *game, Id object_id) {
 
   if (!game || object_id == NO_ID) return NO_ID;
 
-  if (player_has_object(game->player, object_id) == TRUE)
-    return player_get_location(game->player);
-
+  for (i = 0; i < game->n_players; i++) { /* iterates players until the object is found */
+    if (game->players[i] && player_has_object(game->players[i], object_id) == TRUE)
+      return player_get_location(game->players[i]);
+  }
+  
   for (i = 0; i < game->n_spaces; i++) { /* iterates spaces until the object is found */
     if (space_has_object(game->spaces[i], object_id) == TRUE)
       return space_get_id(game->spaces[i]);
@@ -310,20 +374,6 @@ const char *game_get_last_message(Game *game) {
   return game->last_message;
 }
 
-/*  It sets the last object description displayed in the game */
-Status game_set_last_object_description(Game *game, const char *description) {
-  if (!game || !description) return ERROR;
-  strncpy(game->last_object_description, description, WORD_SIZE - 1); /* copies description safely */
-  game->last_object_description[WORD_SIZE - 1] = '\0';
-  return OK;
-}
-
-/*  It gets the last object description displayed in the game */
-const char *game_get_last_object_description(Game *game) {
-  if (!game) return NULL;
-  return game->last_object_description;
-}
-
 /*  It adds a link to the game */
 Status game_add_link(Game *game, Link *link) {
   int i;
@@ -364,6 +414,18 @@ Bool game_connection_is_open(Game *game, Id space_id, Direction direction) {
     }
   }
   return FALSE;
+}
+
+/* It marks a Space as discovered (F12, I3) */
+Status game_discover_space(Game *game, Id space_id) {
+  Space *space = NULL;
+
+  if (!game || space_id == NO_ID) return ERROR;
+
+  space = game_get_space(game, space_id);
+  if (!space) return ERROR;
+
+  return space_set_discovered(space, TRUE);
 }
 
 

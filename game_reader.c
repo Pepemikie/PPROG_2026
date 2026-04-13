@@ -81,7 +81,6 @@ Status game_reader_load_objects(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
-  char description[WORD_SIZE] = "";
   char *toks = NULL;
   Id id = NO_ID, space_id = NO_ID;
   Object *obj = NULL;
@@ -93,20 +92,17 @@ Status game_reader_load_objects(Game *game, char *filename) {
 
   while (fgets(line, WORD_SIZE, file)) {
     if (strncmp("#o:", line, 3) == 0) { /* identifies object lines */
-      toks = strtok(line + 3, "|"); /* parses id, name, description and location */
+      toks = strtok(line + 3, "|"); /* parses id, name and location */
       id = atol(toks);
       toks = strtok(NULL, "|");
       strcpy(name, toks);
       toks = strtok(NULL, "|");
-      strcpy(description, toks);
-      toks = strtok(NULL, "|");
       space_id = atol(toks);
 #ifdef DEBUG
-      printf("Leido: o:%ld|%s|%s|%ld\n", id, name, description, space_id);
+      printf("Leido: o:%ld|%s|%ld\n", id, name, space_id);
 #endif
       if ((obj = object_create(id))) { /* sets object attributes and places it in the game */
         object_set_name(obj, name);
-        object_set_description(obj, description);
         game_add_object(game, obj);
         game_set_object_location(game, space_id, id);
       }
@@ -228,6 +224,57 @@ Status game_reader_load_links(Game *game, char *filename) {
         link_set_direction(link, direction);
         link_set_open(link, open);
         game_add_link(game, link);
+      }
+    }
+  }
+
+  if (ferror(file)) status = ERROR;
+
+  fclose(file);
+  return status;
+}
+
+/* It reads the players from a file, creates each player and adds them to the game. Multiplayer (F11, I3) */
+Status game_reader_load_players(Game *game, char *filename) {
+  FILE *file = NULL;
+  char line[WORD_SIZE] = "";
+  char name[WORD_SIZE] = "";
+  char gdesc[P_GDESC_SIZE] = "";
+  char *toks = NULL;
+  Id id = NO_ID, location_id = NO_ID;
+  int health = 0, max_objs = 0;
+  Player *player = NULL;
+  Status status = OK;
+
+  if (!game || !filename) return ERROR; /* error control */
+
+  file = fopen(filename, "r");
+  if (file == NULL) return ERROR;
+
+  while (fgets(line, WORD_SIZE, file)) {
+    if (strncmp("#p:", line, 3) == 0) { /* identifies player lines */
+      toks = strtok(line + 3, "|"); /* parses id */
+      id = atol(toks);
+      toks = strtok(NULL, "|");     /* name */
+      strcpy(name, toks);
+      toks = strtok(NULL, "|");     /* gdesc */
+      strncpy(gdesc, toks, P_GDESC_SIZE - 1);
+      gdesc[P_GDESC_SIZE - 1] = '\0';
+      toks = strtok(NULL, "|");     /* location */
+      location_id = atol(toks);
+      toks = strtok(NULL, "|");     /* health */
+      health = atoi(toks);
+      toks = strtok(NULL, "|");     /* max_objs */
+      max_objs = atoi(toks);
+
+      player = player_create(id);
+      if (player != NULL) {
+        player_set_name(player, name);
+        player_set_gdesc(player, gdesc);
+        player_set_location(player, location_id);
+        player_set_health(player, health);
+        player_set_max_objs(player, max_objs);      /* sets backpack size from file */
+        game_add_player(game, player);
       }
     }
   }

@@ -152,6 +152,25 @@ Status space_set_gdesc(Space* space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_L
  */
 char* space_get_gdesc(Space* space, int line);
 
+/**
+ * @brief It sets whether a Space has been discovered (F12, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param space a pointer to the Space
+ * @param discovered discovery status to set
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_discovered(Space *space, Bool discovered);
+
+/**
+ * @brief It gets whether a Space has been discovered (F12, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param space a pointer to the Space
+ * @return TRUE if discovered, FALSE otherwise
+ */
+Bool space_get_discovered(Space *space);
+
 #ifdef DEBUG
 /**
  * @brief It prints the data of a Space

@@ -1,8 +1,8 @@
 /** 
  * @brief Implementación de las pruebas unitarias para Character
  * @file character_test.c
- * @author Iñaki López Rocha
- * @date 25-03-2026
+ * @author Jorge Garcia Garrido
+ * @date 15-03-2026
  */
 
 #include <stdio.h> 
@@ -13,7 +13,7 @@
 #include "character_test.h"
 #include "test.h"
 
-#define MAX_TESTS 24
+#define MAX_TESTS 20
 
 int main(int argc, char** argv) {
   int test = 0;
@@ -49,44 +49,35 @@ int main(int argc, char** argv) {
   if (all || test == 16) test2_character_set_message();
   if (all || test == 17) test1_character_get_message();
   if (all || test == 18) test2_character_get_message();
-  if (all || test == 19) test1_character_get_id();
-  if (all || test == 20) test2_character_get_id();
-  if (all || test == 21) test1_character_set_gdesc();
-  if (all || test == 22) test2_character_set_gdesc();
-  if (all || test == 23) test1_character_get_gdesc();
-  if (all || test == 24) test2_character_get_gdesc();
+  if (all || test == 19) test1_character_set_location();
+  if (all || test == 20) test1_character_get_location();
 
   PRINT_PASSED_PERCENTAGE;
   return 1;
 }
 
-/* Tests character creation */
 void test1_character_create() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(c != NULL);
   character_destroy(c);
 }
 
-/* Tests character creation with invalid id */
 void test2_character_create() {
   Character *c = character_create(NO_ID);
   PRINT_TEST_RESULT(c == NULL);
 }
 
-/* Tests setting the character name */
 void test1_character_set_name() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_name(c, "Jorge") == OK);
   character_destroy(c);
 }
 
-/* Tests setting the character name with NULL character */
 void test2_character_set_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_name(c, "Jorge") == ERROR);
 }
 
-/* Tests getting the character name */
 void test1_character_get_name() {
   Character *c = character_create(1);
   character_set_name(c, "Jorge");
@@ -94,26 +85,22 @@ void test1_character_get_name() {
   character_destroy(c);
 }
 
-/* Tests getting the character name with NULL character */
 void test2_character_get_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_name(c) == NULL);
 }
 
-/* Tests setting the character health */
 void test1_character_set_health() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_health(c, 10) == OK);
   character_destroy(c);
 }
 
-/* Tests setting the character health with NULL character */
 void test2_character_set_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_health(c, 10) == ERROR);
 }
 
-/* Tests getting the character health */
 void test1_character_get_health() {
   Character *c = character_create(1);
   character_set_health(c, 25);
@@ -121,26 +108,22 @@ void test1_character_get_health() {
   character_destroy(c);
 }
 
-/* Tests getting the character health with NULL character */
 void test2_character_get_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_health(c) == -1);
 }
 
-/* Tests setting the character friendly status */
 void test1_character_set_friendly() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_friendly(c, FALSE) == OK);
   character_destroy(c);
 }
 
-/* Tests setting the character friendly status with NULL character */
 void test2_character_set_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_friendly(c, FALSE) == ERROR);
 }
 
-/* Tests checking if the character is friendly */
 void test1_character_is_friendly() {
   Character *c = character_create(1);
   character_set_friendly(c, TRUE);
@@ -148,26 +131,22 @@ void test1_character_is_friendly() {
   character_destroy(c);
 }
 
-/* Tests checking if the character is friendly with NULL character */
 void test2_character_is_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_is_friendly(c) == FALSE);
 }
 
-/* Tests setting the character message */
 void test1_character_set_message() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_message(c, "Hola") == OK);
   character_destroy(c);
 }
 
-/* Tests setting the character message with NULL character */
 void test2_character_set_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_message(c, "Hola") == ERROR);
 }
 
-/* Tests getting the character message */
 void test1_character_get_message() {
   Character *c = character_create(1);
   character_set_message(c, "Test Message");
@@ -175,49 +154,20 @@ void test1_character_get_message() {
   character_destroy(c);
 }
 
-/* Tests getting the character message with NULL character */
 void test2_character_get_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_message(c) == NULL);
 }
 
-/* Tests getting the character id */
-void test1_character_get_id() {
-  Character *c = character_create(3);
-  PRINT_TEST_RESULT(character_get_id(c) == 3);
-  character_destroy(c);
-}
-
-/* Tests getting the character id with NULL character */
-void test2_character_get_id() {
-  Character *c = NULL;
-  PRINT_TEST_RESULT(character_get_id(c) == NO_ID);
-}
-
-/* Tests setting the character graphic description */
-void test1_character_set_gdesc() {
+void test1_character_set_location() {
   Character *c = character_create(1);
-  PRINT_TEST_RESULT(character_set_gdesc(c, "HELLO ") == OK);
+  PRINT_TEST_RESULT(character_set_location(c, 100) == OK);
   character_destroy(c);
 }
 
-/* Tests setting the character graphic description with NULL character */
-void test2_character_set_gdesc() {
-  Character *c = NULL;
-  PRINT_TEST_RESULT(character_set_gdesc(c, "HELLO ") == ERROR);
-}
-
-/* Tests getting the character graphic description */
-void test1_character_get_gdesc() {
+void test1_character_get_location() {
   Character *c = character_create(1);
-  character_set_gdesc(c, "HELLO ");
-  PRINT_TEST_RESULT(strcmp(character_get_gdesc(c), "HELLO ") == 0);
+  character_set_location(c, 100);
+  PRINT_TEST_RESULT(character_get_location(c) == 100);
   character_destroy(c);
 }
-
-/* Tests getting the character graphic description with NULL character */
-void test2_character_get_gdesc() {
-  Character *c = NULL;
-  PRINT_TEST_RESULT(character_get_gdesc(c) == NULL);
-}
-

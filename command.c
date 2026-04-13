@@ -21,14 +21,14 @@
  * Dictionary with control commands and its respective job or char * for comparison, for use in command_get_user_input
  */
 char *cmd_to_str[N_CMD][N_CMDT] = {
- {"", "Unknown"},   /* 0 → UNKNOWN*/
- {"e", "Exit"},     /* 1 → EXIT */
- {"t", "Take"},     /* 2 → TAKE */
- {"d", "Drop"},     /* 3 → DROP */
- {"a", "Attack"},   /* 4 → ATTACK */
- {"c", "Chat"},     /* 5 → CHAT */
- {"m", "Move"},      /* 6 → MOVE */
- {"i", "Inspect"}    /* 7 → INSPECT */
+ {"", "Unknown"},   // 0 → UNKNOWN
+ {"e", "Exit"},     // 1 → EXIT
+ {"t", "Take"},     // 2 → TAKE
+ {"d", "Drop"},     // 3 → DROP
+ {"a", "Attack"},   // 4 → ATTACK
+ {"c", "Chat"},     // 5 → CHAT
+ {"m", "Move"},      // 6 → MOVE
+ {"i", "Inspect"}    // 7 → INSPECT
 };
 /*Command struct*/
 struct _Command {

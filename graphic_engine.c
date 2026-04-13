@@ -66,12 +66,15 @@ Graphic_engine *graphic_engine_create() {
  *   If show_sides is FALSE, west and east neighbours are not rendered (treated as absent). */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides) {
   Space *west = NULL, *east = NULL;
+  Player *active_player = NULL;
   Character *character = NULL;
   const char *character_gdesc = NULL;
+  const char *active_player_gdesc = "   ";
   const char *wg = NULL, *mg = NULL, *eg = NULL;
   char str[512], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1];
   Status obj_list_status;
   int i;
+  Bool west_discovered = FALSE, middle_discovered = FALSE, east_discovered = FALSE;  /* F12, I3 */
 
   if (!area || !middle) return;
 
@@ -81,6 +84,11 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
   }
   /* If show_sides is FALSE, west and east remain NULL → rendered as blank columns */
+
+  /* F12, I3: check discovery status of each space to determine whether to render it */
+  middle_discovered = space_get_discovered(middle);
+  if (west) west_discovered = space_get_discovered(west);
+  if (east) east_discovered = space_get_discovered(east);
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
   sprintf(str, "%s  +---------------+  %s",
@@ -92,23 +100,45 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (!west) {
     sprintf(west_str, "                 ");
   } else {
-    character = game_get_character_in_space(game, space_get_id(west));
-    character_gdesc = !character ? "      " : character_get_gdesc(character);
+    if (west_discovered == TRUE) {                     /* F12, I3 */
+      character = game_get_character_in_space(game, space_get_id(west));
+      character_gdesc = !character ? "      " : character_get_gdesc(character);
+    } else {
+      character_gdesc = "      ";
+    }
     sprintf(west_str, "|     %s %3d|", character_gdesc, (int)space_get_id(west));
   }
 
-  character = game_get_character_in_space(game, space_get_id(middle));
-  character_gdesc = !character ? "      " : character_get_gdesc(character);
+  if (middle_discovered == TRUE) {               /* F12, I3 */
+    character = game_get_character_in_space(game, space_get_id(middle));
+    character_gdesc = !character ? "      " : character_get_gdesc(character);
+  } else {
+    character_gdesc = "      ";
+  }
+
+  if (is_act == TRUE) {
+    active_player = game_get_player(game);
+    if (active_player && player_get_gdesc(active_player) && player_get_gdesc(active_player)[0] != '\0') {
+      active_player_gdesc = player_get_gdesc(active_player);
+    } else {
+      active_player_gdesc = "^C>";
+    }
+  }
+
   sprintf(middle_str, "  | %s %s %3d|  ",
-      is_act == TRUE ? "^C>" : "   ", /* marks the active space with an indicator */
+      is_act == TRUE ? active_player_gdesc : "   ", /* marks the active space with current player's indicator */
       character_gdesc,
       (int)space_get_id(middle));
 
   if (!east) {
     sprintf(east_str, "                 ");
   } else {
-    character = game_get_character_in_space(game, space_get_id(east));
-    character_gdesc = !character ? "      " : character_get_gdesc(character);
+    if (east_discovered == TRUE) {                 /* F12, I3 */
+      character = game_get_character_in_space(game, space_get_id(east));
+      character_gdesc = !character ? "      " : character_get_gdesc(character);
+    } else {
+      character_gdesc = "      ";
+    }
     sprintf(east_str, "|     %s %3d|", character_gdesc, (int)space_get_id(east));
   }
 
@@ -117,9 +147,9 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
 
   /* GDESC LINES — SPACE_GDESC_LINES rows of SPACE_GDESC_LENGTH chars */
   for (i = 0; i < SPACE_GDESC_LINES; i++) { /* prints each graphic description line for all three spaces */
-    wg = (!west) ? NULL : space_get_gdesc(west,   i);
-    mg =                  space_get_gdesc(middle, i);
-    eg = (!east ) ? NULL : space_get_gdesc(east,   i);
+    wg = (!west || west_discovered == FALSE) ? NULL : space_get_gdesc(west, i);      /* F12, I3: only get gdesc if space is discovered */
+    mg = (middle_discovered == FALSE) ? "         " : space_get_gdesc(middle, i);    /* F12, I3: only get gdesc if space is discovered */
+    eg = (!east || east_discovered == FALSE) ? NULL : space_get_gdesc(east, i);      /* F12, I3: only get gdesc if space is discovered */
 
     if (!west) {
       sprintf(west_str, "                 ");
@@ -143,21 +173,36 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (!west) {
     sprintf(west_str, "                 ");
   } else {
-    obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
-    sprintf(west_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+    if (west_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects */
+      sprintf(west_str, "|               |");
+    } else {
+      obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
+      sprintf(west_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+    }
   }
 
-  obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
-  sprintf(middle_str, " %s|%s|%s ",
-      west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
-      obj_list_status == ERROR ? "               " : obj_list,
-      east ? ">" : " ");
+  if (middle_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects or navigation arrows */
+    sprintf(middle_str, " %s|%s|%s ",
+        west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
+        "               ",
+        east ? ">" : " ");
+  } else {
+    obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
+    sprintf(middle_str, " %s|%s|%s ",
+        west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
+        obj_list_status == ERROR ? "               " : obj_list,
+        east ? ">" : " ");
+  }
 
   if (!east) {
     sprintf(east_str, "                 ");
   } else {
-    obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
-    sprintf(east_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+    if (east_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects */
+      sprintf(east_str, "|               |");
+    } else {
+      obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
+      sprintf(east_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+    }
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -219,6 +264,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID;
   Id obj_loc = NO_ID, char_loc = NO_ID;
   Space *act = NULL;
+  Space *obj_space = NULL;         /* F12, I3: only show objects if space is discovered */
+  Space *char_space = NULL;        /* F12, I3: only show characters if space is discovered */
   char str[512];
   CommandCode last_cmd = UNKNOWN;
   extern char *cmd_to_str[N_CMD][N_CMDT];
@@ -291,7 +338,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   for (i = 0; i < MAX_OBJECTS; i++) {
     obj = game_get_object_by_index(game, i);
     if (!obj) break;
-    obj_loc = game_get_object_location(game, object_get_id(obj));
+    obj_loc = game_get_object_location(game, object_get_id(obj)); 
+    obj_space = game_get_space(game, obj_loc);                      /* F12, I3: only show objects that are in discovered spaces */
+    if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
     sprintf(str, "  %-10s: %d", object_get_name(obj), (int)obj_loc);
     screen_area_puts(ge->descript, str);
   }
@@ -303,6 +352,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     character = game_get_character_by_index(game, i);
     if (!character) break;
     char_loc = game_get_character_location(game, character_get_id(character));
+    char_space = game_get_space(game, char_loc);                            /* F12, I3: only show characters that are in discovered spaces */
+    if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
     if (char_loc != NO_ID) {
       int health = character_get_health(character);
       if (health > 0)
@@ -316,7 +367,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
 
   /* Player — prints location, health and carried object */
   player = game_get_player(game);
-  sprintf(str, " Player: %d (%d hp)", (int)player_get_location(player), player_get_health(player));
+  sprintf(str, " Player: %s at %d (%d hp)", player_get_name(player), (int)player_get_location(player), player_get_health(player));
   screen_area_puts(ge->descript, str);
 
   inv_set = inventory_get_objects(player_get_backpack(player));
@@ -350,33 +401,20 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     game_set_last_message(game, ""); /* clears message after displaying */
   }
 
-  /* Inspect message — displays and clears last message if present */
-  screen_area_puts(ge->descript, " ");
-  if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
-    sprintf(str, " Description: %s", game_get_last_object_description(game));
-    screen_area_puts(ge->descript, str);
-    game_set_last_object_description(game, ""); /* clears description after displaying */
-  }
-
   /* 3. BANNER */
   screen_area_puts(ge->banner, " The haunted castle game ");
 
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i");
+  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e");
 
   /* 5. FEEDBACK — shows last command and its result status */
   screen_area_clear(ge->feedback);
-  if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
-    last_cmd = command_get_code(game_get_last_command(game));
-    sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
-    screen_area_puts(ge->feedback, str);
-  }
-  else{
-    screen_area_puts(ge->feedback, " No command inserted");
-  }
-  
+  last_cmd = command_get_code(game_get_last_command(game));
+  sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
+  screen_area_puts(ge->feedback, str);
+
   /* 6. Render */
   screen_paint(BLACK);
   printf("prompt:> ");

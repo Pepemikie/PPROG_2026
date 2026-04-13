@@ -148,7 +148,6 @@ Bool inventory_is_empty(Inventory *inventory) {
 #ifdef DEBUG
 /*   It prints the inventory */
 Status inventory_print(Inventory *inventory){
-    int i;
     if(inventory == NULL) {
         return ERROR; /* error control */
     }

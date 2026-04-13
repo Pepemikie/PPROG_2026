@@ -53,4 +53,14 @@ Status game_reader_load_characters(Game *game, char *filename);
  */
 Status game_reader_load_links(Game *game, char *filename);
 
+/**
+ * @brief It reads the players from a file, creates each player and adds them to the game. Multiplayer (F11, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param filename a string with the name of the file to read from
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_reader_load_players(Game *game, char *filename);
+
 #endif

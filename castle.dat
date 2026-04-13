@@ -8,13 +8,12 @@
 #s:15|Interior|14|-1|16|-1|         |         |         |         |         |
 #s:16|Garden|15|-1|-1|-1| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
 
-#o:21|rock|A heavy rock|11
-#o:22|shield|A sturdy shield|16
-#o:23|cap|A wizard's cap|121
-#o:24|apple|A red apple|13
-
-#c:31|Ghost|Enemy|4|0|12|AchoOoOo!|
-#c:32|Batman|Friend|8|1|14|I'm Batman|
+#o:21|rock|11
+#o:22|shield|16
+#o:23|cap|121
+#o:24|apple|13
+#c:31|BadGuy|Enemy |4|0|131|Achoo!|
+#c:32|GoodGuy|Friend|8|1|132|I like trains|
 
 #l:1|link11-12|11|12|S|1
 #l:2|link12-11|12|11|N|1
@@ -33,3 +32,6 @@
 #l:15|link15-14|15|14|N|1
 #l:16|link15-16|15|16|S|1
 #l:17|link16-15|16|15|N|1
+
+#p:1|Player1|^C1>|11|10|3|
+#p:2|Player2|^C2>|11|10|3|

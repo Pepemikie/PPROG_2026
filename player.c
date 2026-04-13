@@ -179,13 +179,31 @@ Status player_set_gdesc(Player* player, char* gdesc) {
   return OK;
 }
 
+/*   It sets the maximum number of objects that a Player can carry in their inventory (F11, I3) */
+Status player_set_max_objs(Player* player, int max_objs) {
+  if (!player || max_objs < 0) {
+    return ERROR;
+  }
+  
+  if (player->backpack) {
+    inventory_destroy(player->backpack); /* destroy the old backpack */
+  }
+  
+  player->backpack = inventory_create(max_objs); /* create a new backpack with the maximum objects */
+  if (!player->backpack) {
+    return ERROR;
+  }
+
+  return OK;
+}
+
 #ifdef DEBUG
 /*   It prints the data of a Player */
 Status player_print(Player* player) {
   if (!player) {
     return ERROR;
   }
-  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %d; Health: %d; Desc: %s)\n", 
+  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %ld; Health: %d; Desc: %s)\n", 
   player->id, player->name, player->location, inventory_get_number_of_objects(player->backpack), player->health, player->gdesc); /* prints all player fields */
   return OK;
 }
