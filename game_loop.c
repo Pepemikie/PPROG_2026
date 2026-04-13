@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "command.h"
 #include "game.h"
@@ -34,13 +35,35 @@ int main(int argc, char *argv[]) {
   Graphic_engine *gengine = NULL;
   Command *last_cmd = NULL;
   int result;
+  char *data_file = NULL;
+  char *log_file = NULL;
   srand(time(NULL)); /* initializes random seed */
-  if (argc < 2) {
-    fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]);
+  
+  /* Parse command line arguments */
+  if (argc == 2) {
+    data_file = argv[1];
+  } else if (argc == 4 && strcmp(argv[2], "-l") == 0) {
+    data_file = argv[1];
+    log_file = argv[3];
+  } else {
+    fprintf(stderr, "Use: %s <game_data_file> [-l <log_file>]\n", argv[0]);
     return 1;
   }
+  
+  /* Redirect output to log file if specified */
+  if (log_file != NULL) {
+    if (freopen(log_file, "w", stdout) == NULL) {
+      fprintf(stderr, "Error opening log file: %s\n", log_file);
+      return 1;
+    }
+    if (freopen(log_file, "w", stderr) == NULL) {
+      fprintf(stderr, "Error opening log file for stderr: %s\n", log_file);
+      return 1;
+    }
+  }
+  
   /* Pasamos la dirección del puntero para que se asigne memoria dentro */
-  result = game_loop_init(&game, &gengine, argv[1]);
+  result = game_loop_init(&game, &gengine, data_file);
   if (result == 1) {
     fprintf(stderr, "Error while initializing game.\n");
     return 1;
