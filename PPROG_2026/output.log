@@ -1,0 +1,12 @@
+Move south: OK
+Take rock: ERROR
+Inspect rock: ERROR
+Drop rock: ERROR
+Move south: OK
+Attack Ghost: ERROR
+Chat Batman: ERROR
+Move south: OK
+Take apple: ERROR
+Move north: OK
+Inspect apple: OK
+Exit: OK
