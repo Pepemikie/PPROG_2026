@@ -17,6 +17,9 @@
 #include "game_actions.h"
 #include "graphic_engine.h"
 
+/* Global file pointer for logging */
+FILE *g_logfile = NULL;
+
 /* Prototipos actualizados para usar punteros */
 
 /**
@@ -57,7 +60,8 @@ int main(int argc, char *argv[]) {
   }
 
   if (logfile) {
-    if (freopen(logfile, "w", stdout) == NULL) {
+    g_logfile = fopen(logfile, "w");
+    if (g_logfile == NULL) {
       fprintf(stderr, "Error opening log file %s\n", logfile);
       return 1;
     }
@@ -82,6 +86,10 @@ int main(int argc, char *argv[]) {
   }
   graphic_engine_paint_game(gengine, game);
   game_loop_cleanup(game, gengine); /* frees all resources */
+  if (g_logfile) {
+    fclose(g_logfile);
+    g_logfile = NULL;
+  }
   return 0;
 }
 

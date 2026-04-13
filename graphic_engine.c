@@ -23,6 +23,9 @@
 #include "object.h"
 #include "game.h"
 
+/* Extern declaration for global logfile pointer */
+extern FILE *g_logfile;
+
 
 #define WIDTH_MAP 55
 #define WIDTH_DES 55
@@ -414,6 +417,17 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   last_cmd = command_get_code(game_get_last_command(game));
   sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
   screen_area_puts(ge->feedback, str);
+
+  /* Log to file if logfile is open and command is valid */
+  if (g_logfile != NULL && last_cmd > 0) {
+    char *arg = command_get_arg(game_get_last_command(game));
+    if (arg != NULL && arg[0] != '\0') {
+      fprintf(g_logfile, "%s %s: %s\n", cmd_to_str[last_cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR");
+    } else {
+      fprintf(g_logfile, "%s: %s\n", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
+    }
+    fflush(g_logfile);
+  }
 
   /* 6. Render */
   screen_paint(BLACK);
