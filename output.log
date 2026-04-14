@@ -1,0 +1,10 @@
+Move s: OK
+Move s: OK
+Take rock: OK
+Take rock: OK
+Attack: OK
+Attack: OK
+Move e: ERROR
+Move e: ERROR
+Exit: OK
+Exit: OK
