@@ -13,8 +13,9 @@
 #o:23|cap|A wizard's cap|121
 #o:24|apple|A red apple|13
 
-#c:31|Ghost|Enemy |4|0|12|AchoOoOo!|
-#c:32|Batman|Friend|8|1|14|I'm Batman|
+#c:31|Gordon|Gordon|2|0|12|Achooo!|
+#c:32|Batman|Batman|18|0|14|I'm Batman|
+#c:33|Police|Police|7|0|121|HEY! YOU!|
 
 #l:1|link11-12|11|12|S|1
 #l:2|link12-11|12|11|N|1

@@ -469,7 +469,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_clear(ge->feedback);
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
-    sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], cmd_to_str[last_cmd][CMDS], game_get_last_status(game) == OK ? "OK" : "ERROR");
+    sprintf(str, " %s: %s", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
     screen_area_puts(ge->feedback, str);
   }
   else{
