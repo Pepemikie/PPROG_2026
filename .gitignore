@@ -1,0 +1,11 @@
+*.o
+castle_game
+character_test
+inventory_test
+link_test
+object_test
+player_test
+space_test
+set_test
+castle_game_debug
+doc
