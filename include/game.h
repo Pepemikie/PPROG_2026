@@ -20,8 +20,8 @@
 #include "link.h"
 
 #define MAX_SPACES 100 /**< Maximum number of spaces in the game */
-#define MAX_OBJECTS 10 /**< Maximum number of objects in the game */
-#define MAX_CHARACTERS 2 /**< Maximum number of characters in the game */
+#define MAX_OBJECTS 30 /**< Maximum number of objects in the game */
+#define MAX_CHARACTERS 8 /**< Maximum number of characters in the game */
 #define MAX_LINKS 400 /**< Maximum number of links in the game */
 #define MAX_PLAYERS 2 /**< Maximum number of players in the game */
 
