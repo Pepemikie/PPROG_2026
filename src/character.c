@@ -24,6 +24,7 @@ struct _Character {
   int health;              /**< Life points of the character */
   Bool friendly;           /**< Whether the character is friendly towards the player */
   char message[WORD_SIZE]; /**< Message displayed when the player interacts with the character */
+  Id following;            /**< The ID of the player that this character is following, or NO_ID if not following anyone */
 };
 
 Character* character_create(Id id) {
@@ -111,11 +112,22 @@ Status character_set_message(Character* c, char* message) {
   return OK;
 }
 
+Status character_set_following(Character* c, Id player_id) {
+  if (!c) return ERROR;
+  c->following = player_id;
+  return OK;
+}
+
+Id character_get_following(Character* c) {
+  if (!c) return NO_ID;
+  return c->following;
+}
+
 #ifdef DEBUG
 Status character_print(Character* c) {
   if (!c) return ERROR;
-  fprintf(stdout, "--> Character [ID: %ld, Name: %s, Desc: %s, Health: %d, Friendly: %d, Message: %s]\n",
-          c->id, c->name, c->gdesc, c->health, c->friendly, c->message);
+  fprintf(stdout, "--> Character [ID: %ld, Name: %s, Desc: %s, Health: %d, Friendly: %d, Message: %s, Following: %ld]\n",
+          c->id, c->name, c->gdesc, c->health, c->friendly, c->message, c->following);
   return OK;
 }
 #endif
