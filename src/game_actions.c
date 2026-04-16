@@ -85,6 +85,14 @@ Status game_actions_move(Game *game);
  */
 Status game_actions_inspect(Game *game);
 
+/**
+ * @brief Recruits a friendly character in the current space to follow the player
+ * 
+ * @param game a pointer to the Game struct
+ * @return OK if the character was recruited, ERROR otherwise
+ */
+Status game_actions_recruit(Game *game);
+
 Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
 
@@ -123,6 +131,10 @@ Status game_actions_update(Game *game, Command *command) {
 
     case INSPECT:
       game_set_last_status(game, game_actions_inspect(game));
+      break;
+
+    case RECRUIT:
+      game_set_last_status(game, game_actions_recruit(game));
       break;
 
     default:
@@ -393,4 +405,26 @@ Status game_actions_chat(Game *game) {
   }
  
   return OK;
+}
+
+/*   Recruits a friendly character in the current space to follow the player */
+Status game_actions_recruit(Game *game) {
+  Character *c = NULL;
+  Id player_loc = NO_ID;
+
+  if (!game) return ERROR;
+
+  player_loc = game_get_player_location(game);
+  c = game_get_character_in_space(game, player_loc);
+
+  if(!c || !character_is_friendly(c)) return ERROR;
+
+  /* Solo reclutamos si es amigo */
+  if (c && character_is_friendly(c)) {
+    /* Hacemos que el personaje siga al jugador */
+    character_set_following(c, player_get_id(game_get_player(game))); /* sets the player ID as the one the character is following */
+    return OK;
+  }
+ 
+  return ERROR;
 }

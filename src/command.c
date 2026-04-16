@@ -34,7 +34,8 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
   {"a", "Attack"},  /**< ATTACK */
   {"c", "Chat"},    /**< CHAT */
   {"m", "Move"},    /**< MOVE */
-  {"i", "Inspect"}  /**< INSPECT */
+  {"i", "Inspect"}, /**< INSPECT */
+  {"r", "Recruit"}  /**< RECRUIT */
 };
 
 /**
