@@ -137,6 +137,10 @@ Status game_actions_update(Game *game, Command *command) {
       game_set_last_status(game, game_actions_recruit(game));
       break;
 
+    case ABANDON:
+      game_set_last_status(game, game_actions_abandon(game));
+      break;
+
     default:
       break;
   }
@@ -427,4 +431,20 @@ Status game_actions_recruit(Game *game) {
   }
  
   return ERROR;
+}
+
+/*.  Abandons the character that you have previously recruited*/
+Status game_actions_abandon(Game *game) {
+  Character*c = NULL;
+  Id player_loc = NO_ID;
+
+  if (!game) return ERROR;
+
+  player_loc = game_get_player_location(game);
+  c = game_get_chatacter_in_space(game, player_loc);
+
+  if(!c) return ERROR; /* si no hay personajen con el jugador, una de dos:
+  o se murió, o no estaba reclutado*/
+
+  /*HAY QUE AÑADIR CMD PARA ESPECIFICAR EL PERSONAJE, AL IIGUAL QUE SE HACE CON EL OBJETO*/
 }
