@@ -117,13 +117,14 @@ Status command_get_user_input(Command* command) {
     }
 
     cmd = UNKNOWN;
+
     while (cmd == UNKNOWN && i < N_CMD) {
-      if (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL])) {
+    if (cmd_to_str[i][CMDS] && cmd_to_str[i][CMDL] && (!strcasecmp(token, cmd_to_str[i][CMDS]) || !strcasecmp(token, cmd_to_str[i][CMDL]))) {
         cmd = i;
-      } else {
+    } else {
         i++;
-      }
     }
+}
 
     token = strtok(NULL, " \n");
     if (token) {
