@@ -19,7 +19,7 @@ struct _Space {
   Id id; /**< The unique identifier of the space */
   char name[WORD_SIZE + 1]; /**< The name of the space */
   Set *objects; /**< The set of objects in the space */
-  Id character; /**< The id of the character located in the space */
+  Set *characters; /**< The id of the character located in the space */
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]; /**< The graphic description of the space */
   Bool discovered;  /**< If a space has been discovered (F12, I3) */                                         
 };
@@ -37,11 +37,16 @@ Space *space_create(Id id) {
   /* initializes all fields by default */
   newSpace->id = id;
   newSpace->name[0] = '\0';
-  newSpace->character = NO_ID;
   newSpace->discovered = FALSE;       /* undiscovered by default (F12, I3) */
 
   newSpace->objects = set_create(); /* creates the object set */
   if (!newSpace->objects) {
+    free(newSpace);
+    return NULL;
+  }
+  
+  newSpace->characters = set_create(); /* creates the object set */
+  if (!newSpace->characters) {
     free(newSpace);
     return NULL;
   }
@@ -113,17 +118,29 @@ int space_get_number_of_objects(Space *space) {
   return set_get_n_ids(space->objects); /* delegates to the set module */
 }
 
-/*   It sets the character located in the Space */
-Status space_set_character(Space *space, Id id) {
-  if (!space) return ERROR;
-  space->character = id; /* assigns the character id to the space */
-  return OK;
+
+/*   It adds a character to the Space */
+Status space_add_character(Space *space, Id id) {
+  if (!space || id == NO_ID) return ERROR;
+  return set_add(space->characters, id); /* delegates to space_set_character */
 }
 
 /*   It gets the id of the character located in the Space */
 Id space_get_character(Space *space) {
   if (!space) return NO_ID;
-  return space->character;
+  return space->characters;
+}
+
+Bool space_has_character(Space *space, Id character_id) {
+  if (!space || character_id == NO_ID) return FALSE;
+if (set_find(space->characters, character_id) == -1)  return FALSE; /* not found */
+return TRUE;
+}
+
+/*   It gets the number of characters in the Space */
+int space_get_number_of_characters(Space *space) {
+  if (!space) return -1;
+  return set_get_n_ids(space->characters); /* delegates to the set module */
 }
 
 /*   It sets the graphic description of a Space */

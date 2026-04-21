@@ -123,13 +123,14 @@ Status game_reader_load_objects(Game *game, char *filename) {
 Status game_reader_load_characters(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
+  Id id = NO_ID;
   char name[WORD_SIZE] = "";
   char gdesc[GDESC_SIZE] = "";
-  char message[WORD_SIZE] = "";
-  char *toks = NULL;
-  Id id = NO_ID, location_id = NO_ID;
   int health = 0;
   int friendly = 0;
+  Id location_id = NO_ID;
+  char message[WORD_SIZE] = "";
+  char *toks = NULL;
   Character *character = NULL;
   Status status = OK;
 
@@ -165,9 +166,9 @@ Status game_reader_load_characters(Game *game, char *filename) {
         character_set_gdesc(character, gdesc);
         character_set_health(character, health);
         character_set_friendly(character, (Bool)friendly);
-        game_set_character_location(game, location_id, id);
-        character_set_message(character, message);
+        character_set_message(character, message);        
         game_add_character(game, character);
+        game_set_character_location(game, location_id, id);
       }
     }
   }

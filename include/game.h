@@ -28,6 +28,9 @@
 /** @brief It defines the Game struct */
 typedef struct _Game Game;
 
+/*
+GAME
+*/
 /**
  * @brief It creates a new Game, allocating memory and initializing its members
  * @author Profesores PPROG
@@ -56,35 +59,6 @@ Status game_create_from_file(Game *game, char *filename);
 Status game_destroy(Game *game);
 
 /**
- * @brief It gets a space from the game by its id
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param id the id of the space to retrieve
- * @return a pointer to the Space with the given id, or NULL if not found
- */
-Space *game_get_space(Game *game, Id id);
-
-/**
- * @brief It gets the actual player of the game
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @return a pointer to the Player struct
- */
-Player *game_get_player(Game *game);
-
-/**
- * @brief It adds a player to the game
- * @author Rodrigo Cruz Asensio
- *
- * @param game a pointer to the Game struct
- * @param player a pointer to the Player to be added
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status game_add_player(Game *game, Player *player);
-
-/**
  * @brief It gets the current turn index 
  * @author Rodrigo Cruz Asensio
  *
@@ -111,75 +85,6 @@ Status game_set_turn(Game *game, int turn);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_next_turn(Game *game);
-
-/**
- * @brief It gets the number of players in the game 
- * @author Rodrigo Cruz Asensio
- *
- * @param game a pointer to the Game struct
- * @return the number of players
- */
-int game_get_num_players(Game *game);
-
-/**
- * @brief It gets an object from the game by its id
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param id the id of the object to retrieve
- * @return a pointer to the Object with the given id, or NULL if not found
- */
-Object* game_get_object(Game* game, Id id);
-
-/**
- * @brief It gets an object from the game by its index
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param index the position of the object in the game's object array
- * @return a pointer to the Object at the given index, or NULL if not found
- */
-Object* game_get_object_by_index(Game *game, int index);
-
-/**
- * @brief It gets the current location of the player
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @return the id of the space where the player is located
- */
-Id game_get_player_location(Game *game);
-
-/**
- * @brief It sets the location of the player
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param id the id of the space where the player is going to be placed
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status game_set_player_location(Game *game, Id id);
-
-/**
- * @brief It gets the location of an object by its id
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param object_id the id of the object whose location is retrieved
- * @return the id of the space where the object is located
- */
-Id game_get_object_location(Game *game, Id object_id);
-
-/**
- * @brief It sets the location of an object in the game
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param space_id the id of the space where the object is going to be placed
- * @param object_id the id of the object to be placed
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status game_set_object_location(Game *game, Id space_id, Id object_id);
 
 /**
  * @brief It gets the last command introduced by the user
@@ -238,6 +143,21 @@ Bool game_get_finished(Game *game);
  */
 Status game_set_finished(Game *game, Bool finished);
 
+
+/*
+SPACE
+*/
+
+/**
+ * @brief It gets a space from the game by its id
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param id the id of the space to retrieve
+ * @return a pointer to the Space with the given id, or NULL if not found
+ */
+Space *game_get_space(Game *game, Id id);
+
 /**
  * @brief It adds a space to the game
  * @author Profesores PPROG
@@ -247,6 +167,119 @@ Status game_set_finished(Game *game, Bool finished);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_add_space(Game *game, Space *space);
+
+
+
+
+
+/*
+PLAYER
+*/
+/**
+ * @brief It gets the actual player of the game
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @return a pointer to the Player struct
+ */
+Player *game_get_player(Game *game);
+
+/**
+ * @brief It adds a player to the game
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param player a pointer to the Player to be added
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_add_player(Game *game, Player *player);
+
+/**
+ * @brief It gets the number of players in the game 
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @return the number of players
+ */
+int game_get_num_players(Game *game);
+
+/**
+ * @brief It gets the current location of the player
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @return the id of the space where the player is located
+ */
+Id game_get_player_location(Game *game);
+
+/**
+ * @brief It sets the location of the player
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param id the id of the space where the player is going to be placed
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_set_player_location(Game *game, Id id);
+
+/**
+ * @brief It gets a player from the game by its index (F13, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param index the index of the player in the players array
+ * @return a pointer to the Player at the given index, or NULL if not found
+ */
+Player *game_get_player_by_index(Game *game, int index);
+
+
+
+
+
+
+/*
+OBJECT
+*/
+/**
+ * @brief It gets an object from the game by its id
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param id the id of the object to retrieve
+ * @return a pointer to the Object with the given id, or NULL if not found
+ */
+Object* game_get_object(Game* game, Id id);
+
+/**
+ * @brief It gets an object from the game by its index
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param index the position of the object in the game's object array
+ * @return a pointer to the Object at the given index, or NULL if not found
+ */
+Object* game_get_object_by_index(Game *game, int index);
+
+/**
+ * @brief It gets the location of an object by its id
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param object_id the id of the object whose location is retrieved
+ * @return the id of the space where the object is located
+ */
+Id game_get_object_location(Game *game, Id object_id);
+
+/**
+ * @brief It sets the location of an object in the game
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param space_id the id of the space where the object is going to be placed
+ * @param object_id the id of the object to be placed
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_set_object_location(Game *game, Id space_id, Id object_id);
 
 /**
  * @brief It adds an object to the game
@@ -259,24 +292,43 @@ Status game_add_space(Game *game, Space *space);
 Status game_add_object(Game *game, Object *object);
 
 /**
- * @brief It gets the location of a character by its id
+ * @brief It sets the last object description displayed in the game
  * @author Jose Miguel Romero Oubina
  *
  * @param game a pointer to the Game struct
- * @param character_id the id of the character whose location is retrieved
- * @return the id of the space where the character is located
+ * @param description a string with the description to be stored
+ * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Id game_get_character_location(Game *game, Id character_id);
+Status game_set_last_object_description(Game *game, const char *description);
 
 /**
- * @brief It gets the character located in a given space
- * @author Profesores PPROG
+ * @brief It gets the last object description displayed in the game
+ * @author Jose Miguel Romero Oubina
  *
  * @param game a pointer to the Game struct
- * @param space_id the id of the space to search in
- * @return a pointer to the Character in that space, or NULL if there is none
+ * @return a string with the last object description stored in the game
  */
-Character* game_get_character_in_space(Game* game, Id space_id);
+const char *game_get_last_object_description(Game *game);
+
+
+
+
+
+
+
+/*
+CHARACTER
+*/
+
+/**
+ * @brief It gets a character from the game by its id
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @param id the id of the character to retrieve
+ * @return a pointer to the Character with the given id, or NULL if not found
+ */
+Character* game_get_character(Game* game, Id id);
 
 /**
  * @brief It gets a character from the game by its index
@@ -287,6 +339,26 @@ Character* game_get_character_in_space(Game* game, Id space_id);
  * @return a pointer to the Character at the given index, or NULL if not found
  */
 Character* game_get_character_by_index(Game *game, int index);
+
+/**
+ * @brief It gets the location of a character by its id
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @param character_id the id of the character whose location is retrieved
+ * @return the id of the space where the character is located
+ */
+Id game_get_character_location(Game *game, Id character_id);
+
+/**
+ * @brief It adds a character to the game
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param character a pointer to the Character to be added
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_add_character(Game *game, Character *character);
 
 /**
  * @brief It sets the last message displayed in the game
@@ -308,45 +380,32 @@ Status game_set_last_message(Game* game, const char* message);
 const char* game_get_last_message(Game* game);
 
 /**
- * @brief It sets the last object description displayed in the game
+ * @brief It gets a character from the game by its name
  * @author Jose Miguel Romero Oubina
- *
+ * 
  * @param game a pointer to the Game struct
- * @param description a string with the description to be stored
- * @return OK, if everything goes well or ERROR if there was some mistake
+ * @param name the name of the character to retrieve
+ * @return Character* a pointer to the Character with the given name, or NULL if not found
  */
-Status game_set_last_object_description(Game *game, const char *description);
+Character *game_get_character_by_name(Game *game, const char *name);
 
 /**
- * @brief It gets the last object description displayed in the game
- * @author Jose Miguel Romero Oubina
- *
- * @param game a pointer to the Game struct
- * @return a string with the last object description stored in the game
- */
-const char *game_get_last_object_description(Game *game);
-
-/**
- * @brief It adds a character to the game
+ * @brief It gets the character located in a given space
  * @author Profesores PPROG
  *
  * @param game a pointer to the Game struct
- * @param character a pointer to the Character to be added
- * @return OK, if everything goes well or ERROR if there was some mistake
+ * @param space_id the id of the space to search in
+ * @return a pointer to the Character in that space, or NULL if there is none
  */
-Status game_add_character(Game *game, Character *character);
+Character* game_get_character_in_space(Game* game, Id space_id);
 
-/**
- * @brief It sets the location of a character in the game
- * @author Profesores PPROG
- *
- * @param game a pointer to the Game struct
- * @param space_id the id of the space where the character is going to be placed
- * @param character_id the id of the character to be placed
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status game_set_character_location(Game *game, Id space_id, Id character_id);
 
+
+
+
+/*
+LINKS
+*/
 /**
  * @brief It adds a link to the game
  * @author Jose Miguel Romero Oubina
@@ -388,16 +447,6 @@ Bool game_connection_is_open(Game *game, Id space_id, Direction direction);
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_discover_space(Game *game, Id space_id);
-
-/**
- * @brief It gets a player from the game by its index (F13, I3)
- * @author Rodrigo Cruz Asensio
- *
- * @param game a pointer to the Game struct
- * @param index the index of the player in the players array
- * @return a pointer to the Player at the given index, or NULL if not found
- */
-Player *game_get_player_by_index(Game *game, int index);
 
 #ifdef DEBUG
 /**

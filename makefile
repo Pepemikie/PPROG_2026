@@ -6,7 +6,7 @@
 
 #FLAGS
 CC=gcc
-CFLAGS=-Wall -g -ansi -pedantic -I./include
+CFLAGS=-Wall -g -pedantic -I./include -lpthread
 CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG -I./include
 LIBS= -L./lib -lscreen
 #FILES AND OBJECTS

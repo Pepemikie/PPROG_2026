@@ -7,11 +7,19 @@
  * @copyright GNU Public License
  */
 
+
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+
+#include <pthread.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 
 #include "command.h"
 #include "game.h"
@@ -20,6 +28,40 @@
 
 /** @brief Global file pointer for logging */
 FILE *g_logfile = NULL;
+
+/** @brief PID of the aplay process for cleanup */
+
+static pid_t music_pid = -1;
+static volatile int music_running = 1; /* añade esta variable */
+
+static void *music_thread(void *arg) {
+    char *aplay_args[] = {"aplay", "./Main_Theme.wav", NULL};
+    (void)arg;
+
+    while (music_running) {   /*comprueba la variable en cada iteración */ 
+        music_pid = fork();
+        if (music_pid == 0) {
+            int devnull = open("/dev/null", O_WRONLY);
+            dup2(devnull, STDOUT_FILENO);
+            dup2(devnull, STDERR_FILENO);
+            close(devnull);
+            execv("/usr/bin/aplay", aplay_args);
+            exit(1);
+        } else if (music_pid > 0) {
+            waitpid(music_pid, NULL, 0);
+        }
+    }
+    return NULL;
+}
+
+static void music_stop(void) {
+    music_running = 0;  /* para el bucle primero */
+    if (music_pid > 0) {
+        kill(music_pid, SIGTERM);
+        waitpid(music_pid, NULL, 0);
+        music_pid = -1;
+    }
+}
 
 /**
  * @brief It initializes the game and the graphic engine from a data file
@@ -54,6 +96,10 @@ int main(int argc, char *argv[]) {
   char *logfile = NULL;
   char *datafile = NULL;
   int i;
+
+  pthread_t music_tid;
+  pthread_attr_t music_attr;
+
   srand(time(NULL)); /* initializes random seed */
 
   for (i = 1; i < argc; i++) {
@@ -89,6 +135,11 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Error while initializing graphic engine.\n");
     return 1;
   }
+
+  pthread_attr_init(&music_attr);
+  pthread_attr_setdetachstate(&music_attr, PTHREAD_CREATE_DETACHED);
+  pthread_create(&music_tid, &music_attr, music_thread, NULL); /* start music thread */
+
   /* Como 'game' ya es puntero, le quitamos el '&' en todas las llamadas */
   last_cmd = game_get_last_command(game);
   while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(game) == FALSE)) { /* main loop: runs until EXIT or game finished */
@@ -139,6 +190,7 @@ int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name) {
  * @param gengine a pointer to the Graphic_engine struct to be destroyed
  */
 void game_loop_cleanup(Game *game, Graphic_engine *gengine) {
+  music_stop(); /* stops background music */
   if (game) {
     game_destroy(game); /* destroys game and frees its memory */
   }

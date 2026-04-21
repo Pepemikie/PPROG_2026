@@ -40,6 +40,7 @@ Character* character_create(Id id) {
   new_character->health = 10;
   new_character->friendly = TRUE;
   strcpy(new_character->message, "");
+  new_character->following = NO_ID;
 
   return new_character;
 }
@@ -51,7 +52,7 @@ Status character_destroy(Character* c) {
 }
 
 Id character_get_id(Character* c) {
-  if (!c) return -1;
+  if (!c) return NO_ID;
   return c->id;
 }
 
@@ -61,7 +62,7 @@ const char* character_get_name(Character* c) {
 }
 
 Status character_set_name(Character* c, char* name) {
-  if (!c) return ERROR;
+  if (!c || !name) return ERROR;
   strncpy(c->name, name, WORD_SIZE);
   c->name[WORD_SIZE - 1] = '\0';
   return OK;
@@ -79,7 +80,7 @@ Status character_set_gdesc(Character* c, char* gdesc) {
 }
 
 int character_get_health(Character* c) {
-  if (!c) return -1;
+  if (!c) return NO_ID;
   return c->health;
 }
 

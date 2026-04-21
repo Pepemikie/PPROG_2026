@@ -20,6 +20,11 @@
 /** @brief It defines the Space struct */
 typedef struct _Space Space;
 
+
+
+/*
+SPACE
+*/
 /**
  * @brief It creates a new Space, allocating memory and initializing its members
  * @author Profesores PPROG
@@ -66,6 +71,49 @@ Status space_set_name(Space* space, char* name);
  */
 const char* space_get_name(Space* space);
 
+/**
+ * @brief It sets the graphic description of a Space
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param space a pointer to the Space
+ * @param gdesc a 2D array of strings with the graphic description to store
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_gdesc(Space* space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]);
+
+/**
+ * @brief It gets a line of the graphic description of a Space
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param space a pointer to the Space
+ * @param line the index of the graphic description line to retrieve
+ * @return a string with the requested line of the graphic description
+ */
+char* space_get_gdesc(Space* space, int line);
+
+/**
+ * @brief It sets whether a Space has been discovered (F12, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param space a pointer to the Space
+ * @param discovered discovery status to set
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status space_set_discovered(Space *space, Bool discovered);
+
+/**
+ * @brief It gets whether a Space has been discovered (F12, I3)
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param space a pointer to the Space
+ * @return TRUE if discovered, FALSE otherwise
+ */
+Bool space_get_discovered(Space *space);
+
+
+/*
+OBJECTS
+*/
 /**
  * @brief It adds an object to the Space
  * @author Profesores PPROG
@@ -114,6 +162,10 @@ Id* space_get_objects(Space* space);
  */
 int space_get_number_of_objects(Space* space);
 
+
+/*
+CHARACTERS
+*/
 /**
  * @brief It sets the character located in the Space
  * @author Jose Miguel Romero Oubina
@@ -125,6 +177,15 @@ int space_get_number_of_objects(Space* space);
 Status space_set_character(Space* space, Id id);
 
 /**
+ * @brief It adds a character to the Space
+ * 
+ * @param space a pointer to the Space
+ * @param id the id of the character to be added to the Space
+ * @return OK, if everything goes well or ERROR if there was some mistake 
+ */
+Status space_add_character(Space *space, Id id);
+
+/**
  * @brief It gets the id of the character located in the Space
  * @author Jose Miguel Romero Oubina
  *
@@ -134,44 +195,23 @@ Status space_set_character(Space* space, Id id);
 Id space_get_character(Space* space);
 
 /**
- * @brief It sets the graphic description of a Space
- * @author Jose Miguel Romero Oubina
- *
+ * @brief It checks whether a character is in the Space
+ * 
  * @param space a pointer to the Space
- * @param gdesc a 2D array of strings with the graphic description to store
- * @return OK, if everything goes well or ERROR if there was some mistake
+ * @param character_id the id of the character to search for
+ * @return TRUE if the character is in the Space, FALSE otherwise
  */
-Status space_set_gdesc(Space* space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]);
+Bool space_has_character(Space *space, Id character_id);
 
 /**
- * @brief It gets a line of the graphic description of a Space
- * @author Jose Miguel Romero Oubina
+ * @brief It gets the number of characters in the Space
+ * @author Profesores PPROG
  *
  * @param space a pointer to the Space
- * @param line the index of the graphic description line to retrieve
- * @return a string with the requested line of the graphic description
+ * @return the number of characters stored in the Space
  */
-char* space_get_gdesc(Space* space, int line);
+int space_get_number_of_characters(Space* space);
 
-
-/**
- * @brief It sets whether a Space has been discovered (F12, I3)
- * @author Rodrigo Cruz Asensio
- *
- * @param space a pointer to the Space
- * @param discovered discovery status to set
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status space_set_discovered(Space *space, Bool discovered);
-
-/**
- * @brief It gets whether a Space has been discovered (F12, I3)
- * @author Rodrigo Cruz Asensio
- *
- * @param space a pointer to the Space
- * @return TRUE if discovered, FALSE otherwise
- */
-Bool space_get_discovered(Space *space);
 
 #ifdef DEBUG
 /**

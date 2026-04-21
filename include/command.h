@@ -43,8 +43,9 @@ typedef enum {
   ATTACK,       /**< Attack a character */
   CHAT,         /**< Chat with a character */
   MOVE,         /**< Move to an adjacent space */
-  INSPECT,       /**< Inspect a space or object */
-  RECRUIT        /**< Recruit a character to follow the player */
+  INSPECT,      /**< Inspect a space or object */
+  RECRUIT,      /**< Recruit a character to follow the player */
+  ABANDON       /**< Abandon a character following the player */ 
 } CommandCode;
 
 /**

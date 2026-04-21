@@ -93,6 +93,14 @@ Status game_actions_inspect(Game *game);
  */
 Status game_actions_recruit(Game *game);
 
+/**
+ * @brief Abandons the character that you have previously recruited
+ * 
+ * @param game a pointer to the Game struct
+ * @return OK if the character was abandoned, ERROR otherwise
+ */
+Status game_actions_abandon(Game *game);
+
 Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
 
@@ -359,20 +367,27 @@ Status game_actions_attack(Game *game) {
   Player *p = NULL;
   Character *c = NULL;
   Id loc = NO_ID;
+  Command *cmd = NULL;
+  char *arg = NULL;
   int r;
 
   if (!game) return ERROR;
 
+  cmd = game_get_last_command(game);
+  if (!cmd) return ERROR;
+
+  arg = command_get_arg(cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
   p = game_get_player(game);
   loc = game_get_player_location(game);
   /* Buscamos al personaje en la sala actual */
-  c = game_get_character_in_space(game, loc);
+  c = game_get_character_by_name(game, arg);
 
-  if(!c || character_is_friendly(c)) return ERROR;/*error control: no se puede atacar a un personaje amigo*/
-
-  /* Solo atacamos si hay enemigo, no es amigo y tiene vida */
-  if (c && !character_is_friendly(c) && character_get_health(c) > 0) {
-    r = rand() % 10; /* Número entre 0 y 9 */
+  if(!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR;
+  if(character_is_friendly(c) || character_get_health(c) <= 0) return ERROR; /*error control: el personaje es amigo, no se puede atacar*/
+  
+  r = rand() % 10; /* Número entre 0 y 9 */
     
   if (r >= 0 && r <= 4) {
   /* Gana el adversario: pierde el jugador */
@@ -384,67 +399,100 @@ Status game_actions_attack(Game *game) {
     }
   } else {
   /* Gana el jugador: pierde el personaje */
-    character_set_health(c, character_get_health(c) - 1);
+    if (character_get_following(c) != NO_ID) {
+    
+      character_set_health(c, character_get_health(c) - 2);
     }
-  }
+    else
+      character_set_health(c, character_get_health(c) - 1);
+    }
   return OK;
 }
-
+/*/////////////AÑADIR ESPECIFICO PERSONAJE*/
 /*   Makes the player interact with a friendly character by chat */
 Status game_actions_chat(Game *game) {
   Character *c = NULL;
   Id loc = NO_ID;
+  Command *cmd = NULL;
+  char *arg = NULL;
+
+  int num_characters = 0;
+  int i = 0;
 
   if (!game) return ERROR;
 
+  cmd = game_get_last_command(game);
+  if (!cmd) return ERROR;
+
+  arg = command_get_arg(cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
   loc = game_get_player_location(game);
-  c = game_get_character_in_space(game, loc);
 
-  if(!c || !character_is_friendly(c)) return ERROR;
+  c = game_get_character_by_name(game, arg);
 
-  /* Solo hablamos si es amigo */
-  if (c && character_is_friendly(c)) {
-    /* Guardamos el mensaje para que el motor gráfico lo vea */
-    game_set_last_message(game, character_get_message(c)); /* stores character message in game */
-  }
- 
+  if (!c /*Y NO ESTA EN EL MISMO ESPACIO*/|| !character_is_friendly(c)) return ERROR;
+
+  game_set_last_message(game, character_get_message(c));
+  
   return OK;
 }
-
+/*////////////AÑADIR ESPECIFICO PERSONAJE CON EL SET DE LA F5*/
 /*   Recruits a friendly character in the current space to follow the player */
 Status game_actions_recruit(Game *game) {
   Character *c = NULL;
   Id player_loc = NO_ID;
+  Command *cmd = NULL;
+  char *arg = NULL;
 
   if (!game) return ERROR;
 
+  cmd = game_get_last_command(game);
+  if (!cmd) return ERROR;
+
+  arg = command_get_arg(cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
   player_loc = game_get_player_location(game);
-  c = game_get_character_in_space(game, player_loc);
 
-  if(!c || !character_is_friendly(c)) return ERROR;
+  c = game_get_character_by_name(game, arg);
+  if(!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR; /*error control: el personaje no está en la sala*/
+  if(!character_is_friendly(c)) return ERROR; /*error control: el personaje no es amigo*/ 
 
-  /* Solo reclutamos si es amigo */
-  if (c && character_is_friendly(c)) {
-    /* Hacemos que el personaje siga al jugador */
-    character_set_following(c, player_get_id(game_get_player(game))); /* sets the player ID as the one the character is following */
-    return OK;
-  }
- 
-  return ERROR;
+  character_set_following(c, player_get_id(game_get_player(game)));
+
+  return OK;
 }
 
-/*.  Abandons the character that you have previously recruited*/
+/*  Abandons the character that you have previously recruited*/
 Status game_actions_abandon(Game *game) {
-  Character*c = NULL;
+  Character *c = NULL;
   Id player_loc = NO_ID;
+  Id player_id = NO_ID;
+  Command *cmd = NULL;
+  char *arg = NULL;
 
   if (!game) return ERROR;
 
+  cmd = game_get_last_command(game);
+  if (!cmd) return ERROR;
+
+  arg = command_get_arg(cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
   player_loc = game_get_player_location(game);
-  c = game_get_chatacter_in_space(game, player_loc);
+  player_id = player_get_id(game_get_player(game));
 
-  if(!c) return ERROR; /* si no hay personajen con el jugador, una de dos:
-  o se murió, o no estaba reclutado*/
+  /* Get the character in the player's current space */
+  c = game_get_character_by_name(game, arg);
 
-  /*HAY QUE AÑADIR CMD PARA ESPECIFICAR EL PERSONAJE, AL IIGUAL QUE SE HACE CON EL OBJETO*/
+  if (!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR;
+
+  /* Check if the character is friendly and following the player */
+  if (!character_is_friendly(c) || character_get_following(c) != player_id) return ERROR;
+  
+  /* Make the character stop following the player */
+  character_set_following(c, NO_ID);
+
+  return OK;
 }

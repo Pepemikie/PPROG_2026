@@ -388,7 +388,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     char_loc = game_get_character_location(game, character_get_id(character));
     char_space = game_get_space(game, char_loc);                            /* F12, I3: only show characters that are in discovered spaces */
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
-    if (char_loc != NO_ID) {
       int health = character_get_health(character);
       if (health > 0)
         sprintf(str, "  %-10s: %d (%d hp)", character_get_name(character), (int)char_loc, health);
@@ -396,7 +395,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
         sprintf(str, "  %-10s: %d (DEAD)", character_get_name(character), (int)char_loc);
       screen_area_puts(ge->descript, str);
     }
-  }
   screen_area_puts(ge->descript, " ");
 
   /* Players — prints each player name, location and health (F13, I3) */
@@ -412,7 +410,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-  /* Player — prints location, health and carried object */
+  /* Player — prints location, health and carried object and character recruited */
   player = game_get_player(game);
   sprintf(str, " Player: %s at %d (%d hp)", player_get_name(player), (int)player_get_location(player), player_get_health(player));
   screen_area_puts(ge->descript, str);
