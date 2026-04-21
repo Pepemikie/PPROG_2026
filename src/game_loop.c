@@ -35,7 +35,7 @@ static pid_t music_pid = -1;
 static volatile int music_running = 1; /* añade esta variable */
 
 static void *music_thread(void *arg) {
-    char *aplay_args[] = {"aplay", "./Main_Theme.wav", NULL};
+    char *aplay_args[] = {"aplay", "./Main_Theme_1.wav", NULL};
     (void)arg;
 
     while (music_running) {   /*comprueba la variable en cada iteración */ 
