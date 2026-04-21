@@ -190,10 +190,9 @@ Status space_add_character(Space *space, Id id);
  * @author Jose Miguel Romero Oubina
  *
  * @param space a pointer to the Space
- * @return the id of the character in the Space, or NO_ID if there is none
+ * @return a pointer to the id of the character in the Space, or NULL if there is none
  */
-Id space_get_character(Space* space);
-
+Id *space_get_character(Space *space);
 /**
  * @brief It checks whether a character is in the Space
  * 

@@ -366,7 +366,7 @@ Status game_actions_inspect(Game *game) {
 Status game_actions_attack(Game *game) {
   Player *p = NULL;
   Character *c = NULL;
-  Id loc = NO_ID;
+  /*Id loc = NO_ID;*/
   Command *cmd = NULL;
   char *arg = NULL;
   int r;
@@ -380,7 +380,7 @@ Status game_actions_attack(Game *game) {
   if (!arg || arg[0] == '\0') return ERROR;
 
   p = game_get_player(game);
-  loc = game_get_player_location(game);
+  /*loc = game_get_player_location(game);*/
   /* Buscamos al personaje en la sala actual */
   c = game_get_character_by_name(game, arg);
 
@@ -412,12 +412,9 @@ Status game_actions_attack(Game *game) {
 /*   Makes the player interact with a friendly character by chat */
 Status game_actions_chat(Game *game) {
   Character *c = NULL;
-  Id loc = NO_ID;
+  /*Id loc = NO_ID;*/
   Command *cmd = NULL;
   char *arg = NULL;
-
-  int num_characters = 0;
-  int i = 0;
 
   if (!game) return ERROR;
 
@@ -427,7 +424,7 @@ Status game_actions_chat(Game *game) {
   arg = command_get_arg(cmd);
   if (!arg || arg[0] == '\0') return ERROR;
 
-  loc = game_get_player_location(game);
+  /*loc = game_get_player_location(game);*/
 
   c = game_get_character_by_name(game, arg);
 
@@ -441,7 +438,7 @@ Status game_actions_chat(Game *game) {
 /*   Recruits a friendly character in the current space to follow the player */
 Status game_actions_recruit(Game *game) {
   Character *c = NULL;
-  Id player_loc = NO_ID;
+  /*Id player_loc = NO_ID;*/
   Command *cmd = NULL;
   char *arg = NULL;
 
@@ -453,7 +450,7 @@ Status game_actions_recruit(Game *game) {
   arg = command_get_arg(cmd);
   if (!arg || arg[0] == '\0') return ERROR;
 
-  player_loc = game_get_player_location(game);
+  /*player_loc = game_get_player_location(game);*/
 
   c = game_get_character_by_name(game, arg);
   if(!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR; /*error control: el personaje no está en la sala*/
@@ -467,7 +464,7 @@ Status game_actions_recruit(Game *game) {
 /*  Abandons the character that you have previously recruited*/
 Status game_actions_abandon(Game *game) {
   Character *c = NULL;
-  Id player_loc = NO_ID;
+  /*Id player_loc = NO_ID;*/
   Id player_id = NO_ID;
   Command *cmd = NULL;
   char *arg = NULL;
@@ -480,7 +477,7 @@ Status game_actions_abandon(Game *game) {
   arg = command_get_arg(cmd);
   if (!arg || arg[0] == '\0') return ERROR;
 
-  player_loc = game_get_player_location(game);
+  /*player_loc = game_get_player_location(game);*/
   player_id = player_get_id(game_get_player(game));
 
   /* Get the character in the player's current space */

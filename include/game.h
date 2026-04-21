@@ -351,6 +351,16 @@ Character* game_get_character_by_index(Game *game, int index);
 Id game_get_character_location(Game *game, Id character_id);
 
 /**
+ * @brief It sets the location of a character in the game
+ * 
+ * @param game a pointer to the Game struct
+ * @param space_id the id of the space where the character is going to be placed
+ * @param object_id the id of the character to be placed
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_set_object_location(Game *game, Id space_id, Id object_id);
+
+/**
  * @brief It adds a character to the game
  * @author Profesores PPROG
  *

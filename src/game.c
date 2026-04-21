@@ -379,8 +379,6 @@ Status game_set_character_location(Game *game, Id space_id, Id character_id) {
   
   if (!s || !c) return ERROR;
 
-  /*space_set_character(s, character_id);*/ /* sets character in the space */
-
   return space_add_character(s, character_get_id(c)); /* adds character to the space */
 }
 

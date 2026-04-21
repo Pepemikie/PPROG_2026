@@ -128,7 +128,7 @@ Status game_reader_load_characters(Game *game, char *filename) {
   char gdesc[GDESC_SIZE] = "";
   int health = 0;
   int friendly = 0;
-  Id location_id = NO_ID;
+  Id space_id = NO_ID;
   char message[WORD_SIZE] = "";
   char *toks = NULL;
   Character *character = NULL;
@@ -152,23 +152,23 @@ Status game_reader_load_characters(Game *game, char *filename) {
       toks = strtok(NULL, "|");
       friendly = atoi(toks);
       toks = strtok(NULL, "|");
-      location_id = atol(toks);
+      space_id = atol(toks);
       toks = strtok(NULL, "|");
       if (toks) {
         strncpy(message, toks, WORD_SIZE - 1);
         message[WORD_SIZE - 1] = '\0';
       }
 #ifdef DEBUG
-      printf("Leido: c:%ld|%s|%s|%d|%d|%ld|%s\n", id, name, gdesc, health, friendly, location_id, message);
+      printf("Leido: c:%ld|%s|%s|%d|%d|%ld|%s\n", id, name, gdesc, health, friendly, space_id, message);
 #endif
       if ((character = character_create(id))) { /* sets all character attributes and places it in the game */
         character_set_name(character, name);
         character_set_gdesc(character, gdesc);
         character_set_health(character, health);
         character_set_friendly(character, (Bool)friendly);
-        character_set_message(character, message);        
+        character_set_message(character, message);
         game_add_character(game, character);
-        game_set_character_location(game, location_id, id);
+        game_set_character_location(game, space_id, id);
       }
     }
   }

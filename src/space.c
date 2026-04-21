@@ -126,9 +126,9 @@ Status space_add_character(Space *space, Id id) {
 }
 
 /*   It gets the id of the character located in the Space */
-Id space_get_character(Space *space) {
-  if (!space) return NO_ID;
-  return space->characters;
+Id *space_get_character(Space *space) {
+  if (!space) return NULL;
+  return set_get_ids(space->characters); /* delegates to the set module */ 
 }
 
 Bool space_has_character(Space *space, Id character_id) {
