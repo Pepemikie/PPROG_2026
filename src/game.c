@@ -396,14 +396,25 @@ Id game_get_character_location(Game *game, Id character_id) {
 /*   It gets the character located in a given space */
 Character *game_get_character_in_space(Game *game, Id space_id) {
   int i;
+  Space *space = NULL;
+  Id *character_id = NULL;
+
   if (!game || space_id == NO_ID) return NULL;
+  
+  space = game_get_space(game, space_id);
+  if (!space) return NULL;
+  
+  character_id = space_get_character(space);
+  if (!character_id) return NULL;
 
   for (i = 0; i < MAX_CHARACTERS && game->characters[i] != NULL; i++) {
-    if (character_get_id(game->characters[i]) == *(space_get_character(game_get_space(game, space_id))))
-      return game->characters[i];
+      if (character_get_id(game->characters[i]) == *character_id)
+          return game->characters[i];
   }
   return NULL;
 }
+
+
 
 Character* game_get_character(Game* game, Id id) {
     int i;
