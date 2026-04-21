@@ -387,7 +387,7 @@ Id game_get_character_location(Game *game, Id character_id) {
   if (!game || character_id == NO_ID) return NO_ID;
 
   for (i = 0; i < game->n_spaces; i++) {
-    if (space_get_character(game->spaces[i]) == character_id)
+    if (space_has_character(game->spaces[i], character_id) == TRUE)
       return space_get_id(game->spaces[i]);
   }
   return NO_ID;
@@ -399,7 +399,7 @@ Character *game_get_character_in_space(Game *game, Id space_id) {
   if (!game || space_id == NO_ID) return NULL;
 
   for (i = 0; i < MAX_CHARACTERS && game->characters[i] != NULL; i++) {
-    if (character_get_id(game->characters[i]) == space_get_character(game_get_space(game, space_id)))
+    if (character_get_id(game->characters[i]) == *(space_get_character(game_get_space(game, space_id))))
       return game->characters[i];
   }
   return NULL;

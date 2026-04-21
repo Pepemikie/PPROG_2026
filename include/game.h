@@ -358,7 +358,7 @@ Id game_get_character_location(Game *game, Id character_id);
  * @param object_id the id of the character to be placed
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Status game_set_object_location(Game *game, Id space_id, Id object_id);
+Status game_set_character_location(Game *game, Id space_id, Id character_id);
 
 /**
  * @brief It adds a character to the game
