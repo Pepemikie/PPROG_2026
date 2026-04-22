@@ -156,7 +156,6 @@ Status game_actions_update(Game *game, Command *command) {
   return OK;
 }
 
-/*///////////////////////////////////////////////////////////////////////*/
 /*   Makes the player pick up the named object in the current space */
 Status game_actions_take(Game *game) {
   Id player_location = NO_ID;
@@ -211,7 +210,6 @@ Status game_actions_take(Game *game) {
   return ERROR;
 }
 
-/*///////////////////////////////////////////////////////////////////////////////*/
 /*   Makes the player drop the named object into the current space */
 Status game_actions_drop(Game *game) {
   Id player_location = NO_ID;
@@ -265,7 +263,6 @@ Status game_actions_drop(Game *game) {
   return OK;
 }
 
-/*///////////////////////////////////////////////////////////////////////////////*/
 /*Moves the player to the space in the direction specified by the command argument if there is one */
 Status game_actions_move(Game *game) {
   Id current_space = NO_ID;
@@ -306,7 +303,6 @@ Status game_actions_move(Game *game) {
   return game_set_player_location(game, next_space);
 }
 
-/*///////////////////////////////////////////////////////////////////////////////*/
 /* Inspects an object in the current space*/
 Status game_actions_inspect(Game *game) {
   Command *cmd = NULL;
@@ -366,10 +362,10 @@ Status game_actions_inspect(Game *game) {
 Status game_actions_attack(Game *game) {
   Player *p = NULL;
   Character *c = NULL;
-  /*Id loc = NO_ID;*/
+  Character *character_following = NULL;
   Command *cmd = NULL;
   char *arg = NULL;
-  int r;
+  int player_enemy, player_character;
 
   if (!game) return ERROR;
 
@@ -380,19 +376,24 @@ Status game_actions_attack(Game *game) {
   if (!arg || arg[0] == '\0') return ERROR;
 
   p = game_get_player(game);
-  /*loc = game_get_player_location(game);*/
   /* Buscamos al personaje en la sala actual */
   c = game_get_character_by_name(game, arg);
 
   if(!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR;
   if(character_is_friendly(c) || character_get_health(c) <= 0) return ERROR; /*error control: el personaje es amigo, no se puede atacar*/
   
-  r = rand() % 10; /* Número entre 0 y 9 */
+  player_enemy = rand() % 10; /* Número entre 0 y 9 */
+  player_character = rand() % 2; /* Número entre 0 y 1 */
     
-  if (r >= 0 && r <= 4) {
+  if (player_enemy >= 0 && player_enemy <= 4) {
   /* Gana el adversario: pierde el jugador */
-    player_set_health(p, player_get_health(p) - 1);
-  
+
+    if(player_character == 0) { /*el ataque va dirigido al jugador*/
+          player_set_health(p, player_get_health(p) - 1);
+    }
+    else if(player_character == 1 && character_get_following(character_following) != player_get_id(p)) { /*el ataque va dirigido al personaje que sigue al jugador*/
+          character_set_health(c, character_get_health(c) - 1);
+    }  
   /* Si el jugador llega a 0, termina el juego */
     if (player_get_health(p) <= 0) {
       game_set_finished(game, TRUE); /* marks game as finished */
@@ -408,53 +409,68 @@ Status game_actions_attack(Game *game) {
     }
   return OK;
 }
-/*/////////////AÑADIR ESPECIFICO PERSONAJE*/
+
 /*   Makes the player interact with a friendly character by chat */
 Status game_actions_chat(Game *game) {
   Character *c = NULL;
-  /*Id loc = NO_ID;*/
-  Command *cmd = NULL;
+  Id player_location = NO_ID;
+  Command *last_cmd = NULL;
+  Id character_location = NO_ID;
   char *arg = NULL;
 
   if (!game) return ERROR;
 
-  cmd = game_get_last_command(game);
-  if (!cmd) return ERROR;
+  player_location = game_get_player_location(game);
+  if (player_location == NO_ID) return ERROR;
 
-  arg = command_get_arg(cmd);
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return ERROR;
+
+  arg = command_get_arg(last_cmd);
   if (!arg || arg[0] == '\0') return ERROR;
-
-  /*loc = game_get_player_location(game);*/
 
   c = game_get_character_by_name(game, arg);
 
-  if (!c /*Y NO ESTA EN EL MISMO ESPACIO*/|| !character_is_friendly(c)) return ERROR;
+  if(!c || character_is_friendly(c) == FALSE || character_get_health(c) <= 0) return ERROR;
+
+  character_location = game_get_character_location(game, character_get_id(c));
+  if (character_location != player_location) return ERROR;
 
   game_set_last_message(game, character_get_message(c));
   
   return OK;
 }
-/*////////////AÑADIR ESPECIFICO PERSONAJE CON EL SET DE LA F5*/
+
 /*   Recruits a friendly character in the current space to follow the player */
 Status game_actions_recruit(Game *game) {
   Character *c = NULL;
-  /*Id player_loc = NO_ID;*/
-  Command *cmd = NULL;
+  Id player_location = NO_ID;
+  Command *last_cmd = NULL;
+  Id character_location = NO_ID;
+  Id current_player_id = NO_ID;
   char *arg = NULL;
 
   if (!game) return ERROR;
 
-  cmd = game_get_last_command(game);
-  if (!cmd) return ERROR;
+  current_player_id = player_get_id(game_get_player(game));
+  if (current_player_id == NO_ID) return ERROR;
 
-  arg = command_get_arg(cmd);
+  player_location = game_get_player_location(game);
+  if (player_location == NO_ID) return ERROR;
+
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return ERROR;
+
+  arg = command_get_arg(last_cmd);
   if (!arg || arg[0] == '\0') return ERROR;
 
-  /*player_loc = game_get_player_location(game);*/
-
   c = game_get_character_by_name(game, arg);
-  if(!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR; /*error control: el personaje no está en la sala*/
-  if(!character_is_friendly(c)) return ERROR; /*error control: el personaje no es amigo*/ 
+
+  if(!c || character_is_friendly(c) == FALSE) return ERROR;
+  if(character_get_following(c) != NO_ID) return ERROR;
+
+  character_location = game_get_character_location(game, character_get_id(c));
+  if (character_location != player_location) return ERROR;
 
   character_set_following(c, player_get_id(game_get_player(game)));
 
@@ -464,31 +480,26 @@ Status game_actions_recruit(Game *game) {
 /*  Abandons the character that you have previously recruited*/
 Status game_actions_abandon(Game *game) {
   Character *c = NULL;
-  /*Id player_loc = NO_ID;*/
-  Id player_id = NO_ID;
-  Command *cmd = NULL;
+  Command *last_cmd = NULL;
   char *arg = NULL;
+  Id current_player_id = NO_ID;
 
   if (!game) return ERROR;
 
-  cmd = game_get_last_command(game);
-  if (!cmd) return ERROR;
+  current_player_id = player_get_id(game_get_player(game));
+  if (current_player_id == NO_ID) return ERROR;
 
-  arg = command_get_arg(cmd);
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return ERROR;
+
+  arg = command_get_arg(last_cmd);
   if (!arg || arg[0] == '\0') return ERROR;
 
-  /*player_loc = game_get_player_location(game);*/
-  player_id = player_get_id(game_get_player(game));
-
-  /* Get the character in the player's current space */
   c = game_get_character_by_name(game, arg);
 
-  if (!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR;
+  if(!c || character_get_following(c) == NO_ID) return ERROR;
+  if(character_get_following(c) != current_player_id) return ERROR;
 
-  /* Check if the character is friendly and following the player */
-  if (!character_is_friendly(c) || character_get_following(c) != player_id) return ERROR;
-  
-  /* Make the character stop following the player */
   character_set_following(c, NO_ID);
 
   return OK;

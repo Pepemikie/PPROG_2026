@@ -62,6 +62,7 @@ Status space_destroy(Space *space) {
   if (!space) return ERROR;
 
   if (space->objects) set_destroy(space->objects); /* destroys the object set */
+  if (space->characters) set_destroy(space->characters); /* destroys the character set */
 
   free(space);
   return OK;

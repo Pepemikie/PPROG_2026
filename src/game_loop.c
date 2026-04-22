@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
     game_next_turn(game);                /* changes player's turn. Multiplayer (F11, I3) */
     last_cmd = game_get_last_command(game); /* actualizamos al final de cada iteración */
   }
-  graphic_engine_paint_game(gengine, game);
+  /*graphic_engine_paint_game(gengine, game);*/
   game_loop_cleanup(game, gengine); /* frees all resources */
   if (g_logfile) {
     fclose(g_logfile);

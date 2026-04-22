@@ -41,10 +41,6 @@ Status game_reader_load_spaces(Game *game, char *filename) {
       id = atol(toks);
       toks = strtok(NULL, "|");
       strcpy(name, toks);
-      toks = strtok(NULL, "|"); /* north */
-      toks = strtok(NULL, "|"); /* east */
-      toks = strtok(NULL, "|"); /* south */
-      toks = strtok(NULL, "|"); /* west */
 
       /* Read gdesc lines — 5 lines of up to 9 chars */
       for (i = 0; i < SPACE_GDESC_LINES; i++) {
