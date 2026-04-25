@@ -211,6 +211,14 @@ Bool space_has_character(Space *space, Id character_id);
  */
 int space_get_number_of_characters(Space* space);
 
+/**
+ * @brief It removes a character from the Space
+ * 
+ * @param space a pointer to the Space
+ * @param id the id of the character to be removed from the Space
+ * @return OK, if everything goes well or ERROR if there was some mistake 
+ */
+Status space_del_character(Space *space, Id id);
 
 #ifdef DEBUG
 /**

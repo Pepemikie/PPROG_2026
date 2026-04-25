@@ -270,6 +270,10 @@ Status game_actions_move(Game *game) {
   Direction dir = UNKNOWN_DIR;
   char *arg = NULL;
   Command *cmd = NULL;
+  Character *aux = NULL;
+  Character *follower = NULL;
+  Id player_id = NO_ID;
+  int i = 0;
 
   if (!game) return ERROR;
 
@@ -300,7 +304,24 @@ Status game_actions_move(Game *game) {
   if (next_space == NO_ID)
     return ERROR;
 
-  return game_set_player_location(game, next_space);
+  /* Mover al jugador */
+  if (game_set_player_location(game, next_space) == ERROR)
+    return ERROR;
+  
+  /* Buscar follower y moverlo al mismo espacio */
+  player_id = player_get_id(game_get_player(game));
+
+  for (i = 0; i < MAX_CHARACTERS; i++) {
+    aux = game_get_character_by_index(game, i);
+    if (!aux) break;
+    if (character_get_following(aux) == player_id && character_get_health(aux) > 0) {
+      follower = aux;
+      space_del_character(game_get_space(game, current_space), character_get_id(follower));
+      space_add_character(game_get_space(game, next_space), character_get_id(follower));
+    }
+  }
+
+  return OK;
 }
 
 /* Inspects an object in the current space*/
@@ -362,10 +383,16 @@ Status game_actions_inspect(Game *game) {
 Status game_actions_attack(Game *game) {
   Player *p = NULL;
   Character *c = NULL;
-  Character *character_following = NULL;
+  Character *follower = NULL;
+  Character *followers[MAX_CHARACTERS];
+  Character *aux = NULL;
   Command *cmd = NULL;
   char *arg = NULL;
+  Id player_id = NO_ID;
   int player_enemy, player_character;
+  int i = 0;
+  int n_followers = 0;
+  int damage = 0;
 
   if (!game) return ERROR;
 
@@ -376,37 +403,55 @@ Status game_actions_attack(Game *game) {
   if (!arg || arg[0] == '\0') return ERROR;
 
   p = game_get_player(game);
-  /* Buscamos al personaje en la sala actual */
+  if (!p) return ERROR;
+
+  player_id = player_get_id(p);
+  if (player_id == NO_ID) return ERROR;
+
+  /* Buscar al enemigo por nombre */
   c = game_get_character_by_name(game, arg);
+  if (!c) return ERROR;
 
-  if(!c /*Y NO ESTA EN EL MISMO ESPACIO*/) return ERROR;
-  if(character_is_friendly(c) || character_get_health(c) <= 0) return ERROR; /*error control: el personaje es amigo, no se puede atacar*/
-  
-  player_enemy = rand() % 10; /* Número entre 0 y 9 */
-  player_character = rand() % 2; /* Número entre 0 y 1 */
-    
-  if (player_enemy >= 0 && player_enemy <= 4) {
-  /* Gana el adversario: pierde el jugador */
+  /* Verificar que el enemigo está en el mismo espacio que el jugador */
+  if (game_get_character_location(game, character_get_id(c)) != game_get_player_location(game))
+    return ERROR;
 
-    if(player_character == 0) { /*el ataque va dirigido al jugador*/
-          player_set_health(p, player_get_health(p) - 1);
+  /* No se puede atacar a personajes amigos o muertos */
+  if (character_is_friendly(c) || character_get_health(c) <= 0) return ERROR;
+
+  /* Buscar automáticamente si hay un follower */
+  for (i = 0; i < MAX_CHARACTERS; i++) {
+    aux = game_get_character_by_index(game, i);
+    if(!aux) break;
+    if (aux && character_get_following(aux) == player_id && character_get_health(aux) > 0) {
+      followers[n_followers++] = aux;
     }
-    else if(player_character == 1 && character_get_following(character_following) != player_get_id(p)) { /*el ataque va dirigido al personaje que sigue al jugador*/
-          character_set_health(c, character_get_health(c) - 1);
-    }  
-  /* Si el jugador llega a 0, termina el juego */
+  }
+
+  player_enemy    = rand() % 10; /* 0-9 */
+  player_character = rand() % 2; /* 0 o 1 */
+
+  if (player_enemy <= 4) {
+    /* Gana el enemigo: inflige daño al jugador o al follower (50/50) */
+    if (n_followers > 0 && player_character == 1) {
+      follower = followers[rand() % n_followers];
+      /* Daño al follower que toca*/
+      character_set_health(follower, character_get_health(follower) - 1);
+    } else {
+      /* Daño al jugador */
+      player_set_health(p, player_get_health(p) - 1);
+    }
+
+    /* Si el jugador muere, fin del juego */
     if (player_get_health(p) <= 0) {
-      game_set_finished(game, TRUE); /* marks game as finished */
+      game_set_finished(game, TRUE);
     }
   } else {
-  /* Gana el jugador: pierde el personaje */
-    if (character_get_following(c) != NO_ID) {
-    
-      character_set_health(c, character_get_health(c) - 2);
-    }
-    else
-      character_set_health(c, character_get_health(c) - 1);
-    }
+    /* Gana el jugador: el follower ayuda si existe */
+      damage = 1 + n_followers;
+      character_set_health(c, character_get_health(c) - damage);
+  }
+
   return OK;
 }
 
@@ -467,7 +512,7 @@ Status game_actions_recruit(Game *game) {
   c = game_get_character_by_name(game, arg);
 
   if(!c || character_is_friendly(c) == FALSE) return ERROR;
-  if(character_get_following(c) != NO_ID) return ERROR;
+  /*if(character_get_following(c) != NO_ID) return ERROR;*/
 
   character_location = game_get_character_location(game, character_get_id(c));
   if (character_location != player_location) return ERROR;

@@ -181,6 +181,11 @@ Bool space_get_discovered(Space *space) {
   return space->discovered;           /* returns the discovered state of the space */
 }
 
+Status space_del_character(Space *space, Id id) {
+  if (!space || id == NO_ID) return ERROR;
+  return set_del(space->characters, id);
+}
+
 #ifdef DEBUG
 /*   It prints the data of a Space */
 Status space_print(Space *space) {

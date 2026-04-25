@@ -461,10 +461,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i");
+  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i, recruit or r, abandon or b");
 
   /* 5. FEEDBACK — shows last command and its result status */
-  screen_area_clear(ge->feedback);
+  screen_area_clear(ge->feedback); /*///////////////////////////////////////////////////////////////////////////////ELIMINAR CUANDO SE ARREGLE EL PROBLEMA DEL DOBLE COMANDO*/
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
     sprintf(str, " %s: %s", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
