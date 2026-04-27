@@ -23,9 +23,6 @@
 #include "object.h"
 #include "game.h"
 
-/** @brief Pointer to the log file */
-extern FILE *g_logfile;
-
 /** @brief Width of the map area */
 #define WIDTH_MAP 55 
 /** @brief Width of the description area */
@@ -390,7 +387,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
       int health = character_get_health(character);
       if (health > 0)
-        sprintf(str, "  %-10s: %d (%d hp)", character_get_name(character), (int)char_loc, health);
+        sprintf(str, "  %-10s: %d (%d hp) %s", character_get_name(character), (int)char_loc, health, character_get_following(character) == player_get_id(p) ? "(Recluted)" : "(Not recluted)");
       else
         sprintf(str, "  %-10s: %d (DEAD)", character_get_name(character), (int)char_loc);
       screen_area_puts(ge->descript, str);
@@ -461,10 +458,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i, recruit or r, abandon or b");
+  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i,");
+  screen_area_puts(ge->help, "  recruit or r, abandon or b");
 
   /* 5. FEEDBACK — shows last command and its result status */
-  screen_area_clear(ge->feedback); /*///////////////////////////////////////////////////////////////////////////////ELIMINAR CUANDO SE ARREGLE EL PROBLEMA DEL DOBLE COMANDO*/
+  screen_area_clear(ge->feedback);
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
     sprintf(str, " %s: %s", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
@@ -484,18 +482,4 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     screen_paint(BLACK);  /* fallback for more players */
   }
   printf("prompt:> ");
-
-  /* Log the last command if logging is enabled */
-  if (g_logfile != NULL && last_cmd != UNKNOWN && last_cmd != NO_CMD) {
-    char arg[WORD_SIZE] = "";
-    if (command_get_arg(game_get_last_command(game)) != NULL) {
-      strcpy(arg, command_get_arg(game_get_last_command(game)));
-    }
-    if (arg[0] != '\0') {
-      fprintf(g_logfile, "%s %s: %s\n", cmd_to_str[last_cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR");
-    } else {
-      fprintf(g_logfile, "%s: %s\n", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
-    }
-    fflush(g_logfile);
-  }
 }
