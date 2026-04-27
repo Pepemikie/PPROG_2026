@@ -387,7 +387,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
       int health = character_get_health(character);
       if (health > 0)
-        sprintf(str, "  %-10s: %d (%d hp) %s", character_get_name(character), (int)char_loc, health, character_get_following(character) == player_get_id(p) ? "(Recluted)" : "(Not recluted)");
+        sprintf(str, "  %-10s: %d (%d hp) %s", character_get_name(character), (int)char_loc, health, character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
       else
         sprintf(str, "  %-10s: %d (DEAD)", character_get_name(character), (int)char_loc);
       screen_area_puts(ge->descript, str);
