@@ -24,13 +24,13 @@
 #include "game.h"
 
 /** @brief Width of the map area */
-#define WIDTH_MAP 75 
+#define WIDTH_MAP 55 
 /** @brief Width of the description area */
-#define WIDTH_DES 60
+#define WIDTH_DES 55
 /** @brief Width of the banner area */
-#define WIDTH_BAN 30
+#define WIDTH_BAN 25
 /** @brief Height of the map area */
-#define HEIGHT_MAP 35
+#define HEIGHT_MAP 30
 /** @brief Height of the banner area */
 #define HEIGHT_BAN 1
 /** @brief Height of the help area */
@@ -38,7 +38,7 @@
 /** @brief Height of the feedback area */
 #define HEIGHT_FDB 3
 /** @brief Width of each room in the map */
-#define ROOM_WIDTH 20
+#define ROOM_WIDTH 15
 
 /** @brief Structure representing the graphic engine */
 struct _Graphic_engine {
@@ -118,9 +118,9 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (east) east_discovered = space_get_discovered(east);
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
-  sprintf(str, "%s  +--------------------+  %s",
-      !west ? "                 " : "+--------------------+",
-      !east ? "                 " : "+--------------------+");
+  sprintf(str, "%s  +---------------+  %s",
+      !west ? "                 " : "+---------------+",
+      !east ? "                 " : "+---------------+");
   screen_area_puts(area, str);
 
   /* CHARACTER + ID LINE */
@@ -133,7 +133,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     } else {
       character_gdesc = "      ";
     }
-    sprintf(west_str, "|     %s %8d|", character_gdesc, (int)space_get_id(west));
+    sprintf(west_str, "|     %s %3d|", character_gdesc, (int)space_get_id(west));
   }
 
     if (middle_discovered == TRUE) {               /* F12, I3 */
@@ -152,7 +152,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     }
   }
 
-  sprintf(middle_str, "  | %s %s %8d|  ",
+  sprintf(middle_str, "  | %s %s %3d|  ",
       is_act == TRUE ? active_player_gdesc : "   ", /* marks the active space with current player's indicator */
       character_gdesc,
       (int)space_get_id(middle));
@@ -166,7 +166,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     } else {
       character_gdesc = "      ";
     }
-    sprintf(east_str, "|     %s %8d|", character_gdesc, (int)space_get_id(east));
+    sprintf(east_str, "|     %s %3d|", character_gdesc, (int)space_get_id(east));
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -181,15 +181,15 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     if (!west) {
       sprintf(west_str, "                 ");
     } else {
-      sprintf(west_str, "|%-14s      |", wg ? wg : "         ");
+      sprintf(west_str, "|%-9s      |", wg ? wg : "         ");
     }
 
-    sprintf(middle_str, "  |%-14s      |  ", mg ? mg : "         ");
+    sprintf(middle_str, "  |%-9s      |  ", mg ? mg : "         ");
 
     if (!east) {
       sprintf(east_str, "                 ");
     } else {
-      sprintf(east_str, "|%-14s      |", eg ? eg : "         ");
+      sprintf(east_str, "|%-9s      |", eg ? eg : "         ");
     }
 
     sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -236,9 +236,9 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   screen_area_puts(area, str);
 
   /* BOTTOM LINE */
-  sprintf(str, "%s  +--------------------+  %s",
-      !west ? "                 " : "+--------------------+",
-      !east ? "                 " : "+--------------------+");
+  sprintf(str, "%s  +---------------+  %s",
+      !west ? "                 " : "+---------------+",
+      !east ? "                 " : "+---------------+");
   screen_area_puts(area, str);
 }
 
@@ -387,9 +387,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
       int health = character_get_health(character);
       if (health > 0)
-        sprintf(str, "  %-10s: %d (%d hp) %s", character_get_name(character), (int)char_loc, health, character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
+        sprintf(str, "  %-10s: %d (%d hp) [%s] %s", character_get_name(character), (int)char_loc, health, character_get_gdesc(character), character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
       else
-        sprintf(str, "  %-10s: %d (DEAD)", character_get_name(character), (int)char_loc);
+        sprintf(str, "  %-10s: %d (DEAD) [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
       screen_area_puts(ge->descript, str);
     }
   screen_area_puts(ge->descript, " ");
@@ -401,8 +401,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!p) continue;
     p_space = game_get_space(game, player_get_location(p));
     if (!p_space || space_get_discovered(p_space) == FALSE) continue; /* only show discovered players */
-    sprintf(str, "  %-8s: %d (%d hp)", player_get_name(p),
-            (int)player_get_location(p), player_get_health(p));
+    sprintf(str, "  %-8s: %d (%d hp) [%s]", player_get_name(p),
+            (int)player_get_location(p), player_get_health(p), player_get_gdesc(p));
     screen_area_puts(ge->descript, str);
   }
   screen_area_puts(ge->descript, " ");
