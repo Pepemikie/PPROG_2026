@@ -15,6 +15,12 @@
 #include <string.h>
 #include <strings.h>
 
+/** @brief Pointer to the log file */
+extern FILE *g_logfile;
+
+/** @brief Command string table */
+extern char *cmd_to_str[N_CMD][N_CMDT];
+
 /**
  * @brief Does nothing when the command is not recognized
  * @author Jose Miguel Romero Oubina
@@ -317,6 +323,20 @@ Status game_actions_update(Game *game, Command *command) {
 
     default:
       break;
+  }
+
+  /* Log the command if logging is enabled */
+  if (g_logfile != NULL && cmd != UNKNOWN && cmd != NO_CMD) {
+    char arg[WORD_SIZE] = "";
+    if (command_get_arg(command) != NULL) {
+      strcpy(arg, command_get_arg(command));
+    }
+    if (arg[0] != '\0') {
+      fprintf(g_logfile, "%s %s: %s\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR");
+    } else {
+      fprintf(g_logfile, "%s: %s\n", cmd_to_str[cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
+    }
+    fflush(g_logfile);
   }
 
   return OK;

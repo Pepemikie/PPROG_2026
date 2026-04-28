@@ -23,17 +23,14 @@
 #include "object.h"
 #include "game.h"
 
-/** @brief Pointer to the log file */
-extern FILE *g_logfile;
-
 /** @brief Width of the map area */
-#define WIDTH_MAP 55 
+#define WIDTH_MAP 75 
 /** @brief Width of the description area */
-#define WIDTH_DES 55
+#define WIDTH_DES 60
 /** @brief Width of the banner area */
-#define WIDTH_BAN 25
+#define WIDTH_BAN 30
 /** @brief Height of the map area */
-#define HEIGHT_MAP 30
+#define HEIGHT_MAP 35
 /** @brief Height of the banner area */
 #define HEIGHT_BAN 1
 /** @brief Height of the help area */
@@ -41,7 +38,7 @@ extern FILE *g_logfile;
 /** @brief Height of the feedback area */
 #define HEIGHT_FDB 3
 /** @brief Width of each room in the map */
-#define ROOM_WIDTH 15
+#define ROOM_WIDTH 20
 
 /** @brief Structure representing the graphic engine */
 struct _Graphic_engine {
@@ -121,9 +118,9 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (east) east_discovered = space_get_discovered(east);
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
-  sprintf(str, "%s  +---------------+  %s",
-      !west ? "                 " : "+---------------+",
-      !east ? "                 " : "+---------------+");
+  sprintf(str, "%s  +--------------------+  %s",
+      !west ? "                 " : "+--------------------+",
+      !east ? "                 " : "+--------------------+");
   screen_area_puts(area, str);
 
   /* CHARACTER + ID LINE */
@@ -136,7 +133,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     } else {
       character_gdesc = "      ";
     }
-    sprintf(west_str, "|     %s %3d|", character_gdesc, (int)space_get_id(west));
+    sprintf(west_str, "|     %s %8d|", character_gdesc, (int)space_get_id(west));
   }
 
     if (middle_discovered == TRUE) {               /* F12, I3 */
@@ -155,7 +152,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     }
   }
 
-  sprintf(middle_str, "  | %s %s %3d|  ",
+  sprintf(middle_str, "  | %s %s %8d|  ",
       is_act == TRUE ? active_player_gdesc : "   ", /* marks the active space with current player's indicator */
       character_gdesc,
       (int)space_get_id(middle));
@@ -169,7 +166,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     } else {
       character_gdesc = "      ";
     }
-    sprintf(east_str, "|     %s %3d|", character_gdesc, (int)space_get_id(east));
+    sprintf(east_str, "|     %s %8d|", character_gdesc, (int)space_get_id(east));
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -184,15 +181,15 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     if (!west) {
       sprintf(west_str, "                 ");
     } else {
-      sprintf(west_str, "|%-9s      |", wg ? wg : "         ");
+      sprintf(west_str, "|%-14s      |", wg ? wg : "         ");
     }
 
-    sprintf(middle_str, "  |%-9s      |  ", mg ? mg : "         ");
+    sprintf(middle_str, "  |%-14s      |  ", mg ? mg : "         ");
 
     if (!east) {
       sprintf(east_str, "                 ");
     } else {
-      sprintf(east_str, "|%-9s      |", eg ? eg : "         ");
+      sprintf(east_str, "|%-14s      |", eg ? eg : "         ");
     }
 
     sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -239,9 +236,9 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   screen_area_puts(area, str);
 
   /* BOTTOM LINE */
-  sprintf(str, "%s  +---------------+  %s",
-      !west ? "                 " : "+---------------+",
-      !east ? "                 " : "+---------------+");
+  sprintf(str, "%s  +--------------------+  %s",
+      !west ? "                 " : "+--------------------+",
+      !east ? "                 " : "+--------------------+");
   screen_area_puts(area, str);
 }
 
@@ -390,7 +387,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
       int health = character_get_health(character);
       if (health > 0)
-        sprintf(str, "  %-10s: %d (%d hp)", character_get_name(character), (int)char_loc, health);
+        sprintf(str, "  %-10s: %d (%d hp) %s", character_get_name(character), (int)char_loc, health, character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
       else
         sprintf(str, "  %-10s: %d (DEAD)", character_get_name(character), (int)char_loc);
       screen_area_puts(ge->descript, str);
@@ -461,10 +458,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i, recruit or r, abandon or b, use or u");
+  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i,");
+  screen_area_puts(ge->help, "  recruit or r, abandon or b");
 
   /* 5. FEEDBACK — shows last command and its result status */
-  screen_area_clear(ge->feedback); /*///////////////////////////////////////////////////////////////////////////////ELIMINAR CUANDO SE ARREGLE EL PROBLEMA DEL DOBLE COMANDO*/
+  screen_area_clear(ge->feedback);
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
     sprintf(str, " %s: %s", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
@@ -484,18 +482,4 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     screen_paint(BLACK);  /* fallback for more players */
   }
   printf("prompt:> ");
-
-  /* Log the last command if logging is enabled */
-  if (g_logfile != NULL && last_cmd != UNKNOWN && last_cmd != NO_CMD) {
-    char arg[WORD_SIZE] = "";
-    if (command_get_arg(game_get_last_command(game)) != NULL) {
-      strcpy(arg, command_get_arg(game_get_last_command(game)));
-    }
-    if (arg[0] != '\0') {
-      fprintf(g_logfile, "%s %s: %s\n", cmd_to_str[last_cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR");
-    } else {
-      fprintf(g_logfile, "%s: %s\n", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
-    }
-    fflush(g_logfile);
-  }
 }
