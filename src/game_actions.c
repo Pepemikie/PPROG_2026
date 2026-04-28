@@ -15,12 +15,6 @@
 #include <string.h>
 #include <strings.h>
 
-/** @brief Pointer to the log file */
-extern FILE *g_logfile;
-
-/** @brief Command string table */
-extern char *cmd_to_str[N_CMD][N_CMDT];
-
 /**
  * @brief Does nothing when the command is not recognized
  * @author Jose Miguel Romero Oubina
@@ -107,6 +101,168 @@ Status game_actions_recruit(Game *game);
  */
 Status game_actions_abandon(Game *game);
 
+/**
+ * @brief Uses an object on the player or a friendly character
+ * 
+ * @param game a pointer to the Game struct
+ * @return OK if the object was used, ERROR otherwise
+ */
+Status game_actions_use(Game *game);
+
+/**
+ * @brief Checks if an object can be taken by the player
+ * @author Iñaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param obj a pointer to the Object
+ * @return TRUE if the object can be taken, FALSE otherwise
+ */
+Bool can_take_object(Game *game, Object *obj);
+
+/**
+ * @brief Handles the logic of taking an object, including dependencies and links
+ * @author Iñaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param obj a pointer to the Object
+ * @param current_space a pointer to the current Space
+ * @return OK if the object was taken, ERROR otherwise
+ */
+Status handle_take_object(Game *game, Object *obj, Space *current_space);
+
+/**
+ * @brief Handles the logic of dropping an object, including dependent objects
+ * @author Iñaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param obj a pointer to the Object
+ * @param current_space a pointer to the current Space
+ * @return OK if the object was dropped, ERROR otherwise
+ */
+Status handle_drop_object(Game *game, Object *obj, Space *current_space);
+
+/* Implementation of auxiliary functions */
+
+/**
+ * @brief Checks if an object can be taken by the player
+ * @author Iñaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param obj a pointer to the Object
+ * @return TRUE if the object can be taken, FALSE otherwise
+ */
+Bool can_take_object(Game *game, Object *obj) {
+  if (!game || !obj) return FALSE;
+  
+  /* Check if object is movable */
+  if (!object_get_movable(obj)) return FALSE;
+  
+  /* Check dependency */
+  if (object_get_dependency(obj) != NO_ID) {
+    if (!inventory_has_object(player_get_backpack(game_get_player(game)), object_get_dependency(obj))) return FALSE;
+  }
+  
+  return TRUE;
+}
+
+/**
+ * @brief Handles the logic of taking an object, including dependencies and links
+ * @author Iñaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param obj a pointer to the Object
+ * @param current_space a pointer to the current Space
+ * @return OK if the object was taken, ERROR otherwise
+ */
+Status handle_take_object(Game *game, Object *obj, Space *current_space) {
+  Id object_id;
+  
+  if (!game || !obj || !current_space) return ERROR;
+  
+  object_id = object_get_id(obj);
+  
+  if (player_add_object(game_get_player(game), object_id) == ERROR) return ERROR;
+  space_del_object(current_space, object_id);
+  
+  /* Add health to player */
+  player_modify_health(game_get_player(game), object_get_health(obj));
+  
+  /* Open link if applicable */
+  if (object_get_open(obj) != NO_ID) {
+    Link *link = game_get_link(game, object_get_open(obj));
+    if (link) link_set_open(link, TRUE);
+  }
+  
+  return OK;
+}
+
+/**
+ * @brief Handles the logic of dropping an object, including dependent objects
+ * @author Iñaki López Rocha
+ *
+ * @param game a pointer to the Game struct
+ * @param obj a pointer to the Object
+ * @param current_space a pointer to the current Space
+ * @return OK if the object was dropped, ERROR otherwise
+ */
+Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
+  Id object_id, player_location;
+  Set *inv_set = NULL;
+  Id *ids = NULL;
+  int n = 0, i = 0, num_to_drop = 0, j = 0;
+  Id *to_drop = NULL;
+  Object *dep_obj = NULL;
+  
+  if (!game || !obj || !current_space) return ERROR;
+  
+  object_id = object_get_id(obj);
+  player_location = game_get_player_location(game);
+  
+  if (player_del_object(game_get_player(game), object_id) == ERROR) return ERROR;
+  space_add_object(current_space, object_id);
+  game_set_object_location(game, player_location, object_id);
+  
+  /* Drop dependent objects */
+  inv_set = inventory_get_objects(player_get_backpack(game_get_player(game)));
+  if (!inv_set) return OK; /* No inventory, nothing to drop */
+  
+  n = set_get_n_ids(inv_set);
+  ids = set_get_ids(inv_set);
+  if (!ids || n <= 0) return OK;
+  
+  /* Count dependent objects */
+  for (i = 0; i < n; i++) {
+    dep_obj = game_get_object(game, ids[i]);
+    if (dep_obj && object_get_dependency(dep_obj) == object_id) {
+      num_to_drop++;
+    }
+  }
+  
+  if (num_to_drop == 0) return OK;
+  
+  to_drop = (Id*)malloc(sizeof(Id) * num_to_drop);
+  if (!to_drop) return OK; /* Memory error, but object was dropped */
+  
+  /* Collect ids of dependent objects */
+  j = 0;
+  for (i = 0; i < n; i++) {
+    dep_obj = game_get_object(game, ids[i]);
+    if (dep_obj && object_get_dependency(dep_obj) == object_id) {
+      to_drop[j++] = ids[i];
+    }
+  }
+  
+  /* Drop dependent objects */
+  for (i = 0; i < num_to_drop; i++) {
+    player_del_object(game_get_player(game), to_drop[i]);
+    space_add_object(current_space, to_drop[i]);
+    game_set_object_location(game, player_location, to_drop[i]);
+  }
+  
+  free(to_drop);
+  return OK;
+}
+
 Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
 
@@ -155,22 +311,12 @@ Status game_actions_update(Game *game, Command *command) {
       game_set_last_status(game, game_actions_abandon(game));
       break;
 
+    case USE:
+      game_set_last_status(game, game_actions_use(game));
+      break;
+
     default:
       break;
-  }
-
-  /* Log the command if logging is enabled */
-  if (g_logfile != NULL && cmd != UNKNOWN && cmd != NO_CMD) {
-    char arg[WORD_SIZE] = "";
-    if (command_get_arg(command) != NULL) {
-      strcpy(arg, command_get_arg(command));
-    }
-    if (arg[0] != '\0') {
-      fprintf(g_logfile, "%s %s: %s\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR");
-    } else {
-      fprintf(g_logfile, "%s: %s\n", cmd_to_str[cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
-    }
-    fflush(g_logfile);
   }
 
   return OK;
@@ -220,9 +366,14 @@ Status game_actions_take(Game *game) {
       }
 
       if (object_id != NO_ID) {
-        if (player_add_object(game_get_player(game), object_id) == ERROR) return ERROR;
-        space_del_object(current_space, object_id);
-        return OK;
+        obj = game_get_object(game, object_id);
+        if (!obj) return ERROR;
+        
+        /* Check if object can be taken */
+        if (!can_take_object(game, obj)) return ERROR;
+        
+        /* Handle taking the object */
+        return handle_take_object(game, obj, current_space);
       }
     }
   }
@@ -275,12 +426,10 @@ Status game_actions_drop(Game *game) {
 
   if (carried_object_id == NO_ID) return ERROR;
 
-  if (player_del_object(game_get_player(game), carried_object_id) == ERROR) return ERROR;
+  obj = game_get_object(game, carried_object_id);
+  if (!obj) return ERROR;
 
-  space_add_object(current_space, carried_object_id);
-  game_set_object_location(game, player_location, carried_object_id);
-
-  return OK;
+  return handle_drop_object(game, obj, current_space);
 }
 
 /*Moves the player to the space in the direction specified by the command argument if there is one */
@@ -311,6 +460,10 @@ Status game_actions_move(Game *game) {
     dir = E;
   else if (strcasecmp(arg, "west") == 0 || strcasecmp(arg, "w") == 0)
     dir = W;
+  else if (strcasecmp(arg, "up") == 0 || strcasecmp(arg, "u") == 0)
+    dir = U;
+  else if (strcasecmp(arg, "down") == 0 || strcasecmp(arg, "d") == 0)
+    dir = D;
   else
     return ERROR;
 
@@ -566,6 +719,86 @@ Status game_actions_abandon(Game *game) {
   if(character_get_following(c) != current_player_id) return ERROR;
 
   character_set_following(c, NO_ID);
+
+  return OK;
+}
+
+/*  Uses an object on the player or a friendly character */
+Status game_actions_use(Game *game) {
+  Id player_location = NO_ID;
+  Id object_id = NO_ID;
+  Object *obj = NULL;
+  Player *p = NULL;
+  Character *c = NULL;
+  int i = 0;
+  Command *last_cmd = NULL;
+  char *arg = NULL;
+  char *arg2 = NULL;
+
+  if (!game) return ERROR;
+
+  p = game_get_player(game);
+  if (!p) return ERROR;
+
+  player_location = game_get_player_location(game);
+  if (player_location == NO_ID) return ERROR;
+
+  last_cmd = game_get_last_command(game);
+  if (!last_cmd) return ERROR;
+
+  arg = command_get_arg(last_cmd);
+  if (!arg || arg[0] == '\0') return ERROR;
+
+  /* Get the object from the player's inventory */
+  Set *inv_set = inventory_get_objects(player_get_backpack(p));
+  if (!inv_set) return ERROR;
+
+  int n = set_get_n_ids(inv_set);
+  Id *ids = set_get_ids(inv_set);
+  
+  if (!ids || n <= 0) return ERROR;
+
+  /* Find the object with the given name */
+  for (i = 0; i < n; i++) {
+    obj = game_get_object(game, ids[i]);
+    if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
+      object_id = ids[i];
+      break;
+    }
+  }
+
+  if (object_id == NO_ID || !obj) return ERROR;
+
+  /* Check if object is usable (health != 0) */
+  if (object_get_health(obj) == 0) return ERROR;
+
+  /* Get the optional second argument (character name) */
+  arg2 = command_get_arg2(last_cmd);
+
+  /* Determine who will be affected by the object */
+  if (arg2 && arg2[0] != '\0') {
+    /* Use object on a character */
+    c = game_get_character_by_name(game, arg2);
+    if (!c) return ERROR;
+
+    /* Verify the character is in the same space and is friendly */
+    Id char_location = game_get_character_location(game, character_get_id(c));
+    if (char_location != player_location) return ERROR;
+
+    if (!character_is_friendly(c)) return ERROR;
+
+    /* Check if character is following the player */
+    if (character_get_following(c) != player_get_id(p)) return ERROR;
+
+    /* Apply health to the character */
+    character_set_health(c, character_get_health(c) + object_get_health(obj));
+  } else {
+    /* Use object on the player */
+    player_modify_health(p, object_get_health(obj));
+  }
+
+  /* Remove the object from the player's inventory and the game */
+  player_del_object(p, object_id);
 
   return OK;
 }

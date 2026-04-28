@@ -1,0 +1,22 @@
+F9: Modificación del fichero de datos y módulos afectados
+
+Descripción de los cambios realizados:
+
+1. **Modificación del archivo de datos `castle.dat`:**
+   - Se agregaron los campos adicionales a las definiciones de objetos para incluir las nuevas propiedades implementadas en fases anteriores.
+   - Campos agregados: `health` (puntos de salud), `movable` (si el objeto es movible), `dependency` (ID del objeto del que depende), `open` (ID del link que abre).
+   - Ejemplo de cambio:
+     - Antes: `#o:21|rock|A heavy rock|11`
+     - Después: `#o:21|rock|A heavy rock|11|0|1|-1|-1`
+   - Esto se aplicó a todos los objetos definidos (rock, shield, cap, apple).
+
+2. **Verificación de funciones de carga:**
+   - Las funciones de carga en `game_reader.c` ya estaban implementadas para leer estos campos adicionales desde el archivo de datos.
+   - No se requirieron modificaciones en las funciones `game_reader_load_spaces` o `game_reader_load_objects`, ya que soportaban la lectura de `health`, `movable`, `dependency` y `open`.
+   - Los cambios en el archivo de datos permiten que los objetos se carguen correctamente con sus nuevas propiedades.
+
+3. **Módulos afectados:**
+   - **Objetos:** El módulo de objetos (`object.h`, `object.c`) ya incluía las funciones para manejar estas propiedades, por lo que solo se actualizó el archivo de datos.
+   - No se afectaron otros módulos como espacios o personajes, ya que los cambios fueron específicos a objetos.
+
+Estos cambios aseguran que el archivo de datos sea consistente con las nuevas funcionalidades de los objetos, permitiendo su correcta carga y uso en el juego.

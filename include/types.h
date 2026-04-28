@@ -24,6 +24,6 @@ typedef enum { FALSE, TRUE } Bool;
 typedef enum { ERROR, OK } Status;
 
 /** @brief It defines the Direction type */
-typedef enum {N, S, E, W, UNKNOWN_DIR} Direction;
+typedef enum {N, S, E, W, U, D, UNKNOWN_DIR} Direction;
 
 #endif

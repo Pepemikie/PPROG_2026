@@ -1,0 +1,17 @@
+Implementación de F6: Modificación de la enumeración de direcciones para incluir up y down.
+
+Cambios realizados:
+
+1. En include/types.h:
+   - Modificada la enumeración Direction para incluir U (up) y D (down): typedef enum {N, S, E, W, U, D, UNKNOWN_DIR} Direction;
+
+2. En src/game_actions.c:
+   - Agregado parsing para comandos "up"/"u" y "down"/"d" en la función de movimiento del jugador.
+
+3. En src/game_reader.c:
+   - Agregado parsing de direcciones "U" y "D" al leer links desde archivos de datos.
+
+4. En src/link.c:
+   - Modificada la función link_print (en DEBUG) para imprimir la dirección como string ("N", "S", "E", "W", "U", "D", "UNKNOWN") en lugar del valor numérico.
+
+Estos cambios permiten que el juego soporte mapas con varios niveles (pisos), permitiendo movimientos hacia arriba y abajo además de las direcciones cardinales. Las funciones de manipulación de conexiones (game_get_connection, game_connection_is_open) ya funcionaban con cualquier Direction, por lo que no requirieron cambios. La impresión de links ahora muestra las direcciones de forma legible.

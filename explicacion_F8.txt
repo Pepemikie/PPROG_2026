@@ -1,0 +1,25 @@
+F8: Integración de nuevas propiedades de objetos en comandos take y drop
+
+Descripción de los cambios realizados:
+
+1. **Funciones auxiliares creadas:**
+   - `can_take_object(Game *game, Object *obj)`: Verifica si un objeto puede ser cogido por el jugador. Comprueba que el objeto sea movible y que, si tiene dependencia, el objeto dependiente esté en el inventario.
+   - `handle_take_object(Game *game, Object *obj, Space *current_space)`: Maneja la lógica de coger un objeto, incluyendo añadirlo al inventario, removerlo del espacio, modificar la salud del jugador y abrir links si aplica.
+   - `handle_drop_object(Game *game, Object *obj, Space *current_space)`: Maneja la lógica de dejar un objeto, incluyendo dejar también los objetos dependientes de él.
+
+2. **Modificaciones en game_actions_take:**
+   - Reemplazado el código inline con llamadas a las funciones auxiliares `can_take_object` y `handle_take_object` para mejorar la modularidad y legibilidad.
+
+3. **Modificaciones en game_actions_drop:**
+   - Reemplazado el código inline con una llamada a `handle_drop_object` para centralizar la lógica de dejar objetos y sus dependencias.
+
+4. **Propiedades integradas:**
+   - **Movible (movable):** Los objetos no movibles no pueden ser cogidos.
+   - **Dependencia (dependency):** Para coger un objeto con dependencia, el objeto del que depende debe estar en el inventario.
+   - **Abrir link (open):** Al coger ciertos objetos, se abren links específicos.
+   - **Dependencias en drop:** Al dejar un objeto, también se dejan automáticamente los objetos que dependen de él.
+
+5. **Declaración faltante agregada:**
+   - Agregada la declaración de `game_actions_abandon` para evitar errores de compilación.
+
+Estos cambios aseguran que los comandos take y drop respeten las nuevas propiedades de los objetos, haciendo el juego más rico y lógico.

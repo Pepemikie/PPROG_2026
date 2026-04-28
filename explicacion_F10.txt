@@ -1,0 +1,152 @@
+================================================================================
+IMPLEMENTACIÓN DE F10: COMANDO USE PARA USAR OBJETOS
+================================================================================
+
+Descripción:
+F10 añade un nuevo comando para usar objetos con la sintaxis:
+  - use <obj>         (usar el objeto sobre el jugador)
+  - use <obj> over <chr>  (usar el objeto sobre un personaje amigo que sigue al jugador)
+
+Restricciones:
+- Si el objeto tiene un valor 0 en su campo health, NO se puede utilizar.
+- El objeto desaparece del juego tras ser usado.
+- Los puntos de vida se añaden/quitan al jugador o al personaje especificado.
+- El segundo argumento (personaje) es OPCIONAL.
+
+================================================================================
+CAMBIOS REALIZADOS:
+================================================================================
+
+1. include/command.h
+   ==================
+   - Actualizado N_CMD de 10 a 11 (nuevo número de comandos).
+   - Agregado USE al enum CommandCode:
+     typedef enum {
+       ...
+       ABANDON,      // Comando anterior
+       USE           // Nuevo comando
+     } CommandCode;
+   - Agregada declaración de función: char* command_get_arg2(Command* command);
+
+2. src/command.c
+   ==============
+   a) Tabla cmd_to_str:
+      - Agregada entrada para USE: {"u", "Use"}
+      - Tabla actualizada a 11 entradas (índice 0 a 10)
+   
+   b) Estructura Command:
+      - Agregado campo: char *arg2; (para el segundo argumento opcional)
+   
+   c) command_create():
+      - Inicialización: newCommand->arg2 = NULL;
+   
+   d) command_destroy():
+      - Liberación de memoria: if (command->arg2) { free(command->arg2); }
+   
+   e) command_get_arg2():
+      - Nueva función que retorna command->arg2
+   
+   f) command_get_user_input():
+      - Parser mejorado para capturar dos argumentos:
+        * Primer argumento: nombre del objeto
+        * Palabra clave: "over" (case-insensitive)
+        * Segundo argumento: nombre del personaje (opcional)
+      - Implementación de lógica:
+        token = strtok(NULL, " \n");  // Primer argumento
+        if (token) {
+          command->arg = malloc...
+          token = strtok(NULL, " \n");  // Buscar "over"
+          if (token && !strcasecmp(token, "over")) {
+            token = strtok(NULL, " \n");  // Segundo argumento
+            if (token) {
+              command->arg2 = malloc...
+            }
+          }
+        }
+
+3. src/game_actions.c
+   ===================
+   a) Declaración de función:
+      Status game_actions_use(Game *game);
+   
+   b) game_actions_update():
+      - Agregado case USE en el switch principal:
+        case USE:
+          game_set_last_status(game, game_actions_use(game));
+          break;
+   
+   c) game_actions_use() - Nueva implementación:
+      Función que realiza las siguientes operaciones:
+      
+      1. Validaciones iniciales:
+         - Obtiene el jugador actual
+         - Obtiene la ubicación del jugador
+         - Obtiene el comando y sus argumentos
+      
+      2. Búsqueda del objeto:
+         - Itera sobre el inventario del jugador
+         - Busca objeto por nombre (strcasecmp)
+         - Verifica que el objeto existe
+      
+      3. Validación del objeto:
+         - Verifica que object_get_health(obj) != 0 (no usable si health = 0)
+      
+      4. Procesamiento del argumento opcional:
+         - Si arg2 está presente (personaje):
+           * Busca el personaje por nombre
+           * Verifica que está en el mismo espacio que el jugador
+           * Verifica que es amigo del jugador
+           * Verifica que sigue al jugador
+           * Aplica salud al personaje: character_set_health(c, character_get_health(c) + object_get_health(obj))
+         - Si arg2 no está presente:
+           * Aplica salud al jugador: player_modify_health(p, object_get_health(obj))
+      
+      5. Eliminación del objeto:
+         - Elimina el objeto del inventario: player_del_object(p, object_id)
+         - El objeto desaparece del juego
+
+================================================================================
+ARCHIVOS MODIFICADOS:
+================================================================================
+✓ include/command.h
+✓ src/command.c
+✓ src/game_actions.c
+
+================================================================================
+VERIFICACIÓN DE COMPILACIÓN:
+================================================================================
+✓ Compilación exitosa: make clean && make
+✓ Sin warnings ni errores
+✓ Ejecutable 'castle_game' generado correctamente
+
+================================================================================
+USO DEL COMANDO:
+================================================================================
+Ejemplos válidos:
+  - "u poción"           (usa poción sobre el jugador, short form)
+  - "Use apple"          (usa manzana sobre el jugador, long form)
+  - "u poción over mago" (usa poción sobre el personaje "mago")
+  - "Use shield over guerrero" (usa escudo sobre "guerrero")
+
+Condiciones de error:
+  - Objeto no existe en inventario -> ERROR
+  - Objeto tiene health = 0 -> ERROR
+  - Personaje no existe -> ERROR (si se especifica)
+  - Personaje no está en mismo espacio -> ERROR (si se especifica)
+  - Personaje no es amigo -> ERROR (si se especifica)
+  - Personaje no está siguiendo al jugador -> ERROR (si se especifica)
+
+================================================================================
+INTEGRACIÓN CON CARACTERÍSTICAS ANTERIORES:
+================================================================================
+F10 se integra correctamente con:
+- F7: Usa los campos health, movable, dependency, open de los objetos
+- F8: Respeta la lógica de objetos movibles y dependencias
+- F9: Lee correctamente las propiedades de objetos del archivo de datos
+
+La salud del objeto (health) se aplica directamente a quien lo usa:
+- Valores positivos: restauran salud
+- Valores negativos: quitan salud (daño)
+- Valor 0: objeto no usable (restricción de F10)
+
+================================================================================

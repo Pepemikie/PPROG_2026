@@ -21,7 +21,7 @@
 /**
  * @brief Number of commands available in the game
  */
-#define N_CMD 10
+#define N_CMD 11
 
 /**
  * @brief Defines the type of command input: short (CMDS) or long (CMDL)
@@ -45,7 +45,8 @@ typedef enum {
   MOVE,         /**< Move to an adjacent space */
   INSPECT,      /**< Inspect a space or object */
   RECRUIT,      /**< Recruit a character to follow the player */
-  ABANDON       /**< Abandon a character following the player */ 
+  ABANDON,      /**< Abandon a character following the player */
+  USE           /**< Use an object on the player or a friendly character */
 } CommandCode;
 
 /**
@@ -97,6 +98,15 @@ CommandCode command_get_code(Command* command);
  * @return a string with the argument stored in the Command, or NULL if there is none
  */
 char* command_get_arg(Command* command);
+
+/**
+ * @brief It gets the second argument of a Command (used for commands like USE)
+ * @author Iñaki López Rocha
+ *
+ * @param command a pointer to the Command
+ * @return a string with the second argument stored in the Command, or NULL if there is none
+ */
+char* command_get_arg2(Command* command);
 
 /**
  * @brief It reads the user input and sets the corresponding CommandCode in the Command struct

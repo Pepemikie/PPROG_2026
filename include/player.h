@@ -191,4 +191,15 @@ Status player_set_max_objs(Player* player, int max_objs);
  */
 Status player_print(Player* player);
 #endif
+
+/**
+ * @brief It modifies the health of a Player by adding the given amount
+ * @author Profesores PPROG
+ *
+ * @param player a pointer to the Player
+ * @param health the health points to add (can be negative)
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status player_modify_health(Player* player, int health);
+
 #endif

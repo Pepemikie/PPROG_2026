@@ -89,20 +89,36 @@ Status game_reader_load_objects(Game *game, char *filename) {
 
   while (fgets(line, WORD_SIZE, file)) {
     if (strncmp("#o:", line, 3) == 0) { /* identifies object lines */
-      toks = strtok(line + 3, "|"); /* parses id, name, description and location */
+      toks = strtok(line + 3, "|"); /* parses id, name, description, location, health, movable, dependency, open */
+      if (!toks) continue;
       id = atol(toks);
       toks = strtok(NULL, "|");
+      if (!toks) continue;
       strcpy(name, toks);
       toks = strtok(NULL, "|");
+      if (!toks) continue;
       strcpy(description, toks);
       toks = strtok(NULL, "|");
+      if (!toks) continue;
       space_id = atol(toks);
+      toks = strtok(NULL, "|");
+      int health = toks ? atoi(toks) : 0;
+      toks = strtok(NULL, "|");
+      Bool movable = toks ? (Bool)atoi(toks) : FALSE;
+      toks = strtok(NULL, "|");
+      Id dependency = toks ? atol(toks) : NO_ID;
+      toks = strtok(NULL, "|");
+      Id open = toks ? atol(toks) : NO_ID;
 #ifdef DEBUG
-      printf("Leido: o:%ld|%s|%s|%ld\n", id, name, description, space_id);
+      printf("Leido: o:%ld|%s|%s|%ld|%d|%d|%ld|%ld\n", id, name, description, space_id, health, movable, dependency, open);
 #endif
       if ((obj = object_create(id))) { /* sets object attributes and places it in the game */
         object_set_name(obj, name);
         object_set_description(obj, description);
+        object_set_health(obj, health);
+        object_set_movable(obj, movable);
+        object_set_dependency(obj, dependency);
+        object_set_open(obj, open);
         game_add_object(game, obj);
         game_set_object_location(game, space_id, id);
       }
@@ -211,6 +227,10 @@ Status game_reader_load_links(Game *game, char *filename) {
       direction = E;
       else if (strcmp(toks, "W") == 0)
       direction = W;
+      else if (strcmp(toks, "U") == 0)
+      direction = U;
+      else if (strcmp(toks, "D") == 0)
+      direction = D;
       else
       direction = UNKNOWN_DIR;
       toks = strtok(NULL, "|");

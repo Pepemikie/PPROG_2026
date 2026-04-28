@@ -449,6 +449,16 @@ Id game_get_connection(Game *game, Id space_id, Direction direction);
 Bool game_connection_is_open(Game *game, Id space_id, Direction direction);
 
 /**
+ * @brief It gets a link from the game by its id
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param id the id of the link
+ * @return a pointer to the Link or NULL if not found
+ */
+Link* game_get_link(Game *game, Id id);
+
+/**
  * @brief It marks a Space as discovered (F12, I3)
  * @author Rodrigo Cruz Asensio
  *

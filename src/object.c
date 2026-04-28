@@ -19,6 +19,10 @@ struct _Object {
   Id id;                  /**< The unique identifier of the object */
   char name[WORD_SIZE]; /**< The name of the object */
   char description[WORD_SIZE]; /**< The description of the object */
+  int health;            /**< Health points added/removed when taken */
+  Bool movable;          /**< Whether the object can be moved */
+  Id dependency;         /**< Id of the object this depends on */
+  Id open;               /**< Id of the link this object can open */
 };
 
 /*   It creates a new Object, allocating memory and initializing its members */
@@ -32,6 +36,10 @@ Object* object_create(Id id) {
   new_object->id = id;
   strcpy(new_object->name, "");
   strcpy(new_object->description, ""); /* initializes name and description to empty strings */
+  new_object->health = 0;
+  new_object->movable = FALSE;
+  new_object->dependency = NO_ID;
+  new_object->open = NO_ID;
 
   return new_object;
 }
@@ -77,11 +85,64 @@ const char* object_get_description(Object* object) {
   return object->description;
 }
 
+/*   It sets the health of an Object */
+Status object_set_health(Object* object, int health) {
+  if (!object) return ERROR;
+  object->health = health;
+  return OK;
+}
+
+/*   It gets the health of an Object */
+int object_get_health(Object* object) {
+  if (!object) return 0;
+  return object->health;
+}
+
+/*   It sets whether an Object is movable */
+Status object_set_movable(Object* object, Bool movable) {
+  if (!object) return ERROR;
+  object->movable = movable;
+  return OK;
+}
+
+/*   It gets whether an Object is movable */
+Bool object_get_movable(Object* object) {
+  if (!object) return FALSE;
+  return object->movable;
+}
+
+/*   It sets the dependency of an Object */
+Status object_set_dependency(Object* object, Id dependency) {
+  if (!object) return ERROR;
+  object->dependency = dependency;
+  return OK;
+}
+
+/*   It gets the dependency of an Object */
+Id object_get_dependency(Object* object) {
+  if (!object) return NO_ID;
+  return object->dependency;
+}
+
+/*   It sets the open link of an Object */
+Status object_set_open(Object* object, Id open) {
+  if (!object) return ERROR;
+  object->open = open;
+  return OK;
+}
+
+/*   It gets the open link of an Object */
+Id object_get_open(Object* object) {
+  if (!object) return NO_ID;
+  return object->open;
+}
+
 #ifdef DEBUG
 /*   It prints the data of an Object */
 Status object_print(Object* object) {
   if (!object) return ERROR;
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Description: %s)\n", object->id, object->name, object->description); /* prints id, name and description */
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Description: %s; Health: %d; Movable: %d; Dependency: %ld; Open: %ld)\n", 
+          object->id, object->name, object->description, object->health, object->movable, object->dependency, object->open); /* prints id, name and description */
   return OK;
 }
 #endif

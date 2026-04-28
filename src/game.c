@@ -520,6 +520,19 @@ Status game_discover_space(Game *game, Id space_id) {
   return space_set_discovered(space, TRUE);
 }
 
+/*   It gets a link from the game by its id */
+Link* game_get_link(Game *game, Id id) {
+  int i;
+
+  if (!game || id == NO_ID) return NULL;
+
+  for (i = 0; i < game->n_links; i++) {
+    if (game->link[i] != NULL && link_get_id(game->link[i]) == id) {
+      return game->link[i];
+    }
+  }
+  return NULL;
+}
 
 #ifdef DEBUG
 /*   It prints the data of the game */

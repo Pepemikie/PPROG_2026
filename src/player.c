@@ -161,6 +161,12 @@ Status player_set_health(Player* player, int health) {
   return OK;
 }
 
+/*   It modifies the health of a Player by adding the given amount */
+Status player_modify_health(Player* player, int health) {
+  if (!player) return ERROR;
+  return player_set_health(player, player_get_health(player) + health);
+}
+
 /*   It gets the graphic description of a Player */
 const char* player_get_gdesc(Player* player) {
   if (!player) {

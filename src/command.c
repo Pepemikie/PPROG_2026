@@ -36,7 +36,8 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
   {"m", "Move"},    /**< MOVE */
   {"i", "Inspect"}, /**< INSPECT */
   {"r", "Recruit"}, /**< RECRUIT */
-  {"b", "Abandon"}  /**< ABANDON */
+  {"b", "Abandon"}, /**< ABANDON */
+  {"u", "Use"}      /**< USE */
 };
 
 /**
@@ -44,6 +45,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
  */
 struct _Command {
   char *arg;       /**< Optional argument provided alongside the command */
+  char *arg2;      /**< Optional second argument for commands like USE */
   CommandCode code; /**< Code identifying the type of command */
 };
 
@@ -57,6 +59,7 @@ Command* command_create() {
 
   newCommand->code = NO_CMD;
   newCommand->arg  = NULL;
+  newCommand->arg2 = NULL;
 
   return newCommand;
 }
@@ -69,6 +72,11 @@ Status command_destroy(Command* command) {
   if (command->arg) {
     free(command->arg);
     command->arg = NULL;
+  }
+
+  if (command->arg2) {
+    free(command->arg2);
+    command->arg2 = NULL;
   }
 
   free(command);
@@ -97,6 +105,11 @@ char* command_get_arg(Command* command) {
   return command->arg;
 }
 
+char* command_get_arg2(Command* command) {
+  if (!command) return NULL;
+  return command->arg2;
+}
+
 Status command_get_user_input(Command* command) {
   char input[CMD_LENGHT] = "", *token = NULL;
   int i = 0;
@@ -109,6 +122,11 @@ Status command_get_user_input(Command* command) {
   if (command->arg) {
     free(command->arg);
     command->arg = NULL;
+  }
+
+  if (command->arg2) {
+    free(command->arg2);
+    command->arg2 = NULL;
   }
 
   if (fgets(input, CMD_LENGHT, stdin)) {
@@ -132,6 +150,17 @@ Status command_get_user_input(Command* command) {
       command->arg = (char*)malloc(strlen(token) + 1);
       if (command->arg)
         strcpy(command->arg, token);
+      
+      /* Handle second argument for commands like USE (over <character>) */
+      token = strtok(NULL, " \n");
+      if (token && !strcasecmp(token, "over")) {
+        token = strtok(NULL, " \n");
+        if (token) {
+          command->arg2 = (char*)malloc(strlen(token) + 1);
+          if (command->arg2)
+            strcpy(command->arg2, token);
+        }
+      }
     }
 
     return command_set_code(command, cmd);

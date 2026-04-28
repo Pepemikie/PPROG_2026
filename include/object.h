@@ -81,10 +81,86 @@ Status object_set_description(Object* object, char* description);
  */
 const char* object_get_description(Object* object);
 
+/**
+ * @brief It sets the health points of an Object
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @param health the health points to set
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status object_set_health(Object* object, int health);
+
+/**
+ * @brief It gets the health points of an Object
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @return the health points of the Object
+ */
+int object_get_health(Object* object);
+
+/**
+ * @brief It sets whether an Object is movable
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @param movable whether the object is movable
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status object_set_movable(Object* object, Bool movable);
+
+/**
+ * @brief It gets whether an Object is movable
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @return TRUE if movable, FALSE otherwise
+ */
+Bool object_get_movable(Object* object);
+
+/**
+ * @brief It sets the dependency of an Object
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @param dependency the id of the object this depends on
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status object_set_dependency(Object* object, Id dependency);
+
+/**
+ * @brief It gets the dependency of an Object
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @return the id of the dependency object or NO_ID if none
+ */
+Id object_get_dependency(Object* object);
+
+/**
+ * @brief It sets the open link of an Object
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @param open the id of the link this object can open
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status object_set_open(Object* object, Id open);
+
+/**
+ * @brief It gets the open link of an Object
+ * @author Iñaki López Rocha
+ *
+ * @param object a pointer to the Object
+ * @return the id of the link this object can open or NO_ID if none
+ */
+Id object_get_open(Object* object);
+
 #ifdef DEBUG
 /**
  * @brief It prints the data of an Object
- * @author Profesores PPROG
+ * @author Jose Miguel Romero Oubina
  *
  * @param object a pointer to the Object
  * @return OK, if everything goes well or ERROR if there was some mistake

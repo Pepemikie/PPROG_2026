@@ -128,10 +128,22 @@ Bool link_get_open(Link *link) {
 #ifdef DEBUG
 /*   It prints the data of a Link */
 Status link_print(Link* link) {
+  char *dir_str = NULL;
   if (!link) return ERROR;
-  fprintf(stdout, "--> Link (Id: %ld; Name: %s; Origin: %ld; Destination: %ld; Direction: %d; Open: %d)\n",
+  
+  switch (link->direction) {
+    case N: dir_str = "N"; break;
+    case S: dir_str = "S"; break;
+    case E: dir_str = "E"; break;
+    case W: dir_str = "W"; break;
+    case U: dir_str = "U"; break;
+    case D: dir_str = "D"; break;
+    default: dir_str = "UNKNOWN"; break;
+  }
+  
+  fprintf(stdout, "--> Link (Id: %ld; Name: %s; Origin: %ld; Destination: %ld; Direction: %s; Open: %d)\n",
           link->id, link->name, link->origin, link->destination,
-          link->direction, link->open);
+          dir_str, link->open);
   return OK;
 }
 #endif
