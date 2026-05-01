@@ -24,13 +24,13 @@
 #include "game.h"
 
 /** @brief Width of the map area */
-#define WIDTH_MAP 55 
+#define WIDTH_MAP 85 
 /** @brief Width of the description area */
-#define WIDTH_DES 55
+#define WIDTH_DES 65
 /** @brief Width of the banner area */
 #define WIDTH_BAN 25
 /** @brief Height of the map area */
-#define HEIGHT_MAP 30
+#define HEIGHT_MAP 40
 /** @brief Height of the banner area */
 #define HEIGHT_BAN 1
 /** @brief Height of the help area */
@@ -69,6 +69,14 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
  * @return Status of the operation
  */
 static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str);
+/**
+ * @brief It builds a string with the names of all characters in a given space
+ * @param game a pointer to the Game struct
+ * @param space a pointer to the Space struct
+ * @param str a pointer to the character array where the string will be stored
+ * @return Status of the operation
+ */
+static Status graphic_engine_get_characters_str(Game *game, Space *space, char *str);
 
 /*   It creates a new Graphic_engine, allocating memory and initializing its members */
 Graphic_engine *graphic_engine_create() {
@@ -92,13 +100,13 @@ Graphic_engine *graphic_engine_create() {
  *   If show_sides is FALSE, west and east neighbours are not rendered (treated as absent). */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides) {
   Space *west = NULL, *east = NULL;
-  Player *active_player = NULL;
+  /*Player *active_player = NULL;
   Character *character = NULL;
-  const char *character_gdesc = NULL;
+  const char *character_gdesc = NULL;*/
   const char *active_player_gdesc = "   ";
   const char *wg = NULL, *mg = NULL, *eg = NULL;
-  char str[512], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1];
-  Status obj_list_status;
+  char str[512], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1], char_list[ROOM_WIDTH + 1];
+  Status obj_list_status, char_list_status;
   int i;
   Bool west_discovered = FALSE, middle_discovered = FALSE, east_discovered = FALSE;  /* F12, I3 */
 
@@ -118,55 +126,46 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (east) east_discovered = space_get_discovered(east);
 
   /* TOP LINE — cell width = 17 chars, empty = 17 chars */
-  sprintf(str, "%s  +---------------+  %s",
-      !west ? "                 " : "+---------------+",
-      !east ? "                 " : "+---------------+");
+  sprintf(str, "%s  +--------------------+  %s",
+      !west ? "                      " : "+--------------------+",
+      !east ? "                      " : "+--------------------+");
   screen_area_puts(area, str);
 
   /* CHARACTER + ID LINE */
   if (!west) {
-    sprintf(west_str, "                 ");
+    sprintf(west_str, "                      ");
   } else {
-    if (west_discovered == TRUE) {                     /* F12, I3 */
-      character = game_get_character_in_space(game, space_get_id(west));
-      character_gdesc = !character ? "      " : character_get_gdesc(character);
+    if (west_discovered == TRUE) {
+      char_list_status = graphic_engine_get_characters_str(game, west, char_list);
     } else {
-      character_gdesc = "      ";
+      char_list_status = ERROR;    
     }
-    sprintf(west_str, "|     %s %3d|", character_gdesc, (int)space_get_id(west));
+    sprintf(west_str, "|          %-15s %3d|",  char_list_status == ERROR ? "               " : char_list,
+        (int)space_get_id(west));
   }
 
-    if (middle_discovered == TRUE) {               /* F12, I3 */
-    character = game_get_character_in_space(game, space_get_id(middle));
-    character_gdesc = !character ? "      " : character_get_gdesc(character);
+if (middle_discovered == TRUE) {
+    char_list_status = graphic_engine_get_characters_str(game, middle, char_list);
   } else {
-    character_gdesc = "      ";
+    char_list_status = ERROR;
   }
 
-  if (is_act == TRUE) {
-    active_player = game_get_player(game);
-    if (active_player && player_get_gdesc(active_player) && player_get_gdesc(active_player)[0] != '\0') {
-      active_player_gdesc = player_get_gdesc(active_player);
-    } else {
-      active_player_gdesc = "^C>";
-    }
-  }
-
-  sprintf(middle_str, "  | %s %s %3d|  ",
-      is_act == TRUE ? active_player_gdesc : "   ", /* marks the active space with current player's indicator */
-      character_gdesc,
+  sprintf(middle_str, "  | %s %-15s %3d|  ",
+      is_act == TRUE ? active_player_gdesc : "   ",
+      char_list_status == ERROR ? "               " : char_list,
       (int)space_get_id(middle));
 
-  if (!east) {
-    sprintf(east_str, "                 ");
+ if (!east) {
+    sprintf(east_str, "                      ");
   } else {
-    if (east_discovered == TRUE) {                 /* F12, I3 */
-      character = game_get_character_in_space(game, space_get_id(east));
-      character_gdesc = !character ? "      " : character_get_gdesc(character);
+    if (east_discovered == TRUE) {
+      char_list_status = graphic_engine_get_characters_str(game, east, char_list);
     } else {
-      character_gdesc = "      ";
+      char_list_status = ERROR;
     }
-    sprintf(east_str, "|     %s %3d|", character_gdesc, (int)space_get_id(east));
+    sprintf(east_str, "|  %-15s %3d|",
+        char_list_status == ERROR ? "               " : char_list,
+        (int)space_get_id(east));
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -179,17 +178,17 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     eg = (!east || east_discovered == FALSE) ? NULL : space_get_gdesc(east, i);      /* F12, I3: only get gdesc if space is discovered */
 
     if (!west) {
-      sprintf(west_str, "                 ");
+      sprintf(west_str, "                       ");
     } else {
-      sprintf(west_str, "|%-9s      |", wg ? wg : "         ");
+      sprintf(west_str, "|%-9s           | ", wg ? wg : "         ");
     }
 
-    sprintf(middle_str, "  |%-9s      |  ", mg ? mg : "         ");
+    sprintf(middle_str, " |%-9s           | ", mg ? mg : "         ");
 
     if (!east) {
-      sprintf(east_str, "                 ");
+      sprintf(east_str, "                       ");
     } else {
-      sprintf(east_str, "|%-9s      |", eg ? eg : "         ");
+      sprintf(east_str, " |%-9s           |", eg ? eg : "         ");
     }
 
     sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -198,37 +197,37 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
 
   /* OBJECTS + ARROWS LINE */
   if (!west) {
-    sprintf(west_str, "                 ");
+    sprintf(west_str, "                      ");
   } else {
     if (west_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects */
-      sprintf(west_str, "|               |");
+      sprintf(west_str, "|%-20s|", "");
     } else {
       obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
-      sprintf(west_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+      sprintf(west_str, "|%-20s|", obj_list_status == ERROR ? "" : obj_list);
     }
   }
 
   if (middle_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects or navigation arrows */
-    sprintf(middle_str, " %s|%s|%s ",
+    sprintf(middle_str, " %s|%-20s|%s ",
         west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
-        "               ",
+        "",
         east ? ">" : " ");
   } else {
     obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
-    sprintf(middle_str, " %s|%s|%s ",
+    sprintf(middle_str, " %s|%-20s|%s ",
         west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
-        obj_list_status == ERROR ? "               " : obj_list,
+        obj_list_status == ERROR ? "" : obj_list,
         east ? ">" : " ");
   }
 
   if (!east) {
-    sprintf(east_str, "                 ");
+    sprintf(east_str, "                    ");
   } else {
     if (east_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects */
-      sprintf(east_str, "|               |");
+      sprintf(east_str, "|%-20s|", "");
     } else {
       obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
-      sprintf(east_str, "|%s|", obj_list_status == ERROR ? "               " : obj_list);
+      sprintf(east_str, "|%-20s|", obj_list_status == ERROR ? "" : obj_list);
     }
   }
 
@@ -236,16 +235,16 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   screen_area_puts(area, str);
 
   /* BOTTOM LINE */
-  sprintf(str, "%s  +---------------+  %s",
-      !west ? "                 " : "+---------------+",
-      !east ? "                 " : "+---------------+");
+  sprintf(str, "%s  +--------------------+  %s",
+      !west ? "                      " : "+--------------------+",
+      !east ? "                      " : "+--------------------+");
   screen_area_puts(area, str);
 }
 
 /*   It builds a string with the names of all objects in a given space */
 static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str) {
   Id *n = NULL;
-  int i, cont;
+  int i, obj_cont;
   char car[ROOM_WIDTH + 1];
 
   car[0] = '\0';
@@ -255,18 +254,62 @@ static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str
   n = space_get_objects(space);
   if (!n) return ERROR;
 
-  cont = space_get_number_of_objects(space);
-  if (cont <= 0) return ERROR;
+  obj_cont = space_get_number_of_objects(space);
+  if (obj_cont <= 0) return ERROR;
 
-  for (i = 0; i < cont; i++) { /* concatenates object names into a single string */
+  for (i = 0; i < obj_cont; i++) { /* concatenates object names into a single string */
     Object *obj = game_get_object(game, n[i]);
     if (!obj) continue;
     if (strlen(car) + strlen(object_get_name(obj)) < (size_t)ROOM_WIDTH)
       strcat(car, object_get_name(obj));
-    if (i < cont - 1) strcat(car, ", ");
+    if (i < obj_cont - 1) strcat(car, ", ");
   }
 
   while ((int)strlen(car) < 15) strcat(car, " "); /* pads string to fixed width */
+  strcpy(str, car);
+  return OK;
+}
+
+/*   It builds a string with the names of all characters in a given space */
+static Status graphic_engine_get_characters_str(Game *game, Space *space, char *str) {
+  Id *n = NULL;
+  int i, char_cont, written;
+  char car[ROOM_WIDTH + 1];
+  const char *name = NULL;
+  int name_len, separator_len;
+
+  car[0] = '\0';
+  written = 0;
+
+  if (!game || !space || !str) return ERROR;
+
+  n = space_get_character(space);
+  if (!n) return ERROR;
+
+  char_cont = space_get_number_of_characters(space);
+  if (char_cont <= 0) return ERROR;
+
+  for (i = 0; i < char_cont; i++) {
+    Character *c = game_get_character(game, n[i]);
+    if (!c) continue;
+
+    name = character_get_name(c);
+    name_len = strlen(name);
+    separator_len = (written > 0) ? 2 : 0; /* ", " only if not first */
+
+    if (written + separator_len + name_len >= ROOM_WIDTH) break; /* no cabe, para */
+
+    if (written > 0) {
+      strcat(car, ", ");
+      written += 2;
+    }
+    strcat(car, name);
+    written += name_len;
+  }
+
+  /* trunca por seguridad y rellena hasta ROOM_WIDTH exacto */
+  car[ROOM_WIDTH] = '\0';
+  while ((int)strlen(car) < ROOM_WIDTH) strcat(car, " ");
   strcpy(str, car);
   return OK;
 }
@@ -324,7 +367,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (id_back != NO_ID) {
       /* North row: show_sides=FALSE — don't reveal its E/W neighbours */
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE, FALSE);
-      screen_area_puts(ge->map, "                           ^");
+      screen_area_puts(ge->map, "                                 ^");
     }
     else {
       screen_area_puts(ge->map, " ");
@@ -343,7 +386,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     graphic_engine_paint_spaces_row(ge->map, game, act, TRUE, TRUE);
 
     if (id_next != NO_ID) {
-      screen_area_puts(ge->map, "                           v");
+      screen_area_puts(ge->map, "                                 v");
       /* South row: show_sides=FALSE — don't reveal its E/W neighbours */
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE, FALSE);
     }

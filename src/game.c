@@ -447,9 +447,10 @@ const char *game_get_last_message(Game *game) {
 }
 
 Character *game_get_character_by_name(Game *game, const char *name) {
+  int i;
   if (!game || !name) return NULL;
 
-  for (int i = 0; i < MAX_CHARACTERS; i++) {
+  for ( i = 0; i < MAX_CHARACTERS; i++) {
     Character *c = game_get_character_by_index(game, i);
     if (c && strcasecmp(character_get_name(c), name) == 0) {
       return c;
