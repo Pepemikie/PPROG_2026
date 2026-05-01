@@ -82,6 +82,10 @@ Status game_reader_load_objects(Game *game, char *filename) {
   Id id = NO_ID, space_id = NO_ID;
   Object *obj = NULL;
   Status status = OK;
+  int health = 0;
+  Bool movable = FALSE;
+  Id dependency = NO_ID;
+  Id open = NO_ID;
 
   if (!game || !filename) return ERROR; /* error control */
 
@@ -102,13 +106,13 @@ Status game_reader_load_objects(Game *game, char *filename) {
       if (!toks) continue;
       space_id = atol(toks);
       toks = strtok(NULL, "|");
-      int health = toks ? atoi(toks) : 0;
+      health = toks ? atoi(toks) : 0;
       toks = strtok(NULL, "|");
-      Bool movable = toks ? (Bool)atoi(toks) : FALSE;
+      movable = toks ? (Bool)atoi(toks) : FALSE;
       toks = strtok(NULL, "|");
-      Id dependency = toks ? atol(toks) : NO_ID;
+      dependency = toks ? atol(toks) : NO_ID;
       toks = strtok(NULL, "|");
-      Id open = toks ? atol(toks) : NO_ID;
+      open = toks ? atol(toks) : NO_ID;
 #ifdef DEBUG
       printf("Leido: o:%ld|%s|%s|%ld|%d|%d|%ld|%ld\n", id, name, description, space_id, health, movable, dependency, open);
 #endif

@@ -15,10 +15,16 @@ int COLUMNS=80;
 #define FG_CHAR ' '
 #define ACCESS(d, x, y) (d + ((y) * COLUMNS) + (x))
 
-
+/**
+ * @brief Structure representing a screen area
+ * 
+ */
 struct _Area{
-  int x, y, width, height;
-  char *cursor;
+  int x, /**< x coordinate of the area */
+  y, /**< y coordinate of the area */
+  width, /**< width of the area */
+  height; /**< height of the area */
+  char *cursor; /**< pointer to the cursor within the area */
 };
 
 

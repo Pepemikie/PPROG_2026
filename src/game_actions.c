@@ -754,6 +754,10 @@ Status game_actions_use(Game *game) {
   Command *last_cmd = NULL;
   char *arg = NULL;
   char *arg2 = NULL;
+  Set *inv_set = NULL;
+  Id *ids = NULL;
+  int n = 0;
+  Id char_location = NO_ID;
 
   if (!game) return ERROR;
 
@@ -770,11 +774,11 @@ Status game_actions_use(Game *game) {
   if (!arg || arg[0] == '\0') return ERROR;
 
   /* Get the object from the player's inventory */
-  Set *inv_set = inventory_get_objects(player_get_backpack(p));
+  inv_set = inventory_get_objects(player_get_backpack(p));
   if (!inv_set) return ERROR;
 
-  int n = set_get_n_ids(inv_set);
-  Id *ids = set_get_ids(inv_set);
+  n = set_get_n_ids(inv_set);
+  ids = set_get_ids(inv_set);
   
   if (!ids || n <= 0) return ERROR;
 
@@ -802,7 +806,7 @@ Status game_actions_use(Game *game) {
     if (!c) return ERROR;
 
     /* Verify the character is in the same space and is friendly */
-    Id char_location = game_get_character_location(game, character_get_id(c));
+    char_location = game_get_character_location(game, character_get_id(c));
     if (char_location != player_location) return ERROR;
 
     if (!character_is_friendly(c)) return ERROR;

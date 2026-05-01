@@ -355,7 +355,7 @@ Id game_get_character_location(Game *game, Id character_id);
  * 
  * @param game a pointer to the Game struct
  * @param space_id the id of the space where the character is going to be placed
- * @param object_id the id of the character to be placed
+ * @param character_id the id of the character to be placed
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status game_set_character_location(Game *game, Id space_id, Id character_id);

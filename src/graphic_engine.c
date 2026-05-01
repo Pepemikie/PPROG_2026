@@ -355,6 +355,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Id *ids = NULL;
   int n = 0;
   char obj_line[512];
+  int health = 0;
 
   int turn = 0;
 
@@ -433,7 +434,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     char_loc = game_get_character_location(game, character_get_id(character));
     char_space = game_get_space(game, char_loc);                            /* F12, I3: only show characters that are in discovered spaces */
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
-      int health = character_get_health(character);
+      health = character_get_health(character);
       if (health > 0)
         sprintf(str, "  %-10s: %d (%d hp) [%s] %s", character_get_name(character), (int)char_loc, health, character_get_gdesc(character), character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
       else

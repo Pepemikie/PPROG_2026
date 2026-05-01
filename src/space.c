@@ -210,8 +210,10 @@ Status space_print(Space *space) {
     fprintf(stdout, "ERROR printing objects\n");
   }
 
-  fprintf(stdout, "---> Character ID: %ld\n", space->character);
-
+  fprintf(stdout, "---> Characters: ");
+  if (set_print(space->characters) == ERROR) { /* prints all characters in the space */
+    fprintf(stdout, "ERROR printing characters\n");
+  }
   return OK;
 }
 #endif
