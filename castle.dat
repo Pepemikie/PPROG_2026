@@ -9,12 +9,29 @@
 #s:16|Garden| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
 
 #o:21|rock|A heavy rock|11|0|1|-1|-1
-#o:22|shield|A sturdy shield|16|0|1|-1|-1
-#o:23|cap|A wizard's cap|121|0|1|-1|-1
-#o:24|aaaa|A red apple|13|0|1|-1|-1
-#o:25|appbbe|A red apple|13|0|1|-1|-1
-#o:26|appltt|A red apple|13|0|1|-1|-1
+#o:22|shield|A sturdy shield|11|0|1|-1|-1
+#o:23|cap|A wizard's cap|11|0|1|-1|-1
+#o:24|aaaa|A red apple|12|0|1|-1|-1
+#o:25|appbbe|A red apple|12|0|1|-1|-1
+#o:26|appltt|A red apple|12|0|1|-1|-1
 #o:27|appyyy|A red apple|13|0|1|-1|-1
+#o:28|trtr|A red apple|13|0|1|-1|-1
+#o:29|ryy|A red apple|13|0|1|-1|-1
+#o:30|qqq|A red apple|14|0|1|-1|-1
+#o:31|rrrr|A red apple|14|0|1|-1|-1
+#o:32|ddd|A red apple|14|0|1|-1|-1
+#o:33|pyyy|A red apple|15|0|1|-1|-1
+#o:34|fff|A red apple|15|0|1|-1|-1
+#o:35|jhg|A red apple|15|0|1|-1|-1
+#o:36|uytr|A red apple|16|0|1|-1|-1
+#o:37|nbv|A red apple|16|0|1|-1|-1
+#o:38|nbvf|A red apple|16|0|1|-1|-1
+#o:39|uytfd|A red apple|131|0|1|-1|-1
+#o:40|wsdc|A red apple|131|0|1|-1|-1
+#o:41|qwdfg|A red apple|131|0|1|-1|-1
+#o:42|ijhg|A red apple|132|0|1|-1|-1
+#o:43|poiuy|A red apple|132|0|1|-1|-1
+#o:44|mnbvc|A red apple|132|0|1|-1|-1
 
 #c:31|Gordon|Gordon|5|0|12|Achooo!|
 #c:32|Batman|Batman|18|1|12|I'm Batman|

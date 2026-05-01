@@ -24,7 +24,7 @@
 #include "game.h"
 
 /** @brief Width of the map area */
-#define WIDTH_MAP 85 
+#define WIDTH_MAP 95 
 /** @brief Width of the description area */
 #define WIDTH_DES 65
 /** @brief Width of the banner area */
@@ -100,70 +100,75 @@ Graphic_engine *graphic_engine_create() {
  *   If show_sides is FALSE, west and east neighbours are not rendered (treated as absent). */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides) {
   Space *west = NULL, *east = NULL;
-  /*Player *active_player = NULL;
-  Character *character = NULL;
-  const char *character_gdesc = NULL;*/
+  Player *active_player = NULL;
   const char *active_player_gdesc = "   ";
   const char *wg = NULL, *mg = NULL, *eg = NULL;
-  char str[512], west_str[85], middle_str[85], east_str[85], obj_list[ROOM_WIDTH + 1], char_list[ROOM_WIDTH + 1];
+  char str[512], west_str[128], middle_str[128], east_str[128];
+  char obj_list[ROOM_WIDTH + 1], char_list[ROOM_WIDTH + 1];
   Status obj_list_status, char_list_status;
   int i;
-  Bool west_discovered = FALSE, middle_discovered = FALSE, east_discovered = FALSE;  /* F12, I3 */
-
+  Bool west_discovered = FALSE, middle_discovered = FALSE, east_discovered = FALSE;
 
   if (!area || !middle) return;
 
-  /* Only look up side spaces when the caller allows it (i.e. active row) */
   if (show_sides == TRUE) {
     west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));
     east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
   }
-  /* If show_sides is FALSE, west and east remain NULL → rendered as blank columns */
 
-  /* F12, I3: check discovery status of each space to determine whether to render it */
   middle_discovered = space_get_discovered(middle);
   if (west) west_discovered = space_get_discovered(west);
   if (east) east_discovered = space_get_discovered(east);
 
-  /* TOP LINE — cell width = 17 chars, empty = 17 chars */
-  sprintf(str, "%s  +--------------------+  %s",
-      !west ? "                      " : "+--------------------+",
-      !east ? "                      " : "+--------------------+");
+  /* TOP LINE*/
+  sprintf(str, "%s  +-------------------------+  %s",
+      !west ? "                           " : "+-------------------------+",
+      !east ? "                           " : "+-------------------------+");
   screen_area_puts(area, str);
 
-  /* CHARACTER + ID LINE */
+  /* CHARACTER + ID LINE*/
   if (!west) {
-    sprintf(west_str, "                      ");
+    sprintf(west_str, "                           ");
   } else {
     if (west_discovered == TRUE) {
       char_list_status = graphic_engine_get_characters_str(game, west, char_list);
     } else {
-      char_list_status = ERROR;    
+      char_list_status = ERROR;
     }
-    sprintf(west_str, "|          %-15s %3d|",  char_list_status == ERROR ? "               " : char_list,
+    sprintf(west_str, "| %-15s      %3d|",
+        char_list_status == ERROR ? "               " : char_list,
         (int)space_get_id(west));
   }
 
-if (middle_discovered == TRUE) {
+  if (middle_discovered == TRUE) {
     char_list_status = graphic_engine_get_characters_str(game, middle, char_list);
   } else {
     char_list_status = ERROR;
   }
 
-  sprintf(middle_str, "  | %s %-15s %3d|  ",
+  if (is_act == TRUE) {
+    active_player = game_get_player(game);
+    if (active_player && player_get_gdesc(active_player) && player_get_gdesc(active_player)[0] != '\0') {
+      active_player_gdesc = player_get_gdesc(active_player);
+    } else {
+      active_player_gdesc = "^C>";
+    }
+  }
+
+  sprintf(middle_str, "  | %s %-15s  %3d|  ",
       is_act == TRUE ? active_player_gdesc : "   ",
       char_list_status == ERROR ? "               " : char_list,
       (int)space_get_id(middle));
 
- if (!east) {
-    sprintf(east_str, "                      ");
+  if (!east) {
+    sprintf(east_str, "                           ");
   } else {
     if (east_discovered == TRUE) {
       char_list_status = graphic_engine_get_characters_str(game, east, char_list);
     } else {
       char_list_status = ERROR;
     }
-    sprintf(east_str, "|  %-15s %3d|",
+    sprintf(east_str, "| %-15s      %3d|",
         char_list_status == ERROR ? "               " : char_list,
         (int)space_get_id(east));
   }
@@ -171,63 +176,63 @@ if (middle_discovered == TRUE) {
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
   screen_area_puts(area, str);
 
-  /* GDESC LINES — SPACE_GDESC_LINES rows of SPACE_GDESC_LENGTH chars */
-  for (i = 0; i < SPACE_GDESC_LINES; i++) { /* prints each graphic description line for all three spaces */
-    wg = (!west || west_discovered == FALSE) ? NULL : space_get_gdesc(west, i);      /* F12, I3: only get gdesc if space is discovered */
-    mg = (middle_discovered == FALSE) ? "         " : space_get_gdesc(middle, i);    /* F12, I3: only get gdesc if space is discovered */
-    eg = (!east || east_discovered == FALSE) ? NULL : space_get_gdesc(east, i);      /* F12, I3: only get gdesc if space is discovered */
+  /* GDESC LINES*/
+  for (i = 0; i < SPACE_GDESC_LINES; i++) {
+    wg = (!west || west_discovered == FALSE) ? NULL : space_get_gdesc(west, i);
+    mg = (middle_discovered == FALSE) ? "         " : space_get_gdesc(middle, i);
+    eg = (!east || east_discovered == FALSE) ? NULL : space_get_gdesc(east, i);
 
     if (!west) {
-      sprintf(west_str, "                       ");
+      sprintf(west_str, "                             ");
     } else {
-      sprintf(west_str, "|%-9s           | ", wg ? wg : "         ");
+      sprintf(west_str, "|%-9s                |  ", wg ? wg : "         ");
     }
 
-    sprintf(middle_str, " |%-9s           | ", mg ? mg : "         ");
+    sprintf(middle_str, "|%-9s                | ", mg ? mg : "         ");
 
     if (!east) {
-      sprintf(east_str, "                       ");
+      sprintf(east_str, "                           ");
     } else {
-      sprintf(east_str, " |%-9s           |", eg ? eg : "         ");
+      sprintf(east_str, " |%-9s                |", eg ? eg : "         ");
     }
 
     sprintf(str, "%s%s%s", west_str, middle_str, east_str);
     screen_area_puts(area, str);
   }
 
-  /* OBJECTS + ARROWS LINE */
+  /* OBJECTS + ARROWS LINE*/
   if (!west) {
-    sprintf(west_str, "                      ");
+    sprintf(west_str, "                           ");
   } else {
-    if (west_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects */
-      sprintf(west_str, "|%-20s|", "");
+    if (west_discovered == FALSE) {
+      sprintf(west_str, "|%-25s|", "");
     } else {
       obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
-      sprintf(west_str, "|%-20s|", obj_list_status == ERROR ? "" : obj_list);
+      sprintf(west_str, "|%-25s|", obj_list_status == ERROR ? "" : obj_list);
     }
   }
 
-  if (middle_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects or navigation arrows */
-    sprintf(middle_str, " %s|%-20s|%s ",
-        west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
+  if (middle_discovered == FALSE) {
+    sprintf(middle_str, " %s|%-25s|%s ",
+        west ? "<" : " ",
         "",
         east ? ">" : " ");
   } else {
     obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
-    sprintf(middle_str, " %s|%-20s|%s ",
-        west ? "<" : " ", /* shows navigation arrows if adjacent spaces exist */
+    sprintf(middle_str, " %s|%-25s|%s ",
+        west ? "<" : " ",
         obj_list_status == ERROR ? "" : obj_list,
         east ? ">" : " ");
   }
 
   if (!east) {
-    sprintf(east_str, "                    ");
+    sprintf(east_str, "                           ");
   } else {
-    if (east_discovered == FALSE) {            /* F12, I3: if space is undiscovered, don't show its objects */
-      sprintf(east_str, "|%-20s|", "");
+    if (east_discovered == FALSE) {
+      sprintf(east_str, "|%-25s|", "");
     } else {
       obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
-      sprintf(east_str, "|%-20s|", obj_list_status == ERROR ? "" : obj_list);
+      sprintf(east_str, "|%-25s|", obj_list_status == ERROR ? "" : obj_list);
     }
   }
 
@@ -235,9 +240,9 @@ if (middle_discovered == TRUE) {
   screen_area_puts(area, str);
 
   /* BOTTOM LINE */
-  sprintf(str, "%s  +--------------------+  %s",
-      !west ? "                      " : "+--------------------+",
-      !east ? "                      " : "+--------------------+");
+  sprintf(str, "%s  +-------------------------+  %s",
+      !west ? "                           " : "+-------------------------+",
+      !east ? "                           " : "+-------------------------+");
   screen_area_puts(area, str);
 }
 
@@ -265,7 +270,7 @@ static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str
     if (i < obj_cont - 1) strcat(car, ", ");
   }
 
-  while ((int)strlen(car) < 15) strcat(car, " "); /* pads string to fixed width */
+  while ((int)strlen(car) < ROOM_WIDTH) strcat(car, " "); /* pads string to fixed width */
   strcpy(str, car);
   return OK;
 }
