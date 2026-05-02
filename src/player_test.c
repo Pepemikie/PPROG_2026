@@ -14,7 +14,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 21
+#define MAX_TESTS 26
 
 /** @brief Main function for running the Player module unit tests */
 int main(int argc, char** argv) {
@@ -54,6 +54,11 @@ int main(int argc, char** argv) {
   if (all || test == 19) test2_player_get_health();
   if (all || test == 20) test1_player_set_gdesc();
   if (all || test == 21) test1_player_get_gdesc();
+  if (all || test == 22) test1_player_get_id();
+  if (all || test == 23) test1_player_set_max_objs();
+  if (all || test == 24) test2_player_set_max_objs();
+  if (all || test == 25) test1_player_modify_health();
+  if (all || test == 26) test2_player_modify_health();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -162,6 +167,34 @@ void test1_player_get_backpack() {
   Player *p = player_create(1);
   PRINT_TEST_RESULT(player_get_backpack(p) != NULL && inventory_is_empty(player_get_backpack(p)) == TRUE);
   player_destroy(p);
+}
+
+void test1_player_get_id() {
+  Player *p = player_create(7);
+  PRINT_TEST_RESULT(player_get_id(p) == 7);
+  player_destroy(p);
+}
+
+void test1_player_set_max_objs() {
+  Player *p = player_create(1);
+  PRINT_TEST_RESULT(player_set_max_objs(p, 5) == OK && inventory_get_max_objs(player_get_backpack(p)) == 5);
+  player_destroy(p);
+}
+
+void test2_player_set_max_objs() {
+  Player *p = NULL;
+  PRINT_TEST_RESULT(player_set_max_objs(p, 5) == ERROR);
+}
+
+void test1_player_modify_health() {
+  Player *p = player_create(1);
+  PRINT_TEST_RESULT(player_modify_health(p, 5) == OK && player_get_health(p) == 15 && player_modify_health(p, -10) == OK && player_get_health(p) == 5);
+  player_destroy(p);
+}
+
+void test2_player_modify_health() {
+  Player *p = NULL;
+  PRINT_TEST_RESULT(player_modify_health(p, 5) == ERROR);
 }
 
 /* Tests setting the player health */

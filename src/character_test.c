@@ -18,7 +18,7 @@
 /**
  * @brief Maximum number of tests available for the Character module
  */
-#define MAX_TESTS 24
+#define MAX_TESTS 28
 
 /**
  * @brief Main function for the Character test module
@@ -68,6 +68,10 @@ int main(int argc, char** argv) {
   if (all || test == 22) test2_character_set_gdesc();
   if (all || test == 23) test1_character_get_gdesc();
   if (all || test == 24) test2_character_get_gdesc();
+  if (all || test == 25) test1_character_set_following();
+  if (all || test == 26) test2_character_set_following();
+  if (all || test == 27) test1_character_get_following();
+  if (all || test == 28) test2_character_get_following();
 
   PRINT_PASSED_PERCENTAGE;
   return 1;
@@ -106,7 +110,28 @@ void test2_character_get_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_name(c) == NULL);
 }
+void test1_character_set_following() {
+  Character *c = character_create(1);
+  PRINT_TEST_RESULT(character_set_following(c, 2) == OK);
+  character_destroy(c);
+}
 
+void test2_character_set_following() {
+  Character *c = NULL;
+  PRINT_TEST_RESULT(character_set_following(c, 2) == ERROR);
+}
+
+void test1_character_get_following() {
+  Character *c = character_create(1);
+  character_set_following(c, 3);
+  PRINT_TEST_RESULT(character_get_following(c) == 3);
+  character_destroy(c);
+}
+
+void test2_character_get_following() {
+  Character *c = NULL;
+  PRINT_TEST_RESULT(character_get_following(c) == NO_ID);
+}
 void test1_character_set_health() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_health(c, 10) == OK);

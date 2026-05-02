@@ -15,7 +15,7 @@
 #include "game.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 8
+#define MAX_TESTS 15
 
 /** @brief Main function for running the Link module unit tests */
 int main(int argc, char** argv) {
@@ -41,7 +41,14 @@ int main(int argc, char** argv) {
   if (all || test == 5) test1_link_space_ids();
   if (all || test == 6) test1_link_direction();
   if (all || test == 7) test1_link_open();
-  if (all || test == 8) test2_link_get_name();
+  if (all || test == 8) test2_link_name();
+  if (all || test == 9) test2_link_get_name();
+  if (all || test == 10) test2_link_space_ids();
+  if (all || test == 11) test2_link_get_space_ids();
+  if (all || test == 12) test2_link_direction();
+  if (all || test == 13) test2_link_get_direction();
+  if (all || test == 14) test2_link_open();
+  if (all || test == 15) test2_link_get_open();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -104,4 +111,39 @@ void test1_link_open() {
 void test2_link_get_name() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_get_name(l) == NULL);
+}
+
+void test2_link_name() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_set_name(l, "door") == ERROR);
+}
+
+void test2_link_space_ids() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_set_origin(l, 10) == ERROR && link_set_destination(l, 20) == ERROR);
+}
+
+void test2_link_get_space_ids() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_get_origin(l) == NO_ID && link_get_destination(l) == NO_ID);
+}
+
+void test2_link_direction() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_set_direction(l, N) == ERROR);
+}
+
+void test2_link_get_direction() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_get_direction(l) == UNKNOWN_DIR);
+}
+
+void test2_link_open() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_set_open(l, TRUE) == ERROR);
+}
+
+void test2_link_get_open() {
+  Link *l = NULL;
+  PRINT_TEST_RESULT(link_get_open(l) == FALSE);
 }

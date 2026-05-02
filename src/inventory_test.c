@@ -15,7 +15,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 9 
+#define MAX_TESTS 16 
 
 /** @brief Main function for running inventory tests */
 int main(int argc, char** argv) {
@@ -43,6 +43,13 @@ int main(int argc, char** argv) {
   if (all || test == 7) test1_inventory_number_of_objects();
   if (all || test == 8) test1_inventory_get_objects();
   if (all || test == 9) test1_inventory_set_objects();
+  if (all || test == 10) test2_inventory_add_del();
+  if (all || test == 11) test2_inventory_has_object();
+  if (all || test == 12) test2_inventory_full_empty();
+  if (all || test == 13) test2_inventory_get_objects();
+  if (all || test == 14) test2_inventory_set_objects();
+  if (all || test == 15) test2_inventory_get_max_objs();
+  if (all || test == 16) test2_inventory_number_of_objects();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -120,4 +127,37 @@ void test1_inventory_set_objects() {
   set_add(new_objs, 11);
   PRINT_TEST_RESULT(inventory_set_objects(inv, new_objs) == OK && inventory_has_object(inv, 11) == TRUE);
   inventory_destroy(inv);
+}
+
+void test2_inventory_add_del() {
+  Inventory *inv = NULL;
+  PRINT_TEST_RESULT(inventory_add_object(inv, 5) == ERROR && inventory_del_object(inv, 5) == ERROR);
+}
+
+void test2_inventory_has_object() {
+  PRINT_TEST_RESULT(inventory_has_object(NULL, 5) == FALSE && inventory_has_object(NULL, NO_ID) == FALSE);
+}
+
+void test2_inventory_full_empty() {
+  PRINT_TEST_RESULT(inventory_is_empty(NULL) == TRUE && inventory_is_full(NULL) == FALSE);
+}
+
+void test2_inventory_get_objects() {
+  PRINT_TEST_RESULT(inventory_get_objects(NULL) == NULL);
+}
+
+void test2_inventory_set_objects() {
+  Inventory *inv = inventory_create(2);
+  Set *new_objs = set_create();
+  PRINT_TEST_RESULT(inventory_set_objects(NULL, new_objs) == ERROR && inventory_set_objects(inv, NULL) == ERROR);
+  set_destroy(new_objs);
+  inventory_destroy(inv);
+}
+
+void test2_inventory_number_of_objects() {
+  PRINT_TEST_RESULT(inventory_get_number_of_objects(NULL) == -1);
+}
+
+void test2_inventory_get_max_objs() {
+  PRINT_TEST_RESULT(inventory_get_max_objs(NULL) == -1);
 }

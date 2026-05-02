@@ -16,7 +16,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 12
+#define MAX_TESTS 17
 
 /** @brief Main function for running the Set module unit tests */
 int main(int argc, char** argv) {
@@ -43,6 +43,11 @@ int main(int argc, char** argv) {
   if (all || test == 10) test1_set_get_id();
   if (all || test == 11) test2_set_get_id();
   if (all || test == 12) test1_set_get_ids();
+  if (all || test == 13) test4_set_add();
+  if (all || test == 14) test3_set_del();
+  if (all || test == 15) test3_set_find();
+  if (all || test == 16) test2_set_get_n_ids();
+  if (all || test == 17) test2_set_get_ids();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -143,5 +148,36 @@ void test1_set_get_ids() {
   set_add(s, 5);
   ids = set_get_ids(s);
   PRINT_TEST_RESULT(ids != NULL && ids[0] == 5);
+  set_destroy(s);
+}
+
+void test4_set_add() {
+  Set *s = NULL;
+  Set *valid = set_create();
+  PRINT_TEST_RESULT(set_add(s, 5) == ERROR && set_add(valid, NO_ID) == ERROR);
+  set_destroy(valid);
+}
+
+void test3_set_del() {
+  Set *s = NULL;
+  Set *valid = set_create();
+  PRINT_TEST_RESULT(set_del(s, 5) == ERROR && set_del(valid, NO_ID) == ERROR);
+  set_destroy(valid);
+}
+
+void test3_set_find() {
+  Set *s = NULL;
+  Set *empty = set_create();
+  PRINT_TEST_RESULT(set_find(s, 5) == -1 && set_find(empty, NO_ID) == -1);
+  set_destroy(empty);
+}
+
+void test2_set_get_n_ids() {
+  PRINT_TEST_RESULT(set_get_n_ids(NULL) == -1);
+}
+
+void test2_set_get_ids() {
+  Set *s = set_create();
+  PRINT_TEST_RESULT(set_get_ids(NULL) == NULL && set_get_ids(s) == NULL);
   set_destroy(s);
 }
