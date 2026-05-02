@@ -150,4 +150,28 @@ void test1_character_get_gdesc();
  */
 void test2_character_get_gdesc();
 
+/**
+ * @brief Tests setting the id of the player that a character is following
+ * @author Profesores Pprog
+ */
+void test1_character_set_following();
+
+/**
+ * @brief Tests setting the id of the player that a character is following with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_character_set_following();
+
+/**
+ * @brief Tests getting the id of the player that a character is following
+ * @author Profesores Pprog
+ */
+void test1_character_get_following();
+
+/**
+ * @brief Tests getting the id of the player that a character is following with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_character_get_following();
+
 #endif /* CHARACTER_TEST_H */

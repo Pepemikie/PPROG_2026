@@ -136,4 +136,34 @@ void test1_player_set_gdesc();
  */
 void test1_player_get_gdesc();
 
+/**
+ * @brief Tests getting the player id
+ * @author Iñaki López Rocha
+ */
+void test1_player_get_id();
+
+/**
+ * @brief Tests setting the player's backpack capacity
+ * @author Iñaki López Rocha
+ */
+void test1_player_set_max_objs();
+
+/**
+ * @brief Tests setting the player's backpack capacity with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_player_set_max_objs();
+
+/**
+ * @brief Tests modifying the player's health
+ * @author Iñaki López Rocha
+ */
+void test1_player_modify_health();
+
+/**
+ * @brief Tests modifying the player's health with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_player_modify_health();
+
 #endif

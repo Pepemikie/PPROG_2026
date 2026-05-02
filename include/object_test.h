@@ -79,4 +79,100 @@ void test1_object_get_description();
  */
 void test2_object_get_description();
 
+/**
+ * @brief Tests setting the object health
+ * @author Iñaki López Rocha
+ */
+void test1_object_set_health();
+
+/**
+ * @brief Tests setting the object health with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_set_health();
+
+/**
+ * @brief Tests getting the object health
+ * @author Iñaki López Rocha
+ */
+void test1_object_get_health();
+
+/**
+ * @brief Tests getting the object health with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_get_health();
+
+/**
+ * @brief Tests setting whether the object is movable
+ * @author Iñaki López Rocha
+ */
+void test1_object_set_movable();
+
+/**
+ * @brief Tests setting whether the object is movable with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_set_movable();
+
+/**
+ * @brief Tests getting whether the object is movable
+ * @author Iñaki López Rocha
+ */
+void test1_object_get_movable();
+
+/**
+ * @brief Tests getting whether the object is movable with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_get_movable();
+
+/**
+ * @brief Tests setting the object dependency
+ * @author Iñaki López Rocha
+ */
+void test1_object_set_dependency();
+
+/**
+ * @brief Tests setting the object dependency with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_set_dependency();
+
+/**
+ * @brief Tests getting the object dependency
+ * @author Iñaki López Rocha
+ */
+void test1_object_get_dependency();
+
+/**
+ * @brief Tests getting the object dependency with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_get_dependency();
+
+/**
+ * @brief Tests setting the object open link
+ * @author Iñaki López Rocha
+ */
+void test1_object_set_open();
+
+/**
+ * @brief Tests setting the object open link with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_set_open();
+
+/**
+ * @brief Tests getting the object open link
+ * @author Iñaki López Rocha
+ */
+void test1_object_get_open();
+
+/**
+ * @brief Tests getting the object open link with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_get_open();
+
 #endif

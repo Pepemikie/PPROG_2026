@@ -53,9 +53,51 @@ void test1_link_direction();
 void test1_link_open();
 
 /**
+ * @brief Tests setting a link name with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_name();
+
+/**
  * @brief Tests getting the name of a link with invalid parameters
  * @author Iñaki López Rocha
  */
 void test2_link_get_name();
+
+/**
+ * @brief Tests setting the origin and destination of a link with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_space_ids();
+
+/**
+ * @brief Tests getting the origin and destination of a link with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_get_space_ids();
+
+/**
+ * @brief Tests setting the link direction with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_direction();
+
+/**
+ * @brief Tests getting the link direction with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_get_direction();
+
+/**
+ * @brief Tests setting the link open state with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_open();
+
+/**
+ * @brief Tests getting the link open state with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_link_get_open();
 
 #endif

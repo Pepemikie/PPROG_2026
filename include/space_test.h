@@ -94,4 +94,88 @@ void test2_space_get_object();
  */
 void test3_space_get_object();
 
+/**
+ * @brief Tests setting the graphic description of a space
+ * @author Profesores Pprog
+ */
+void test1_space_set_gdesc();
+
+/**
+ * @brief Tests setting the graphic description of a space with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_space_set_gdesc();
+
+/**
+ * @brief Tests getting the graphic description of a space
+ * @author Profesores Pprog
+ */
+void test1_space_get_gdesc();
+
+/**
+ * @brief Tests getting the graphic description of a space with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_space_get_gdesc();
+
+/**
+ * @brief Tests setting the discovered state of a space
+ * @author Profesores Pprog
+ */
+void test1_space_set_discovered();
+
+/**
+ * @brief Tests getting the discovered state of a space
+ * @author Profesores Pprog
+ */
+void test1_space_get_discovered();
+
+/**
+ * @brief Tests adding a character to a space
+ * @author Profesores Pprog
+ */
+void test1_space_add_character();
+
+/**
+ * @brief Tests adding a character to a space with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_space_add_character();
+
+/**
+ * @brief Tests checking whether a character is in a space
+ * @author Profesores Pprog
+ */
+void test1_space_has_character();
+
+/**
+ * @brief Tests checking whether a character is in a space with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_space_has_character();
+
+/**
+ * @brief Tests getting the number of characters in a space
+ * @author Profesores Pprog
+ */
+void test1_space_get_number_of_characters();
+
+/**
+ * @brief Tests getting the characters array from a space
+ * @author Profesores Pprog
+ */
+void test1_space_get_character();
+
+/**
+ * @brief Tests removing a character from a space
+ * @author Profesores Pprog
+ */
+void test1_space_del_character();
+
+/**
+ * @brief Tests removing a character from a space with invalid parameters
+ * @author Profesores Pprog
+ */
+void test2_space_del_character();
+
 #endif
