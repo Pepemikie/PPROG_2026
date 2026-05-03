@@ -32,6 +32,7 @@
 #o:42|ijhg|A red apple|132|0|1|-1|-1
 #o:43|poiuy|A red apple|132|0|1|-1|-1
 #o:44|mnbvc|A red apple|132|0|1|-1|-1
+#o:50|key|A rusty key|12|0|1|-1|5
 
 #c:31|Gordon|Gordon|5|0|12|Achooo!|
 #c:32|Batman|Batman|18|1|12|I'm Batman|
@@ -55,5 +56,5 @@
 #l:16|link15-16|15|16|S|1
 #l:17|link16-15|16|15|N|1
 
-#p:1|Knight|^C>|11|5|3|
-#p:2|Damsel|^d>|11|5|3|
+#p:1|Shadow|^C>|11|5|3|
+#p:2|Raven|^d>|11|5|3|
