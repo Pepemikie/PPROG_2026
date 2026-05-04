@@ -319,9 +319,9 @@ Status game_actions_update(Game *game, Command *command) {
       strcpy(arg, command_get_arg(command));
     }
     if (arg[0] != '\0') {
-      fprintf(g_logfile, "%s %s: %s\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR");
+      fprintf(g_logfile, "%s %s: %s (%s)\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR", game_get_turn(game) == 0 ? "P1" : "P2");
     } else {
-      fprintf(g_logfile, "%s: %s\n", cmd_to_str[cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
+      fprintf(g_logfile, "%s: %s (%s)\n", cmd_to_str[cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR", game_get_turn(game) == 0 ? "P1" : "P2");
     }
     fflush(g_logfile);
   }

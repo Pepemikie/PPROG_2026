@@ -28,6 +28,7 @@ struct _Game {
   Character *characters[MAX_CHARACTERS]; /**< Array of pointers to Character structures */
   int n_spaces; /**< Number of spaces in the game */
   Command *last_cmd; /**< Pointer to the last Command issued by the player */
+  int last_cmd_player; /**< Index of the player who issued the last command */
   Bool finished; /**< Flag indicating whether the game has finished */
   char last_message[WORD_SIZE]; /**< String with the last message of the character */
   Status last_status; /**< Status of the last action performed */
@@ -57,6 +58,7 @@ Game *game_create() {
 
   game->n_spaces = 0;
   game->last_cmd = command_create(); /* creates an empty command */
+  game->last_cmd_player = -1;
   game->finished = FALSE;
   game->last_status = OK;
   strcpy(game->last_message, "");
@@ -164,12 +166,18 @@ Command *game_get_last_command(Game *game) {
   return game->last_cmd;
 }
 
+int game_get_last_command_player(Game *game) {
+  if (!game) return -1;
+  return game->last_cmd_player;
+}
+
 /*   It sets the last command introduced by the user */
 Status game_set_last_command(Game *game, Command *command) {
   if (!game){
     return ERROR;
   }
   game->last_cmd = command;
+  game->last_cmd_player = command ? game->turn : -1;
   game->last_status = OK;
   return OK;
 }

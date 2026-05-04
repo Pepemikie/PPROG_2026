@@ -106,6 +106,15 @@ Command* game_get_last_command(Game *game);
 Status game_set_last_command(Game *game, Command *command);
 
 /**
+ * @brief It gets the index of the player who executed the last command
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @return the player index of the last command issuer, or -1 if none
+ */
+int game_get_last_command_player(Game *game);
+
+/**
  * @brief It gets the status of the last command executed
  * @author Profesores PPROG
  *

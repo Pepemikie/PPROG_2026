@@ -356,8 +356,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   int n = 0;
   char obj_line[512];
   int health = 0;
-
   int turn = 0;
+  int last_cmd_player = -1;
+  const char *player_label = "P?";
 
   if (!ge || !game) return;
 
@@ -501,7 +502,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
 
   /* 3. BANNER */
-  sprintf(str, " Player: %s ", player_get_name(game_get_player(game)));
+  sprintf(str, "    Player: %s ", player_get_name(game_get_player(game)));
   screen_area_puts(ge->banner, str);
 
   /* 4. HELP — lists all available commands */
@@ -514,7 +515,16 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_clear(ge->feedback);
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
-    sprintf(str, " %s: %s", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR");
+    last_cmd_player = game_get_last_command_player(game);
+    player_label = "P?";
+
+    if (last_cmd_player == 0) {
+      player_label = "P1";
+    } else if (last_cmd_player == 1) {
+      player_label = "P2";
+    }
+
+    sprintf(str, " %s: %s (%s)", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR", player_label);
     screen_area_puts(ge->feedback, str);
   }
   else{
