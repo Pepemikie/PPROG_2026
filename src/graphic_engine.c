@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "command.h"
 #include "libscreen.h"
@@ -39,6 +40,8 @@
 #define HEIGHT_FDB 3
 /** @brief Width of each room in the map */
 #define ROOM_WIDTH 15
+/** @brief Number of char for the P1 and P2 specification*/
+#define PLAYER_ACTION 3
 
 /** @brief Structure representing the graphic engine */
 struct _Graphic_engine {
@@ -358,7 +361,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   int health = 0;
   int turn = 0;
   int last_cmd_player = -1;
-  const char *player_label = "P?";
+  char player_label[PLAYER_ACTION];
 
   char room_name[498];
 
@@ -446,8 +449,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       health = character_get_health(character);
       if (health > 0)
         sprintf(str, "  %-10s: %d (%-2d hp)  [%s] %s", character_get_name(character), (int)char_loc, health, character_get_gdesc(character), character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
-      else
-        sprintf(str, "  %-10s: %d (DEAD) [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
+      else{
+        sprintf(str, "  %-10s: %d (DEAD)  [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
+        sleep(1);
+        space_del_character(act, character_get_id(character));
+      }
       screen_area_puts(ge->descript, str);
     }
   screen_area_puts(ge->descript, " ");
@@ -524,12 +530,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
     last_cmd_player = game_get_last_command_player(game);
-    player_label = "P?";
 
     if (last_cmd_player == 0) {
-      player_label = "P1";
+      strcpy(player_label, "P1");
     } else if (last_cmd_player == 1) {
-      player_label = "P2";
+      strcpy(player_label, "P2");
     }
 
     sprintf(str, " %s: %s (%s)", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR", player_label);
