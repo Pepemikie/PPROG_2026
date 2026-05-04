@@ -14,8 +14,8 @@
 #include "types.h"
 #include "set.h"
 
-#define SPACE_GDESC_LINES   5 /**< Number of lines in the graphic description of a Space */
-#define SPACE_GDESC_LENGTH  9 /**< Maximum length of each line in the graphic description of a Space */
+#define SPACE_GDESC_LINES   10 /**< Number of lines in the graphic description of a Space */
+#define SPACE_GDESC_LENGTH  12 /**< Maximum length of each line in the graphic description of a Space */
 
 /** @brief It defines the Space struct */
 typedef struct _Space Space;

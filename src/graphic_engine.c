@@ -124,22 +124,21 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (east) east_discovered = space_get_discovered(east);
 
   /* TOP LINE*/
-  sprintf(str, "%s  +-------------------------+  %s",
-      !west ? "                           " : "+-------------------------+",
-      !east ? "                           " : "+-------------------------+");
+  sprintf(str, "%s  +----------++++++++++++++---------------+  %s",
+      !west ? "             " : "------------+",
+      !east ? "             " : "+------------");
   screen_area_puts(area, str);
 
   /* CHARACTER + ID LINE*/
   if (!west) {
-    sprintf(west_str, "                           ");
+    sprintf(west_str, "             ");
   } else {
     if (west_discovered == TRUE) {
       char_list_status = graphic_engine_get_characters_str(game, west, char_list);
     } else {
       char_list_status = ERROR;
     }
-    sprintf(west_str, "| %-15s      %3d|",
-        char_list_status == ERROR ? "               " : char_list,
+    sprintf(west_str, "         %3d|",
         (int)space_get_id(west));
   }
 
@@ -158,22 +157,22 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     }
   }
 
-  sprintf(middle_str, "  | %s %-15s  %3d|  ",
+  if(is_act == FALSE) sprintf(middle_str, "  |                                    %3d|  ", (int)space_get_id(middle));
+  else{
+  sprintf(middle_str, "  | %s %-29s  %3d|  ",
       is_act == TRUE ? active_player_gdesc : "   ",
       char_list_status == ERROR ? "               " : char_list,
       (int)space_get_id(middle));
-
+  }
   if (!east) {
-    sprintf(east_str, "                           ");
+    sprintf(east_str, "             ");
   } else {
     if (east_discovered == TRUE) {
       char_list_status = graphic_engine_get_characters_str(game, east, char_list);
     } else {
       char_list_status = ERROR;
     }
-    sprintf(east_str, "| %-15s      %3d|",
-        char_list_status == ERROR ? "               " : char_list,
-        (int)space_get_id(east));
+    sprintf(east_str, "|%3d", (int)space_get_id(east));
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -186,17 +185,18 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     eg = (!east || east_discovered == FALSE) ? NULL : space_get_gdesc(east, i);
 
     if (!west) {
-      sprintf(west_str, "                             ");
+      sprintf(west_str, "               ");
     } else {
-      sprintf(west_str, "|%-9s                |  ", wg ? wg : "         ");
+      sprintf(west_str, "            |  ");
     }
-
-    sprintf(middle_str, "|%-9s                | ", mg ? mg : "         ");
+    if(is_act == FALSE) sprintf(middle_str, "                                            ");
+    else
+    sprintf(middle_str, "|%-9s                              | ", mg ? mg : "         ");
 
     if (!east) {
-      sprintf(east_str, "                           ");
+      sprintf(east_str, "               ");
     } else {
-      sprintf(east_str, " |%-9s                |", eg ? eg : "         ");
+      sprintf(east_str, " |            ");
     }
 
     sprintf(str, "%s%s%s", west_str, middle_str, east_str);
@@ -205,47 +205,40 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
 
   /* OBJECTS + ARROWS LINE*/
   if (!west) {
-    sprintf(west_str, "                           ");
+    sprintf(west_str, "             ");
   } else {
-    if (west_discovered == FALSE) {
-      sprintf(west_str, "|%-25s|", "");
-    } else {
-      obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
-      sprintf(west_str, "| %-24s|", obj_list_status == ERROR ? "" : obj_list);
-    }
+    sprintf(west_str, "            |");
   }
-
+  
+if(is_act == FALSE) sprintf(middle_str, "                                            ");
+else{
   if (middle_discovered == FALSE) {
-    sprintf(middle_str, " %s|%-25s|%s ",
+    sprintf(middle_str, " %s|%-39s|%s ",
         west ? "<" : " ",
         "",
         east ? ">" : " ");
   } else {
     obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
-    sprintf(middle_str, " %s| %-24s|%s ",
+    sprintf(middle_str, " %s| %-38s|%s ",
         west ? "<" : " ",
         obj_list_status == ERROR ? "" : obj_list,
         east ? ">" : " ");
   }
+}
 
   if (!east) {
-    sprintf(east_str, "                           ");
+    sprintf(east_str, "             ");
   } else {
-    if (east_discovered == FALSE) {
-      sprintf(east_str, "|%-25s|", "");
-    } else {
-      obj_list_status = graphic_engine_get_objects_str(game, east, obj_list);
-      sprintf(east_str, "|%-25s|", obj_list_status == ERROR ? "" : obj_list);
-    }
+    sprintf(east_str, "|            ");
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
   screen_area_puts(area, str);
 
   /* BOTTOM LINE */
-  sprintf(str, "%s  +-------------------------+  %s",
-      !west ? "                           " : "+-------------------------+",
-      !east ? "                           " : "+-------------------------+");
+  sprintf(str, "%s  +------------++++++++++++++-------------+  %s",
+      !west ? "             " : "------------+",
+      !east ? "             " : "+-------------");
   screen_area_puts(area, str);
 }
 
