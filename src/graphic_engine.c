@@ -30,7 +30,7 @@
 /** @brief Width of the banner area */
 #define WIDTH_BAN 25
 /** @brief Height of the map area */
-#define HEIGHT_MAP 40
+#define HEIGHT_MAP 45
 /** @brief Height of the banner area */
 #define HEIGHT_BAN 1
 /** @brief Height of the help area */
@@ -208,7 +208,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
       sprintf(west_str, "|%-25s|", "");
     } else {
       obj_list_status = graphic_engine_get_objects_str(game, west, obj_list);
-      sprintf(west_str, "|%-25s|", obj_list_status == ERROR ? "" : obj_list);
+      sprintf(west_str, "| %-24s|", obj_list_status == ERROR ? "" : obj_list);
     }
   }
 
@@ -219,7 +219,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
         east ? ">" : " ");
   } else {
     obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
-    sprintf(middle_str, " %s|%-25s|%s ",
+    sprintf(middle_str, " %s| %-24s|%s ",
         west ? "<" : " ",
         obj_list_status == ERROR ? "" : obj_list,
         east ? ">" : " ");
@@ -265,8 +265,8 @@ static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str
   for (i = 0; i < obj_cont; i++) { /* concatenates object names into a single string */
     Object *obj = game_get_object(game, n[i]);
     if (!obj) continue;
-    if (strlen(car) + strlen(object_get_name(obj)) < (size_t)ROOM_WIDTH)
-      strcat(car, object_get_name(obj));
+    if (strlen(car) + strlen(object_get_gdesc(obj)) < (size_t)ROOM_WIDTH)
+      strcat(car, object_get_gdesc(obj));
     if (i < obj_cont - 1) strcat(car, ", ");
   }
 
@@ -360,6 +360,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   int last_cmd_player = -1;
   const char *player_label = "P?";
 
+  char room_name[498];
+
   if (!ge || !game) return;
 
   /* 1. MAP AREA */
@@ -414,6 +416,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* 2. DESCRIPTION AREA */
   screen_area_clear(ge->descript);
 
+  /*Players Room name Location*/
+  strcpy(room_name, space_get_name(game_get_space(game, game_get_player_location(game))));
+  sprintf(str, " Room's name: %s", room_name);
+  screen_area_puts(ge->descript, str);
+  screen_area_puts(ge->descript, " ");
+
   /* Objects — prints each object name and its location */
   screen_area_puts(ge->descript, " Objects:");
   for (i = 0; i < MAX_OBJECTS; i++) {
@@ -422,7 +430,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     obj_loc = game_get_object_location(game, object_get_id(obj)); 
     obj_space = game_get_space(game, obj_loc);                      /* F12, I3: only show objects that are in discovered spaces */
     if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
-    sprintf(str, "  %-10s: %d", object_get_name(obj), (int)obj_loc);
+    sprintf(str, "  %-13s      [ %s ]: %d", object_get_name(obj), object_get_gdesc(obj), (int)obj_loc);
     screen_area_puts(ge->descript, str);
   }
   screen_area_puts(ge->descript, " ");
@@ -437,7 +445,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
       health = character_get_health(character);
       if (health > 0)
-        sprintf(str, "  %-10s: %d (%d hp) [%s] %s", character_get_name(character), (int)char_loc, health, character_get_gdesc(character), character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
+        sprintf(str, "  %-10s: %d (%-2d hp)  [%s] %s", character_get_name(character), (int)char_loc, health, character_get_gdesc(character), character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
       else
         sprintf(str, "  %-10s: %d (DEAD) [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
       screen_area_puts(ge->descript, str);
@@ -451,7 +459,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!p) continue;
     p_space = game_get_space(game, player_get_location(p));
     if (!p_space || space_get_discovered(p_space) == FALSE) continue; /* only show discovered players */
-    sprintf(str, "  %-8s: %d (%d hp) [%s]", player_get_name(p),
+    sprintf(str, "  %-8s: %-3d (%d hp) [%s]", player_get_name(p),
             (int)player_get_location(p), player_get_health(p), player_get_gdesc(p));
     screen_area_puts(ge->descript, str);
   }

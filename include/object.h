@@ -63,6 +63,25 @@ Status object_set_name(Object* object, char* name);
 const char* object_get_name(Object* object);
 
 /**
+ * @brief It sets the graphical description of an Object
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param object a pointer to the Object
+ * @param gdesc a string with the graphical description to store
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status object_set_gdesc(Object* object, char* gdesc);
+
+/**
+ * @brief It gets the graphical description of an Object
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param object a pointer to the Object
+ * @return the graphical description of the Object
+ */
+const char* object_get_gdesc(Object* object);
+
+/**
  * @brief It sets the description of an Object
  * @author Profesores PPROG
  *

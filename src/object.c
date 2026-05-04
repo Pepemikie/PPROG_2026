@@ -18,6 +18,7 @@
 struct _Object {
   Id id;                  /**< The unique identifier of the object */
   char name[WORD_SIZE]; /**< The name of the object */
+  char gdesc[WORD_SIZE]; /**< The graphical description of the object */
   char description[WORD_SIZE]; /**< The description of the object */
   int health;            /**< Health points added/removed when taken */
   Bool movable;          /**< Whether the object can be moved */
@@ -35,6 +36,7 @@ Object* object_create(Id id) {
 
   new_object->id = id;
   strcpy(new_object->name, "");
+  strcpy(new_object->gdesc, "");
   strcpy(new_object->description, ""); /* initializes name and description to empty strings */
   new_object->health = 0;
   new_object->movable = FALSE;
@@ -69,6 +71,19 @@ Status object_set_name(Object* object, char* name) {
 const char* object_get_name(Object* object) {
   if (!object) return NULL;
   return object->name;
+}
+
+Status object_set_gdesc(Object* object, char* gdesc) {
+  if (!object || !gdesc) return ERROR;
+  if (!strncpy(object->gdesc, gdesc, WORD_SIZE - 1)) return ERROR; /* copies graphical description safely */
+  object->gdesc[WORD_SIZE - 1] = '\0';
+  return OK;
+}
+
+/*   It gets the graphical description of an Object */
+const char* object_get_gdesc(Object* object) {
+  if (!object) return NULL;
+  return object->gdesc;
 }
 
 /*   It sets the description of an Object */
@@ -141,8 +156,8 @@ Id object_get_open(Object* object) {
 /*   It prints the data of an Object */
 Status object_print(Object* object) {
   if (!object) return ERROR;
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Description: %s; Health: %d; Movable: %d; Dependency: %ld; Open: %ld)\n", 
-          object->id, object->name, object->description, object->health, object->movable, object->dependency, object->open); /* prints id, name and description */
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Description: %s; Health: %d; Movable: %d; Dependency: %ld; Open: %ld; GDesc: %s)\n", 
+          object->id, object->name, object->description, object->health, object->movable, object->dependency, object->open, object->gdesc); /* prints id, name and description */
   return OK;
 }
 #endif

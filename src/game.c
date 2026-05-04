@@ -423,8 +423,6 @@ Character *game_get_character_in_space(Game *game, Id space_id) {
   return NULL;
 }
 
-
-
 Character* game_get_character(Game* game, Id id) {
     int i;
   if (!game || id == NO_ID) return NULL;
