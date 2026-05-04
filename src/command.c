@@ -37,6 +37,7 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
   {"i", "Inspect"}, /**< INSPECT */
   {"r", "Recruit"}, /**< RECRUIT */
   {"b", "Abandon"}, /**< ABANDON */
+  {"o", "Open"},    /**< OPEN */
   {"u", "Use"}      /**< USE */
 };
 
@@ -143,7 +144,7 @@ Status command_get_user_input(Command* command) {
     } else {
         i++;
     }
-}
+    }
 
     token = strtok(NULL, " \n");
     if (token) {
@@ -151,14 +152,17 @@ Status command_get_user_input(Command* command) {
       if (command->arg)
         strcpy(command->arg, token);
       
-      /* Handle second argument for commands like USE (over <character>) */
+      /* Handle second argument for commands like USE (over <character>) or OPEN (with <object>) */
       token = strtok(NULL, " \n");
-      if (token && !strcasecmp(token, "over")) {
-        token = strtok(NULL, " \n");
-        if (token) {
-          command->arg2 = (char*)malloc(strlen(token) + 1);
-          if (command->arg2)
-            strcpy(command->arg2, token);
+      if (token) {
+        if ((cmd == USE && !strcasecmp(token, "over")) ||      /* USE over <character> */
+            (cmd == OPEN && !strcasecmp(token, "with"))) {     /* OPEN with <object> (I4, F11) */
+          token = strtok(NULL, " \n");
+          if (token) {
+            command->arg2 = (char*)malloc(strlen(token) + 1);  /* Allocate memory for the second argument */
+            if (command->arg2)
+              strcpy(command->arg2, token);                    /* Store the second argument if allocation was successful */
+          }
         }
       }
     }

@@ -21,7 +21,7 @@
 /**
  * @brief Number of commands available in the game
  */
-#define N_CMD 11
+#define N_CMD 12
 
 /**
  * @brief Defines the type of command input: short (CMDS) or long (CMDL)
@@ -46,6 +46,7 @@ typedef enum {
   INSPECT,      /**< Inspect a space or object */
   RECRUIT,      /**< Recruit a character to follow the player */
   ABANDON,      /**< Abandon a character following the player */
+  OPEN,         /**< Open a link with an object */  
   USE           /**< Use an object on the player or a friendly character */
 } CommandCode;
 

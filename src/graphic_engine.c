@@ -298,7 +298,7 @@ static Status graphic_engine_get_characters_str(Game *game, Space *space, char *
     Character *c = game_get_character(game, n[i]);
     if (!c) continue;
 
-    name = character_get_name(c);
+    name = character_get_gdesc(c);
     name_len = strlen(name);
     separator_len = (written > 0) ? 2 : 0; /* ", " only if not first */
 
@@ -508,7 +508,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " The commands you can use are:");
   screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i,");
-  screen_area_puts(ge->help, "  recruit or r, abandon or b");
+  screen_area_puts(ge->help, "  recruit or r, abandon or b, open <link> with <object>, use <object> [over <character>],");
 
   /* 5. FEEDBACK — shows last command and its result status */
   screen_area_clear(ge->feedback);

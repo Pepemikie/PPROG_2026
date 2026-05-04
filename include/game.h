@@ -468,6 +468,16 @@ Link* game_get_link(Game *game, Id id);
  */
 Status game_discover_space(Game *game, Id space_id);
 
+/**
+ * @brief It gets a link from the game by its name (F11, I4) 
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @param name the name of the link
+ * @return a pointer to the Link or NULL if not found
+ */
+Link* game_get_link_by_name(Game *game, const char *name);
+
 #ifdef DEBUG
 /**
  * @brief It prints the data of the game

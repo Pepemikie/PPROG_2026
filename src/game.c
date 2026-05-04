@@ -536,6 +536,20 @@ Link* game_get_link(Game *game, Id id) {
   return NULL;
 }
 
+/*   It gets a link from the game by its name (F11, I4) */
+Link *game_get_link_by_name(Game *game, const char *name) {
+  int i;
+
+  if (!game || !name) return NULL;     
+
+  for (i = 0; i < game->n_links; i++) {     /* Iterates until matching name is found (the one passed as argument) */ 
+    if (game->link[i] != NULL && strcasecmp(link_get_name(game->link[i]), name) == 0)
+      return game->link[i];
+  }
+
+  return NULL;
+}
+
 #ifdef DEBUG
 /*   It prints the data of the game */
 void game_print(Game *game) {

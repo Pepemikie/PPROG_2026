@@ -93,6 +93,7 @@ Status game_actions_inspect(Game *game);
 
 /**
  * @brief Recruits a friendly character in the current space to follow the player
+ * @author Jose Miguel Romero Oubina
  * 
  * @param game a pointer to the Game struct
  * @return OK if the character was recruited, ERROR otherwise
@@ -101,6 +102,7 @@ Status game_actions_recruit(Game *game);
 
 /**
  * @brief Abandons the character that you have previously recruited
+ * @author Jose Miguel Romero Oubina
  * 
  * @param game a pointer to the Game struct
  * @return OK if the character was abandoned, ERROR otherwise
@@ -108,7 +110,17 @@ Status game_actions_recruit(Game *game);
 Status game_actions_abandon(Game *game);
 
 /**
+ * @brief Opens a named link with a named object in the current space, if possible
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ * @return OK if the link was opened, ERROR otherwise
+ */
+Status game_actions_open(Game *game);
+
+/**
  * @brief Uses an object on the player or a friendly character
+ * @author Iñaki López Rocha
  * 
  * @param game a pointer to the Game struct
  * @return OK if the object was used, ERROR otherwise
@@ -149,14 +161,7 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space);
 
 /* Implementation of auxiliary functions */
 
-/**
- * @brief Checks if an object can be taken by the player
- * @author Iñaki López Rocha
- *
- * @param game a pointer to the Game struct
- * @param obj a pointer to the Object
- * @return TRUE if the object can be taken, FALSE otherwise
- */
+/* Checks if an object can be taken by the player */
 Bool can_take_object(Game *game, Object *obj) {
   if (!game || !obj) return FALSE;
   
@@ -171,15 +176,7 @@ Bool can_take_object(Game *game, Object *obj) {
   return TRUE;
 }
 
-/**
- * @brief Handles the logic of taking an object, including dependencies and links
- * @author Iñaki López Rocha
- *
- * @param game a pointer to the Game struct
- * @param obj a pointer to the Object
- * @param current_space a pointer to the current Space
- * @return OK if the object was taken, ERROR otherwise
- */
+/* It handles the logic of taking an object, including dependencies and links */
 Status handle_take_object(Game *game, Object *obj, Space *current_space) {
   Id object_id;
   
@@ -193,24 +190,10 @@ Status handle_take_object(Game *game, Object *obj, Space *current_space) {
   /* Add health to player */
   player_modify_health(game_get_player(game), object_get_health(obj));
   
-  /* Open link if applicable */
-  if (object_get_open(obj) != NO_ID) {
-    Link *link = game_get_link(game, object_get_open(obj));
-    if (link) link_set_open(link, TRUE);
-  }
-  
   return OK;
 }
 
-/**
- * @brief Handles the logic of dropping an object, including dependent objects
- * @author Iñaki López Rocha
- *
- * @param game a pointer to the Game struct
- * @param obj a pointer to the Object
- * @param current_space a pointer to the current Space
- * @return OK if the object was dropped, ERROR otherwise
- */
+/* It handles the logic of dropping an object, including dependent objects */
 Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
   Id object_id, player_location;
   Set *inv_set = NULL;
@@ -315,6 +298,10 @@ Status game_actions_update(Game *game, Command *command) {
 
     case ABANDON:
       game_set_last_status(game, game_actions_abandon(game));
+      break;
+
+    case OPEN:
+      game_set_last_status(game, game_actions_open(game));
       break;
 
     case USE:
@@ -741,6 +728,65 @@ Status game_actions_abandon(Game *game) {
   character_set_following(c, NO_ID);
 
   return OK;
+}
+
+/* Opens a named link with a named object in the current space, if possible (F11, I4) */
+Status game_actions_open(Game *game) {
+  Command *last_cmd = NULL;
+  char *link_name = NULL;
+  char *obj_name = NULL;
+  Player *player = NULL;
+  Set *inv_set = NULL;
+  Id *ids = NULL;
+  int n = 0;
+  int i = 0;
+  Object *obj = NULL;
+  Link *link = NULL;
+  Id object_id = NO_ID;
+  Id player_location = NO_ID;
+
+  if (!game) return ERROR;
+
+  last_cmd = game_get_last_command(game);       /* We get the last command executed */
+  if (!last_cmd) return ERROR;
+
+  link_name = command_get_arg(last_cmd);        /* We get the first argument, which should be the name of the link */
+  obj_name = command_get_arg2(last_cmd);        /* We get the second argument, which should be the name of the object */
+  if (!link_name || link_name[0] == '\0' || !obj_name || obj_name[0] == '\0')
+    return ERROR;
+
+  player = game_get_player(game);               
+  if (!player) return ERROR;
+
+  player_location = game_get_player_location(game); 
+  if (player_location == NO_ID) return ERROR;
+
+  inv_set = inventory_get_objects(player_get_backpack(player));   /* We get the set of objects in the player's inventory */
+  if (!inv_set) return ERROR;
+
+  n = set_get_n_ids(inv_set);                             /* We get the number of objects in the inventory */
+  ids = set_get_ids(inv_set);                             /* We get the array of object ids in the inventory */
+  if (!ids || n <= 0) return ERROR;
+
+  for (i = 0; i < n; i++) {                               /* We look for the object with the given name in the inventory */
+    obj = game_get_object(game, ids[i]);
+    if (obj != NULL && strcasecmp(object_get_name(obj), obj_name) == 0) {
+      object_id = ids[i];
+      break;
+    }
+  }
+  if (object_id == NO_ID || !obj) return ERROR;
+  if (object_get_open(obj) == NO_ID) return ERROR;
+
+  link = game_get_link_by_name(game, link_name);           /* We look for the link with the given name in the game */
+  if (!link) return ERROR;
+
+  if (link_get_origin(link) != player_location && link_get_destination(link) != player_location)              /* We check that the link is connected to the current space */
+    return ERROR;
+
+  if (object_get_open(obj) != link_get_id(link)) return ERROR;          /* We check that the object can open the link */
+
+  return link_set_open(link, TRUE);                        /* We open the link */
 }
 
 /*  Uses an object on the player or a friendly character */

@@ -1,42 +1,47 @@
-#s:11|Entry| _   !#  |[_]--'---|!'!""`""!|! ! /^\ !|!_!_!I!_!|
-#s:12|Corridor|  _____  |  _ _ _  |  _ _ _  |  _ _ _  |  _____  |
-#s:121|Dungeon|    :    | '. _ .'| = (=) =| .'   '.|    :    |
+#s:11|Entry|//ENTRY//|._______.|!  //   !|!__//___!|!_______!|
+#s:12|Mesopotamian Room|   __   |   ][   |  /  \  | ( ++ ) |  \__/  |
+#s:121|Greek Room| 0=====0 |  ! ! !  |  ! ! !  | _!_!_!_ |[-_-_-_-]|
 #s:13|Lunchroom|        | \.../  |  \_/   |   Y    |  _!_   |
-#s:131|Room| .-===-. | ! . . ! | ! .'. ! |()_____()|II_____II|
-#s:132|Bathroom|       _  |      ! ! |   ___! ! |  (    .' |   )  (   |
-#s:14|Kitchen|         |         |         |         |         |
-#s:15|Interior|         |         |         |         |         |
-#s:16|Garden| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
+#s:14|Talking Room| .-===-. | ! . . ! | ! .'. ! |()_____()|II_____II|
+#s:15|Bathroom|       _  |      ! ! |   ___! ! |  (    .' |   )  (   |
+#s:16|Armor Room|  %\    |  ( )>  |  /_o-->|  ! !   |   V_   |
+#s:17|Art Room|+-------+|!  .... !|! /(º-º)!|!  /b d\!|+-------+|
+#s:18|Garden| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
+#s:132|Space Room|  /\    | (__)   | [ J]   | }__{   | /^^\   |
+#s:131|Crown Room|    _   |  _*_*_ | {._._.}| !_____!| _$$$$$_|
 
-#o:21|rock|A heavy rock|11|0|1|-1|-1
-#o:22|shield|A sturdy shield|11|0|1|-1|-1
-#o:23|cap|A wizard's cap|11|0|1|-1|-1
-#o:24|aaaa|A red apple|12|0|1|-1|-1
-#o:25|appbbe|A red apple|12|0|1|-1|-1
-#o:26|appltt|A red apple|12|0|1|-1|-1
-#o:27|appyyy|A red apple|13|0|1|-1|-1
-#o:28|trtr|A red apple|13|0|1|-1|-1
-#o:29|ryy|A red apple|13|0|1|-1|-1
-#o:30|qqq|A red apple|14|0|1|-1|-1
-#o:31|rrrr|A red apple|14|0|1|-1|-1
-#o:32|ddd|A red apple|14|0|1|-1|-1
-#o:33|pyyy|A red apple|15|0|1|-1|-1
-#o:34|fff|A red apple|15|0|1|-1|-1
-#o:35|jhg|A red apple|15|0|1|-1|-1
-#o:36|uytr|A red apple|16|0|1|-1|-1
-#o:37|nbv|A red apple|16|0|1|-1|-1
-#o:38|nbvf|A red apple|16|0|1|-1|-1
-#o:39|uytfd|A red apple|131|0|1|-1|-1
-#o:40|wsdc|A red apple|131|0|1|-1|-1
-#o:41|qwdfg|A red apple|131|0|1|-1|-1
-#o:42|ijhg|A red apple|132|0|1|-1|-1
-#o:43|poiuy|A red apple|132|0|1|-1|-1
-#o:44|mnbvc|A red apple|132|0|1|-1|-1
+#o:21|Knife|A sharp knife|11|0|1|-1|-1
+#o:22|Shield|A sturdy shield|11|0|1|-1|-1
+#o:23|Sword|A slightly broken sword|11|0|1|-1|-1
+#o:24|Rock|A hard rock|12|0|1|-1|-1
+#o:25|Skull|A skull from an anonymous|12|0|1|-1|-1
+#o:26|Dino-Bone|A very big bone|12|0|1|-1|-1
+#o:27|Map|Sorry! An useless map|13|0|1|-1|-1
+#o:28|Fossil|A very interesting fossil|13|0|1|-1|-1
+#o:29|Crown|A SHINY and PRECIOUS crown!|13|0|1|-1|-1
+#o:30|Gun|A killing weapon|14|0|1|-1|-1
+#o:31|Rocket Engine|You don't need that|14|0|1|-1|-1
+#o:32|Moon Rock|A rock with 1/6 Earth's Gravity|14|0|1|-1|-1
+#o:33|Pearl Necklace|A shiny necklace|15|0|1|-1|-1
+#o:34|Apple|A red apple|15|0|1|-1|-1
+#o:35|Martini|Probably it's not a very good moment for that right now|15|0|1|-1|-1
+#o:36|Rum|Why not?|16|0|1|-1|-1
+#o:37|Mummy|Eeeeeeww a mummy|16|0|1|-1|-1
+#o:38|Hieroglyphs|Yeah, whathever...|16|0|1|-1|-1
+#o:39|Banana|A banana that whas glued to a wall|131|0|1|-1|-1
+#o:40|Whip|That's something harmfull|131|0|1|-1|-1
+#o:41|Diamond Sword|A Minecraft sword!|131|0|1|-1|-1
+#o:42|Pickaxe|A pickaxe from 1870|132|0|1|-1|-1
+#o:43|Phone|A robbed phone|132|0|1|-1|-1
+#o:44|Wallet|A wallet you "found" in someone's hand|132|0|1|-1|-1
 #o:50|key|A rusty key|12|0|1|-1|5
 
-#c:31|Gordon|Gordon|5|0|12|Achooo!|
-#c:32|Batman|Batman|18|1|12|I'm Batman|
-#c:33|Police|Police|7|1|12|HEY! YOU!|
+#c:31|Batman|/(B)\ |24|0|12|I'm Batman|
+#c:32|Police|(P)/=*|10|0|12|HEY! YOU!|
+#c:33|Guide |(G) !>|3|0|13|Welcome to the 05 museum|
+#c:34|Josemi| >(:{)|8|1|13|Malloc|
+#c:35|Inaki | /(:D)|5|1|14|Calloc|
+#c:36|Rodri | \(Bo)|9|1|14|Realloc|
 
 #l:1|link11-12|11|12|S|1
 #l:2|link12-11|12|11|N|1
@@ -56,5 +61,5 @@
 #l:16|link15-16|15|16|S|1
 #l:17|link16-15|16|15|N|1
 
-#p:1|Shadow|^C>|11|5|3|
-#p:2|Raven|^d>|11|5|3|
+#p:1|Robber (1)|&P1|11|5|3|
+#p:2|Robber (2)|$P2|11|5|3|
