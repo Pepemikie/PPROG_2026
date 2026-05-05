@@ -63,6 +63,8 @@ static void music_stop(void) {
     }
 }
 
+void print_start();
+
 /**
  * @brief It initializes the game and the graphic engine from a data file
  *
@@ -140,6 +142,7 @@ int main(int argc, char *argv[]) {
   pthread_attr_setdetachstate(&music_attr, PTHREAD_CREATE_DETACHED);
   pthread_create(&music_tid, &music_attr, music_thread, NULL); /* start music thread */
 
+  print_start();
   /* Como 'game' ya es puntero, le quitamos el '&' en todas las llamadas */
   last_cmd = game_get_last_command(game);
   while ((command_get_code(last_cmd) != EXIT) && (game_get_finished(game) == FALSE)) { /* main loop: runs until EXIT or game finished */
@@ -198,3 +201,64 @@ void game_loop_cleanup(Game *game, Graphic_engine *gengine) {
     graphic_engine_destroy(gengine); /* destroys graphic engine and frees its memory */
   }
 }
+
+void print_start(){
+  int i;
+  
+  for(i=0; i < 30; i++)
+  printf("\n");
+
+  printf("            ████████|      ██████|    ████████|  \n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|  ██|     ██|\n");  usleep(100000); 
+  printf("            ████████|    ██|     ██|  ██|  ███|  \n");  usleep(100000); 
+  printf("            ██|    ██|   ██|     ██|  ██|     ██|\n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|  ████████|  \n");  usleep(100000); 
+  printf("                           ██████|               \n\n");  usleep(100000); 
+
+  printf("                         ██████████|  ██|     ██|  ██████████|\n");  usleep(100000); 
+  printf("                             ██|      ██|     ██|  ██|        \n");  usleep(100000); 
+  printf("                             ██|      ██████████|  ██████|    \n");  usleep(100000); 
+  printf("                             ██|      ██|     ██|  ██|        \n");  usleep(100000); 
+  printf("                             ██|      ██|     ██|  ██████████|\n");  usleep(100000); 
+  printf("                                      ██|     ██|            \n\n");  usleep(100000); 
+
+  printf("            ██|     ██|  ██|     ██|   ████████|   ██████████|  ██|     ██|  ██|     ██|\n");  usleep(100000); 
+  printf("            ████| ████|  ██|     ██|  ██|          ██|          ██|     ██|  ████| ████|\n");  usleep(100000); 
+  printf("            ██| ██| ██|  ██|     ██|   ████████|   ██████|      ██|     ██|  ██| ██| ██|\n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|          ██|  ██|          ██|     ██|  ██|     ██|\n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|   ████████|   ██|            ██████|    ██|     ██|\n");  usleep(100000); 
+  printf("                           ██████|                 ██████████|               ██|     ██|\n\n");  usleep(100000); 
+
+  for(i=0; i < 10; i++){
+    printf("\n");
+    usleep(100000);
+    if (i == 5)
+      printf("                         $$$ ENTER TO START THE ROBBERY $$$");
+  }
+
+  getchar();
+}
+
+
+/*
+████████|     ████████|   ████████
+██|     ██| ██|       ██| ██|     ██
+████████|   ██|       ██| ██|  ███
+██|    ██|  ██|       ██| ██|     ██
+██|     ██| ██|       ██| ████████
+              ████████|             
+
+██████████| ██|     ██| ██████████
+    ██|     ██|     ██| ██
+    ██|     ██████████| ██████
+    ██|     ██|     ██| ██
+    ██|     ██|     ██| ██████████
+            ██|     ██| 
+
+██|     ██| ██|     ██|  ████████|  ██████████| ██|     ██| ██|     ██
+████| ████| ██|     ██| ██|         ██|         ██|     ██| ████| ████
+██| ██| ██| ██|     ██|  ████████|  ██████|     ██|     ██| ██| ██| ██|   
+██|     ██| ██|     ██|         ██| ██|         ██|     ██| ██|     ██
+██|     ██| ██|     ██|  ████████|  ██|           ██████|   ██|     ██
+              ██████|               ██████████|             ██|     ██
+*/
