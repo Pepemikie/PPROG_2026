@@ -1,3 +1,6 @@
+#p:1|Robber (1)|&P1|11|5|3|
+#p:2|Robber (2)|$P2|11|5|3|
+
 #s:11|Entry|//ENTRY//|._______.|!  //   !|!__//___!|!_______!|
 #s:12|Mesopotamian Room|   __   |   ][   |  /  \  | ( ++ ) |  \__/  |
 #s:121|Greek Room| 0=====0 |  ! ! !  |  ! ! !  | _!_!_!_ |[-_-_-_-]|
@@ -15,7 +18,7 @@
 #o:23|Sword|-[==>|A slightly broken sword|11|0|1|-1|-1
 #o:24|Rock|0|A hard rock|12|0|1|-1|-1
 #o:25|Skull|(:)]|A skull from an anonymous|12|0|1|-1|-1
-#o:26|Dino-Bone|[===]|A very big bone|12|0|1|-1|-1
+#o:26|Dino-Bone|E===3|A very big bone|12|0|1|-1|-1
 #o:27|Map|[".]|Sorry! An useless map|13|0|1|-1|-1
 #o:28|Fossil|@|A very interesting fossil|13|0|1|-1|-1
 #o:29|Crown|MM|A SHINY and PRECIOUS crown!|13|0|1|-1|-1
@@ -43,8 +46,8 @@
 #c:35|Inaki | /(:D)|5|1|14|Calloc|
 #c:36|Rodri | \(Bo)|9|1|14|Realloc|
 
-#l:1|link11-12|11|12|S|1
-#l:2|link12-11|12|11|N|1
+#l:1|link11-12|11|12|U|1
+#l:2|link12-11|12|11|D|1
 #l:3|link12-13|12|13|S|1
 #l:4|link13-12|13|12|N|1
 #l:5|link12-121|12|121|W|0
@@ -60,6 +63,3 @@
 #l:15|link15-14|15|14|N|1
 #l:16|link15-16|15|16|S|1
 #l:17|link16-15|16|15|N|1
-
-#p:1|Robber (1)|&P1|11|5|3|
-#p:2|Robber (2)|$P2|11|5|3|

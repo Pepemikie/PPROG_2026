@@ -5,15 +5,15 @@
 # @version 4.2
 
 #FLAGS
- CFLAGS=-Wall -g -pedantic -ansi -I./include -lpthread
+CFLAGS=-Wall -g -pedantic -ansi -I./include -lpthread
 CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG -I./include
 LIBS= -L./lib -lscreen
 #FILES AND OBJECTS
 OBJ=		obj/command.o obj/game.o obj/game_actions.o obj/game_loop.o obj/space.o obj/graphic_engine.o obj/game_reader.o obj/object.o obj/player.o obj/character.o obj/set.o obj/inventory.o obj/link.o
 OBJ_DEBUG = obj/command_d.o obj/game_d.o obj/game_actions_d.o obj/game_loop_d.o obj/space_d.o obj/graphic_engine_d.o obj/game_reader_d.o obj/object_d.o obj/player_d.o obj/character_d.o obj/set_d.o obj/inventory_d.o obj/link_d.o
 #EXECUTABLES
-EXE= castle_game
-EXE_DEBUG= castle_game_debug
+EXE= rob_the_museum
+EXE_DEBUG= rob_the_museum_debug
 EXE_SET_TEST= set_test
 EXE_CHARACTER_TEST= character_test
 EXE_SPACE_TEST= space_test
@@ -195,18 +195,18 @@ obj/inventory_test.o: src/inventory_test.c
 #RUNNING
 #Nomal execution
 run:
-	./$(EXE) castle.dat
+	./$(EXE) museum.dat
 
 runlog:
-	./$(EXE) castle.dat -l output.log
+	./$(EXE) museum.dat -l output.log
 
 #Execution with valgrind
 runv:
-	valgrind --leak-check=full -s --track-origins=yes ./$(EXE) castle.dat
+	valgrind --leak-check=full -s --track-origins=yes ./$(EXE) museum.dat
 
 #Debug execution
 rundebug:
-	./$(EXE_DEBUG) castle.dat
+	./$(EXE_DEBUG) museum.dat
 
 #Test execution
 runtest:
@@ -214,16 +214,16 @@ runtest:
 
 #Run game with specific commands
 runcmd1:
-	./$(EXE) castle.dat -l output.log < game1.cmd
+	./$(EXE) museum.dat -l output.log < game1.cmd
 
 runcmd2:
-	./$(EXE) castle.dat -l output.log < game2.cmd
+	./$(EXE) museum.dat -l output.log < game2.cmd
 
 runcmd3:
-	./$(EXE) castle.dat -l output.log < game3.cmd
+	./$(EXE) museum.dat -l output.log < game3.cmd
 
 runcmd4:
-	./$(EXE) castle.dat -l output.log < game4.cmd
+	./$(EXE) museum.dat -l output.log < game4.cmd
 
 #CLEANING
 #files cleaning
