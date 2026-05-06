@@ -34,9 +34,8 @@ FILE *g_logfile = NULL;
 static pid_t music_pid = -1;
 static volatile int music_running = 1; /* añade esta variable */
 
-static void *music_thread(void *arg) {
+static void *music_thread() {
     char *aplay_args[] = {"aplay", "./Main_Theme_2.wav", NULL};
-    (void)arg;
 
     while (music_running) {   /*comprueba la variable en cada iteración */ 
         music_pid = fork();
@@ -54,7 +53,7 @@ static void *music_thread(void *arg) {
     return NULL;
 }
 
-static void music_stop(void) {
+static void music_stop() {
     music_running = 0;  /* para el bucle primero */
     if (music_pid > 0) {
         kill(music_pid, SIGTERM);
@@ -64,6 +63,7 @@ static void music_stop(void) {
 }
 
 void print_start();
+void print_end();
 
 /**
  * @brief It initializes the game and the graphic engine from a data file
@@ -193,6 +193,8 @@ int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name) {
  * @param gengine a pointer to the Graphic_engine struct to be destroyed
  */
 void game_loop_cleanup(Game *game, Graphic_engine *gengine) {
+
+  print_end();
   music_stop(); /* stops background music */
   if (game) {
     game_destroy(game); /* destroys game and frees its memory */
@@ -208,57 +210,66 @@ void print_start(){
   for(i=0; i < 30; i++)
   printf("\n");
 
-  printf("            ████████|      ██████|    ████████|  \n");  usleep(100000); 
-  printf("            ██|     ██|  ██|     ██|  ██|     ██|\n");  usleep(100000); 
-  printf("            ████████|    ██|     ██|  ██|  ███|  \n");  usleep(100000); 
-  printf("            ██|    ██|   ██|     ██|  ██|     ██|\n");  usleep(100000); 
-  printf("            ██|     ██|  ██|     ██|  ████████|  \n");  usleep(100000); 
-  printf("                           ██████|               \n\n");  usleep(100000); 
+  printf("            ████████|      ██████|    ████████|                            \033[1;32m██|\033[0m              \n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|  ██|     ██|                      \033[1;32m█████████|\033[0m              \n");  usleep(100000); 
+  printf("            ████████|    ██|     ██|  ██|  ███|                      \033[1;32m██|   ██|  ██|\033[0m            \n");  usleep(100000); 
+  printf("            ██|    ██|   ██|     ██|  ██|     ██|                    \033[1;32m██|   ██|  ██|\033[0m            \n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|  ████████|                      \033[1;32m██|   ██|\033[0m              \n");  usleep(100000); 
+  printf("                           ██████|                                     \033[1;32m█████████|\033[0m              \n");  usleep(100000); 
+  printf("                                                                           \033[1;32m██|  ██|\033[0m            \n");  usleep(100000); 
+  printf("                         ██████████|  ██|     ██|  ██████████|       \033[1;32m██|   ██|  ██|\033[0m          \n");  usleep(100000); 
+  printf("                             ██|      ██|     ██|  ██|               \033[1;32m██|   ██|  ██|\033[0m            \n");  usleep(100000); 
+  printf("                             ██|      ██████████|  ██████|             \033[1;32m█████████|\033[0m                 \n");  usleep(100000); 
+  printf("                             ██|      ██|     ██|  ██|                     \033[1;32m██|\033[0m              \n");  usleep(100000); 
+  printf("                             ██|      ██|     ██|  ██████████|                            \n");  usleep(100000); 
+  printf("                                      ██|     ██|                                       \n\n");  usleep(100000); 
 
-  printf("                         ██████████|  ██|     ██|  ██████████|\n");  usleep(100000); 
-  printf("                             ██|      ██|     ██|  ██|        \n");  usleep(100000); 
-  printf("                             ██|      ██████████|  ██████|    \n");  usleep(100000); 
-  printf("                             ██|      ██|     ██|  ██|        \n");  usleep(100000); 
-  printf("                             ██|      ██|     ██|  ██████████|\n");  usleep(100000); 
-  printf("                                      ██|     ██|            \n\n");  usleep(100000); 
-
-  printf("            ██|     ██|  ██|     ██|   ████████|   ██████████|  ██|     ██|  ██|     ██|\n");  usleep(100000); 
-  printf("            ████| ████|  ██|     ██|  ██|          ██|          ██|     ██|  ████| ████|\n");  usleep(100000); 
-  printf("            ██| ██| ██|  ██|     ██|   ████████|   ██████|      ██|     ██|  ██| ██| ██|\n");  usleep(100000); 
-  printf("            ██|     ██|  ██|     ██|          ██|  ██|          ██|     ██|  ██|     ██|\n");  usleep(100000); 
-  printf("            ██|     ██|  ██|     ██|   ████████|   ██|            ██████|    ██|     ██|\n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|   ████████|   ██████████|  ██|     ██|  ██|     ██|  \n");  usleep(100000); 
+  printf("            ████| ████|  ██|     ██|  ██|          ██|          ██|     ██|  ████| ████|  \n");  usleep(100000); 
+  printf("            ██| ██| ██|  ██|     ██|   ████████|   ██████|      ██|     ██|  ██| ██| ██|  \n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|          ██|  ██|          ██|     ██|  ██|     ██|  \n");  usleep(100000); 
+  printf("            ██|     ██|  ██|     ██|   ████████|   ██|            ██████|    ██|     ██|  \n");  usleep(100000); 
   printf("                           ██████|                 ██████████|               ██|     ██|\n\n");  usleep(100000); 
 
-  for(i=0; i < 10; i++){
+  for(i=0; i < 25; i++){
     printf("\n");
     usleep(100000);
     if (i == 5)
-      printf("                         $$$ ENTER TO START THE ROBBERY $$$");
+      printf("                           \033[1m$$$ ENTER TO START THE ROBBERY $$$\033[0m\n");
   }
 
   getchar();
+  return;
 }
 
+void print_end(){
+  int i;
+  
+  for(i=0; i < 30; i++)
+  printf("\n");
 
-/*
-████████|     ████████|   ████████
-██|     ██| ██|       ██| ██|     ██
-████████|   ██|       ██| ██|  ███
-██|    ██|  ██|       ██| ██|     ██
-██|     ██| ██|       ██| ████████
-              ████████|             
+  printf("            ██████████|  ██|     ██|  ██████████|\n");  usleep(100000); 
+  printf("                ██|      ██|     ██|  ██|\n");  usleep(100000); 
+  printf("                ██|      ██████████|  ██████|\n");  usleep(100000); 
+  printf("                ██|      ██|     ██|  ██|\n");  usleep(100000); 
+  printf("                ██|      ██|     ██|  ██████████|\n");  usleep(100000); 
+  printf("                         ██|     ██|\n\n");  usleep(100000); 
 
-██████████| ██|     ██| ██████████
-    ██|     ██|     ██| ██
-    ██|     ██████████| ██████
-    ██|     ██|     ██| ██
-    ██|     ██|     ██| ██████████
-            ██|     ██| 
+  printf("            ██████████|  ██|     ██|  ████████|\n");  usleep(100000); 
+  printf("            ██|          ████|   ██|  ██|     ██|\n");  usleep(100000); 
+  printf("            ██████|      ██|██|  ██|  ██|     ██|\n");  usleep(100000); 
+  printf("            ██|          ██|  █████|  ██|     ██|\n");  usleep(100000); 
+  printf("            ██████████|  ██|    ███|  ████████|\n");  usleep(100000); 
+  printf("                         ██|     ██|   \n\n");  usleep(100000); 
 
-██|     ██| ██|     ██|  ████████|  ██████████| ██|     ██| ██|     ██
-████| ████| ██|     ██| ██|         ██|         ██|     ██| ████| ████
-██| ██| ██| ██|     ██|  ████████|  ██████|     ██|     ██| ██| ██| ██|   
-██|     ██| ██|     ██|         ██| ██|         ██|     ██| ██|     ██
-██|     ██| ██|     ██|  ████████|  ██|           ██████|   ██|     ██
-              ██████|               ██████████|             ██|     ██
-*/
+  for(i=0; i < 25; i++){
+    printf("\n");
+    usleep(100000);
+    if (i == 5){
+      printf("                 \033[1mTHANKS FOR PLAYING OUR GAME\033[0m\n");
+      printf("                 \033[1m BY JOSEMI, IÑAKI & RODRI\033[0m\n");
+    }
+  }
+  
+  return;
+}
