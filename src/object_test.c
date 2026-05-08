@@ -14,7 +14,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 28
+#define MAX_TESTS 32
 
 /** @brief Main function for running the Object module unit tests */
 int main(int argc, char** argv) {
@@ -45,22 +45,26 @@ int main(int argc, char** argv) {
   if (all || test == 10) test2_object_set_description();
   if (all || test == 11) test1_object_get_description();
   if (all || test == 12) test2_object_get_description();
-  if (all || test == 13) test1_object_set_health();
-  if (all || test == 14) test2_object_set_health();
-  if (all || test == 15) test1_object_get_health();
-  if (all || test == 16) test2_object_get_health();
-  if (all || test == 17) test1_object_set_movable();
-  if (all || test == 18) test2_object_set_movable();
-  if (all || test == 19) test1_object_get_movable();
-  if (all || test == 20) test2_object_get_movable();
-  if (all || test == 21) test1_object_set_dependency();
-  if (all || test == 22) test2_object_set_dependency();
-  if (all || test == 23) test1_object_get_dependency();
-  if (all || test == 24) test2_object_get_dependency();
-  if (all || test == 25) test1_object_set_open();
-  if (all || test == 26) test2_object_set_open();
-  if (all || test == 27) test1_object_get_open();
-  if (all || test == 28) test2_object_get_open();
+  if (all || test == 13) test1_object_set_gdesc();
+  if (all || test == 14) test2_object_set_gdesc();
+  if (all || test == 15) test1_object_get_gdesc();
+  if (all || test == 16) test2_object_get_gdesc();
+  if (all || test == 17) test1_object_set_health();
+  if (all || test == 18) test2_object_set_health();
+  if (all || test == 19) test1_object_get_health();
+  if (all || test == 20) test2_object_get_health();
+  if (all || test == 21) test1_object_set_movable();
+  if (all || test == 22) test2_object_set_movable();
+  if (all || test == 23) test1_object_get_movable();
+  if (all || test == 24) test2_object_get_movable();
+  if (all || test == 25) test1_object_set_dependency();
+  if (all || test == 26) test2_object_set_dependency();
+  if (all || test == 27) test1_object_get_dependency();
+  if (all || test == 28) test2_object_get_dependency();
+  if (all || test == 29) test1_object_set_open();
+  if (all || test == 30) test2_object_set_open();
+  if (all || test == 31) test1_object_get_open();
+  if (all || test == 32) test2_object_get_open();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -144,6 +148,33 @@ void test1_object_get_description() {
 void test2_object_get_description() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_get_description(o) == NULL);
+}
+
+/* Tests setting the graphical description of an object */
+void test1_object_set_gdesc() {
+  Object *o = object_create(1);
+  PRINT_TEST_RESULT(object_set_gdesc(o, "Sword") == OK);
+  object_destroy(o);
+}
+
+/* Tests setting the graphical description of an object with invalid parameters */
+void test2_object_set_gdesc() {
+  Object *o = NULL;
+  PRINT_TEST_RESULT(object_set_gdesc(o, "Sword") == ERROR);
+}
+
+/* Tests getting the graphical description of an object */
+void test1_object_get_gdesc() {
+  Object *o = object_create(1);
+  object_set_gdesc(o, "Sword");
+  PRINT_TEST_RESULT(strcmp(object_get_gdesc(o), "Sword") == 0);
+  object_destroy(o);
+}
+
+/* Tests getting the graphical description of an object with invalid parameters */
+void test2_object_get_gdesc() {
+  Object *o = NULL;
+  PRINT_TEST_RESULT(object_get_gdesc(o) == NULL);
 }
 
 void test1_object_set_health() {
