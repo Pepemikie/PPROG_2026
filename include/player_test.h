@@ -2,7 +2,7 @@
  * @brief It declares the tests for the Player module
  * @file player_test.h
  * @author Iñaki López Rocha
- * @version 0.0
+ * @version 2.0
  * @date 02-04-2026
  * @copyright GNU Public License
  */

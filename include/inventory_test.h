@@ -2,7 +2,7 @@
  * @brief It declares the tests for the Inventory module
  * @file inventory_test.h
  * @author Iñaki López Rocha
- * @version 0.0
+ * @version 1.0
  * @date 11-04-2026
  * @copyright GNU Public License
  */
