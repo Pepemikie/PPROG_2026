@@ -31,17 +31,27 @@
 /** @brief Width of the banner area */
 #define WIDTH_BAN 25
 /** @brief Height of the map area */
-#define HEIGHT_MAP 45
+#define HEIGHT_MAP 54
 /** @brief Height of the banner area */
 #define HEIGHT_BAN 1
 /** @brief Height of the help area */
-#define HEIGHT_HLP 3
+#define HEIGHT_HLP 4
 /** @brief Height of the feedback area */
 #define HEIGHT_FDB 3
 /** @brief Width of each room in the map */
 #define ROOM_WIDTH 15
 /** @brief Number of char for the P1 and P2 specification*/
 #define PLAYER_ACTION 3
+
+/**
+ * @brief HP thresholds for colour coding.
+ *
+ * hp > HP_HIGH  → green   (healthy)
+ * HP_LOW < hp ≤ HP_HIGH → yellow  (wounded)
+ * hp ≤ HP_LOW  → red     (critical)
+ */
+#define HP_HIGH 6
+#define HP_LOW  3
 
 /** @brief Structure representing the graphic engine */
 struct _Graphic_engine {
@@ -81,6 +91,45 @@ static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str
  */
 static Status graphic_engine_get_characters_str(Game *game, Space *space, char *str);
 
+/**
+ * @brief Returns the Color_attr that matches a given hp value.
+ *
+ * hp > HP_HIGH  → COLOR_ATTR_BOLD_GREEN
+ * HP_LOW < hp ≤ HP_HIGH → COLOR_ATTR_BOLD_YELLOW
+ * hp ≤ HP_LOW  → COLOR_ATTR_BOLD_RED
+ */
+static Color_attr hp_to_color(int hp) {
+  if (hp > HP_HIGH) return COLOR_ATTR_BOLD_GREEN;
+  if (hp > HP_LOW)  return COLOR_ATTR_BOLD_YELLOW;
+  return COLOR_ATTR_BOLD_RED;
+}
+
+/**
+ * @brief Returns the Frame_color that corresponds to a player turn index.
+ *
+ * turn 0 → BLUE
+ * turn 1 → GREEN
+ * others → BLACK
+ */
+static Frame_color turn_to_frame_color(int turn) {
+  if (turn == 0) return BLUE;
+  if (turn == 1) return GREEN;
+  return BLACK;
+}
+
+/**
+ * @brief Returns the Color_attr that matches the active player's frame color.
+ *
+ * turn 0 → COLOR_ATTR_BOLD_BLUE
+ * turn 1 → COLOR_ATTR_BOLD_GREEN
+ * others → COLOR_ATTR_BOLD
+ */
+static Color_attr turn_to_text_color(int turn) {
+  if (turn == 0) return COLOR_ATTR_BOLD_BLUE;
+  if (turn == 1) return COLOR_ATTR_BOLD_GREEN;
+  return COLOR_ATTR_BOLD;
+}
+
 /*   It creates a new Graphic_engine, allocating memory and initializing its members */
 Graphic_engine *graphic_engine_create() {
   Graphic_engine *ge = NULL;
@@ -99,10 +148,300 @@ Graphic_engine *graphic_engine_create() {
   return ge;
 }
 
+/*   It destroys a Graphic_engine, freeing the allocated memory */
+void graphic_engine_destroy(Graphic_engine *ge) {
+  if (!ge) return;
+
+  /* destroys each display area */
+  screen_area_destroy(ge->map);
+  screen_area_destroy(ge->descript);
+  screen_area_destroy(ge->banner);
+  screen_area_destroy(ge->help);
+  screen_area_destroy(ge->feedback);
+
+  screen_destroy();
+  free(ge);
+}
+
+/*   It renders the current state of the game on screen */
+void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
+  Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID;
+  Id obj_loc = NO_ID, char_loc = NO_ID;
+  Space *act = NULL;
+  Space *obj_space = NULL;         /* F12, I3: only show objects if space is discovered */
+  Space *char_space = NULL;        /* F12, I3: only show characters if space is discovered */
+  char str[512];
+  CommandCode last_cmd = UNKNOWN;
+  extern char *cmd_to_str[N_CMD][N_CMDT];
+  int i;
+  Player *player = NULL;
+  Player *p = NULL;                /* F13, I3: used to iterate all players */
+  Character *character = NULL;
+  Object *obj = NULL;
+  Space *p_space = NULL;           /* F13, I3: space of each player for discovered check */
+
+  Set *inv_set = NULL;
+  Id *ids = NULL;
+  int n = 0;
+  char obj_line[512];
+  int health = 0;
+  int turn = 0;
+  int last_cmd_player = -1;
+  char player_label[PLAYER_ACTION];
+
+  char room_name[498];
+
+  /* offsets used to highlight hp numbers inside a formatted string */
+  int hp_offset = 0;
+  int hp_len    = 0;
+  Color_attr hp_col;
+
+  if (!ge || !game) return;
+
+  turn = game_get_turn(game);
+
+  /* 1. MAP AREA */
+  screen_area_clear(ge->map);
+  if ((id_act = game_get_player_location(game)) != NO_ID) {
+    act = game_get_space(game, id_act);
+    if (!act) return;
+
+    id_back = game_get_connection(game, space_get_id(act), N); /* retrieves north and south neighbours */
+    id_next = game_get_connection(game, space_get_id(act), S);
+
+    if (id_back != NO_ID) {
+      /* North row: show_sides=FALSE — don't reveal its E/W neighbours */
+      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE, FALSE);
+      screen_area_puts(ge->map, "                                 ^");
+    }
+    else {
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+    }
+
+    /* Active row: show_sides=TRUE — player is here, reveal E/W neighbours */
+    graphic_engine_paint_spaces_row(ge->map, game, act, TRUE, TRUE);
+
+    if (id_next != NO_ID) {
+      screen_area_puts(ge->map, "                                 v");
+      /* South row: show_sides=FALSE — don't reveal its E/W neighbours */
+      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE, FALSE);
+    }
+    else {
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+      screen_area_puts(ge->map, " ");
+    }
+  }
+
+  /* 2. DESCRIPTION AREA */
+  screen_area_clear(ge->descript);
+
+  /*Players Room name Location*/
+  strcpy(room_name, space_get_name(game_get_space(game, game_get_player_location(game))));
+  sprintf(str, " Room's name: %s", room_name);
+  screen_area_puts(ge->descript, str);
+  screen_area_puts(ge->descript, " ");
+
+  /* Objects — prints each object name and its location */
+  screen_area_puts(ge->descript, " Objects:");
+  for (i = 0; i < MAX_OBJECTS; i++) {
+    obj = game_get_object_by_index(game, i);
+    if (!obj) break;
+    obj_loc = game_get_object_location(game, object_get_id(obj)); 
+    obj_space = game_get_space(game, obj_loc);                      /* F12, I3: only show objects that are in discovered spaces */
+    if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
+    sprintf(str, "  %-13s      [ %s ]: %d", object_get_name(obj), object_get_gdesc(obj), (int)obj_loc);
+    screen_area_puts(ge->descript, str);
+  }
+  screen_area_puts(ge->descript, " ");
+
+  /* Characters — prints each character name, location and health (hp coloured green/yellow/red) */
+  screen_area_puts(ge->descript, " Characters:");
+  for (i = 0; i < MAX_CHARACTERS; i++) {
+    character = game_get_character_by_index(game, i);
+    if (!character) break;
+    char_loc = game_get_character_location(game, character_get_id(character));
+    char_space = game_get_space(game, char_loc);                            /* F12, I3: only show characters that are in discovered spaces */
+    if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
+    health = character_get_health(character);
+    if (health > 0) {
+      /*
+       * Build the prefix up to the hp number to calculate the offset,
+       * then build the full string and highlight the hp digits.
+       */
+      char prefix[128];
+      char hp_str[8];
+      sprintf(prefix, "  %-10s: %d (", character_get_name(character), (int)char_loc);
+      hp_offset = (int)strlen(prefix);
+      sprintf(hp_str, "%d", health);
+      hp_len = (int)strlen(hp_str);
+
+      sprintf(str, "  %-10s: %d (%d hp)  [%s] %s",
+              character_get_name(character), (int)char_loc, health,
+              character_get_gdesc(character),
+              character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
+
+      hp_col = hp_to_color(health);
+      screen_area_puts_bold_color_at(ge->descript, str, hp_offset, hp_len, hp_col);
+    } else {
+      sprintf(str, "  %-10s: %d (DEAD)  [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
+      screen_area_puts_red(ge->descript, str);
+      sleep(1);
+      space_del_character(act, character_get_id(character));
+    }
+  }
+  screen_area_puts(ge->descript, " ");
+
+  /* Players — prints each player name, location and health (F13, I3) */
+  screen_area_puts(ge->descript, " Players:");
+  for (i = 0; i < game_get_num_players(game); i++) {
+    p = game_get_player_by_index(game, i);
+    if (!p) continue;
+    p_space = game_get_space(game, player_get_location(p));
+    if (!p_space || space_get_discovered(p_space) == FALSE) continue; /* only show discovered players */
+    health = player_get_health(p);
+    {
+      char prefix_hp[128];
+      char hp_str2[8];
+      int  hp_off2, hp_len2;
+
+      sprintf(prefix_hp, "  %-8s: %-3d (", player_get_name(p), (int)player_get_location(p));
+      hp_off2 = (int)strlen(prefix_hp);
+      sprintf(hp_str2, "%d", health);
+      hp_len2 = (int)strlen(hp_str2);
+
+      sprintf(str, "  %-8s: %-3d (%d hp) [%s]",
+              player_get_name(p), (int)player_get_location(p),
+              health, player_get_gdesc(p));
+
+      hp_col = hp_to_color(health);
+      screen_area_puts_bold_color_at(ge->descript, str, hp_off2, hp_len2, hp_col);
+    }
+  }
+  screen_area_puts(ge->descript, " ");
+
+  /* Player — prints location, health and carried object and character recruited */
+  player = game_get_player(game);
+  health = player_get_health(player);
+  {
+    char prefix_hp[128];
+    char hp_str3[8];
+    int  hp_off3, hp_len3;
+
+    sprintf(prefix_hp, " Player: %s at %d (", player_get_name(player), (int)player_get_location(player));
+    hp_off3 = (int)strlen(prefix_hp);
+    sprintf(hp_str3, "%d", health);
+    hp_len3 = (int)strlen(hp_str3);
+
+    sprintf(str, " Player: %s at %d (%d hp)",
+            player_get_name(player), (int)player_get_location(player), health);
+
+    hp_col = hp_to_color(health);
+    screen_area_puts_bold_color_at(ge->descript, str, hp_off3, hp_len3, hp_col);
+  }
+
+  inv_set = inventory_get_objects(player_get_backpack(player));
+  if(inv_set != NULL){/*gets number of objects in inventory */
+    n = set_get_n_ids(inv_set);
+  }else{
+    n = 0;/*no objects in inventory */
+  }
+
+  if (n <= 0) {
+    screen_area_puts(ge->descript, " Player has no objects");
+  } else {
+    ids = set_get_ids(inv_set);
+    strcpy(obj_line, " Player has:");
+    for (i = 0; i < n; i++) {
+      obj = game_get_object(game, ids[i]);
+      if (obj) {
+        strcat(obj_line, " ");
+        strcat(obj_line, object_get_name(obj));
+        if (i < n - 1) strcat(obj_line, ",");
+      }
+    }
+    screen_area_puts(ge->descript, obj_line);
+  }
+
+  /* Chat message — displays and clears last message if present */
+  screen_area_puts(ge->descript, " ");
+  if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
+    sprintf(str, " Message: %s", game_get_last_message(game));
+    screen_area_puts(ge->descript, str);
+    game_set_last_message(game, ""); /* clears message after displaying */
+  }
+  /* Inspect message — displays and clears last message if present */
+  else if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
+    sprintf(str, " Description: %s", game_get_last_object_description(game));
+    screen_area_puts(ge->descript, str);
+    game_set_last_object_description(game, ""); /* clears description after displaying */
+  }
+
+  /* 3. BANNER — coloured with active player's colour */
+  {
+    int bname_off = (int)strlen("    Player: ");
+    int bname_len = (int)strlen(player_get_name(game_get_player(game)));
+    sprintf(str, "    Player: %s ", player_get_name(game_get_player(game)));
+    screen_area_puts_bold_color_at(ge->banner, str, bname_off, bname_len, turn_to_text_color(turn));
+  }
+
+  /* 4. HELP — lists all available commands */
+  screen_area_clear(ge->help);
+  screen_area_puts(ge->help, " Movement Commands:  move <dir> or m <n|s|e|w|u|d>");
+  screen_area_puts(ge->help, " Object Commands:  take <obj> or t <obj>, drop <obj> or d <obj>, inspect <obj> or i <obj>, open <link> with <object>, use <object> [over <character>]");
+  screen_area_puts(ge->help, " Character Commands:  attack <char> or a <char>, char <char> or c <har>, recruit <char> or r <char>, abandon <char> or b <char>");
+  screen_area_puts(ge->help, " Other Commands: music <1,2,3>, exit or e");
+
+  /* 5. FEEDBACK — shows last command; OK coloured with player colour, ERROR in red */
+  screen_area_clear(ge->feedback);
+  if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
+    last_cmd = command_get_code(game_get_last_command(game));
+    last_cmd_player = game_get_last_command_player(game);
+
+    if      (last_cmd_player == 0) strcpy(player_label, "P1");
+    else if (last_cmd_player == 1) strcpy(player_label, "P2");
+    else                           strcpy(player_label, "??");
+
+    {
+      Bool cmd_ok = (game_get_last_status(game) == OK);
+      sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], player_label, cmd_ok ? "OK" : "ERROR");
+      if (cmd_ok) {
+        int ok_offset = (int)strlen(str) - 2; /* points at "OK" */
+        screen_area_puts_bold_color_at(ge->feedback, str, ok_offset, 2, turn_to_text_color(last_cmd_player));
+      } else {
+        screen_area_puts_red(ge->feedback, str);
+      }
+    }
+  }
+  else{
+    screen_area_puts(ge->feedback, " No command inserted");
+  }
+
+/* 6. Render with player color (F13, I3) */
+  screen_paint(turn_to_frame_color(turn));
+  printf("prompt:> ");
+}
+
 /*   It paints a row of three horizontally adjacent spaces centered on the given space.
  *   If show_sides is FALSE, west and east neighbours are not rendered (treated as absent). */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides) {
-  Space *west = NULL, *east = NULL;
+  Space *west = NULL, *east = NULL, *up = NULL, *down = NULL;
   Player *active_player = NULL;
   const char *active_player_gdesc = "   ";
   const char *wg = NULL, *mg = NULL, *eg = NULL;
@@ -111,12 +450,15 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   Status obj_list_status, char_list_status;
   int i;
   Bool west_discovered = FALSE, middle_discovered = FALSE, east_discovered = FALSE;
+  char floor_arrow[3];
 
   if (!area || !middle) return;
 
   if (show_sides == TRUE) {
     west = game_get_space(game, game_get_connection(game, space_get_id(middle), W));
     east = game_get_space(game, game_get_connection(game, space_get_id(middle), E));
+    up = game_get_space(game, game_get_connection(game, space_get_id(middle), U));
+    down = game_get_space(game, game_get_connection(game, space_get_id(middle), D));
   }
 
   middle_discovered = space_get_discovered(middle);
@@ -157,10 +499,17 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
       active_player_gdesc = "^C>";
     }
   }
+  
+  /*Se mira si tiene up o down para imprimir una flecha*/
+  if(up && !down) strcpy(floor_arrow, "^ ");
+  else if(down && !up) strcpy(floor_arrow, "v ");
+  else if(down && up) strcpy(floor_arrow, "^v");
+  else strcpy(floor_arrow, "  ");
 
-  sprintf(middle_str, "  | %s %-15s  %3d|  ",
+  sprintf(middle_str, "  | %s %-9s%s%3d|  ",
       is_act == TRUE ? active_player_gdesc : "   ",
       char_list_status == ERROR ? "               " : char_list,
+      floor_arrow,
       (int)space_get_id(middle));
 
   if (!east) {
@@ -177,7 +526,13 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   }
 
   sprintf(str, "%s%s%s", west_str, middle_str, east_str);
-  screen_area_puts(area, str);
+  if (is_act == TRUE) {
+    int bold_start = strlen(west_str) + 4;
+    int bold_len = (int)strlen(active_player_gdesc);
+    screen_area_puts_bold_at(area, str, bold_start, bold_len);
+  } else {
+    screen_area_puts(area, str);
+  }
 
   /* GDESC LINES*/
   for (i = 0; i < SPACE_GDESC_LINES; i++) {
@@ -320,238 +675,4 @@ static Status graphic_engine_get_characters_str(Game *game, Space *space, char *
   while ((int)strlen(car) < ROOM_WIDTH) strcat(car, " ");
   strcpy(str, car);
   return OK;
-}
-
-/*   It destroys a Graphic_engine, freeing the allocated memory */
-void graphic_engine_destroy(Graphic_engine *ge) {
-  if (!ge) return;
-
-  /* destroys each display area */
-  screen_area_destroy(ge->map);
-  screen_area_destroy(ge->descript);
-  screen_area_destroy(ge->banner);
-  screen_area_destroy(ge->help);
-  screen_area_destroy(ge->feedback);
-
-  screen_destroy();
-  free(ge);
-}
-
-/*   It renders the current state of the game on screen */
-void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
-  Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID;
-  Id obj_loc = NO_ID, char_loc = NO_ID;
-  Space *act = NULL;
-  Space *obj_space = NULL;         /* F12, I3: only show objects if space is discovered */
-  Space *char_space = NULL;        /* F12, I3: only show characters if space is discovered */
-  char str[512];
-  CommandCode last_cmd = UNKNOWN;
-  extern char *cmd_to_str[N_CMD][N_CMDT];
-  int i;
-  Player *player = NULL;
-  Player *p = NULL;                /* F13, I3: used to iterate all players */
-  Character *character = NULL;
-  Object *obj = NULL;
-  Space *p_space = NULL;           /* F13, I3: space of each player for discovered check */
-
-  Set *inv_set = NULL;
-  Id *ids = NULL;
-  int n = 0;
-  char obj_line[512];
-  int health = 0;
-  int turn = 0;
-  int last_cmd_player = -1;
-  char player_label[PLAYER_ACTION];
-
-  char room_name[498];
-
-  if (!ge || !game) return;
-
-  /* 1. MAP AREA */
-  screen_area_clear(ge->map);
-  if ((id_act = game_get_player_location(game)) != NO_ID) {
-    act = game_get_space(game, id_act);
-    if (!act) return;
-
-    id_back = game_get_connection(game, space_get_id(act), N); /* retrieves north and south neighbours */
-    id_next = game_get_connection(game, space_get_id(act), S);
-
-    if (id_back != NO_ID) {
-      /* North row: show_sides=FALSE — don't reveal its E/W neighbours */
-      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE, FALSE);
-      screen_area_puts(ge->map, "                                 ^");
-    }
-    else {
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-    }
-
-    /* Active row: show_sides=TRUE — player is here, reveal E/W neighbours */
-    graphic_engine_paint_spaces_row(ge->map, game, act, TRUE, TRUE);
-
-    if (id_next != NO_ID) {
-      screen_area_puts(ge->map, "                                 v");
-      /* South row: show_sides=FALSE — don't reveal its E/W neighbours */
-      graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE, FALSE);
-    }
-    else {
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-      screen_area_puts(ge->map, " ");
-    }
-  }
-
-  /* 2. DESCRIPTION AREA */
-  screen_area_clear(ge->descript);
-
-  /*Players Room name Location*/
-  strcpy(room_name, space_get_name(game_get_space(game, game_get_player_location(game))));
-  sprintf(str, " Room's name: %s", room_name);
-  screen_area_puts(ge->descript, str);
-  screen_area_puts(ge->descript, " ");
-
-  /* Objects — prints each object name and its location */
-  screen_area_puts(ge->descript, " Objects:");
-  for (i = 0; i < MAX_OBJECTS; i++) {
-    obj = game_get_object_by_index(game, i);
-    if (!obj) break;
-    obj_loc = game_get_object_location(game, object_get_id(obj)); 
-    obj_space = game_get_space(game, obj_loc);                      /* F12, I3: only show objects that are in discovered spaces */
-    if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
-    sprintf(str, "  %-13s      [ %s ]: %d", object_get_name(obj), object_get_gdesc(obj), (int)obj_loc);
-    screen_area_puts(ge->descript, str);
-  }
-  screen_area_puts(ge->descript, " ");
-
-  /* Characters — prints each character name, location and health */
-  screen_area_puts(ge->descript, " Characters:");
-  for (i = 0; i < MAX_CHARACTERS; i++) {
-    character = game_get_character_by_index(game, i);
-    if (!character) break;
-    char_loc = game_get_character_location(game, character_get_id(character));
-    char_space = game_get_space(game, char_loc);                            /* F12, I3: only show characters that are in discovered spaces */
-    if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
-      health = character_get_health(character);
-      if (health > 0)
-        sprintf(str, "  %-10s: %d (%-2d hp)  [%s] %s", character_get_name(character), (int)char_loc, health, character_get_gdesc(character), character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
-      else{
-        sprintf(str, "  %-10s: %d (DEAD)  [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
-        sleep(1);
-        space_del_character(act, character_get_id(character));
-      }
-      screen_area_puts(ge->descript, str);
-    }
-  screen_area_puts(ge->descript, " ");
-
-  /* Players — prints each player name, location and health (F13, I3) */
-  screen_area_puts(ge->descript, " Players:");
-  for (i = 0; i < game_get_num_players(game); i++) {
-    p = game_get_player_by_index(game, i);
-    if (!p) continue;
-    p_space = game_get_space(game, player_get_location(p));
-    if (!p_space || space_get_discovered(p_space) == FALSE) continue; /* only show discovered players */
-    sprintf(str, "  %-8s: %-3d (%d hp) [%s]", player_get_name(p),
-            (int)player_get_location(p), player_get_health(p), player_get_gdesc(p));
-    screen_area_puts(ge->descript, str);
-  }
-  screen_area_puts(ge->descript, " ");
-
-  /* Player — prints location, health and carried object and character recruited */
-  player = game_get_player(game);
-  sprintf(str, " Player: %s at %d (%d hp)", player_get_name(player), (int)player_get_location(player), player_get_health(player));
-  screen_area_puts(ge->descript, str);
-
-  inv_set = inventory_get_objects(player_get_backpack(player));
-  if(inv_set != NULL){/*gets number of objects in inventory */
-    n = set_get_n_ids(inv_set);
-  }else{
-    n = 0;/*no objects in inventory */
-  }
-
-  if (n <= 0) {
-    screen_area_puts(ge->descript, " Player has no objects");
-  } else {
-    ids = set_get_ids(inv_set);
-    strcpy(obj_line, " Player has:");
-    for (i = 0; i < n; i++) {
-      obj = game_get_object(game, ids[i]);
-      if (obj) {
-        strcat(obj_line, " ");
-        strcat(obj_line, object_get_name(obj));
-        if (i < n - 1) strcat(obj_line, ",");
-      }
-    }
-    screen_area_puts(ge->descript, obj_line);
-  }
-
-  /* Chat message — displays and clears last message if present */
-  screen_area_puts(ge->descript, " ");
-  if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
-    sprintf(str, " Message: %s", game_get_last_message(game));
-    screen_area_puts(ge->descript, str);
-    game_set_last_message(game, ""); /* clears message after displaying */
-  }
-
-  /* Inspect message — displays and clears last message if present */
-  screen_area_puts(ge->descript, " ");
-  if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
-    sprintf(str, " Description: %s", game_get_last_object_description(game));
-    screen_area_puts(ge->descript, str);
-    game_set_last_object_description(game, ""); /* clears description after displaying */
-  }
-
-  /* 3. BANNER */
-  sprintf(str, "    Player: %s ", player_get_name(game_get_player(game)));
-  screen_area_puts(ge->banner, str);
-
-  /* 4. HELP — lists all available commands */
-  screen_area_clear(ge->help);
-  screen_area_puts(ge->help, " The commands you can use are:");
-  screen_area_puts(ge->help, "  move <dir> or m <n|s|e|w>, take or t, drop or d, attack or a, chat or c, exit or e, inspect or i,");
-  screen_area_puts(ge->help, "  recruit or r, abandon or b, open <link> with <object>, use <object> [over <character>],");
-
-  /* 5. FEEDBACK — shows last command and its result status */
-  screen_area_clear(ge->feedback);
-  if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
-    last_cmd = command_get_code(game_get_last_command(game));
-    last_cmd_player = game_get_last_command_player(game);
-
-    if (last_cmd_player == 0) {
-      strcpy(player_label, "P1");
-    } else if (last_cmd_player == 1) {
-      strcpy(player_label, "P2");
-    }
-
-    sprintf(str, " %s: %s (%s)", cmd_to_str[last_cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR", player_label);
-    screen_area_puts(ge->feedback, str);
-  }
-  else{
-    screen_area_puts(ge->feedback, " No command inserted");
-  }
-  
-/* 6. Render with player color (F13, I3) */
-  turn = game_get_turn(game);
-  if (turn == 0) {
-    screen_paint(BLUE);   /* player 0 gets blue border */
-  } else if (turn == 1) {
-    screen_paint(GREEN);  /* player 1 gets green border */
-  } else {
-    screen_paint(BLACK);  /* fallback for more players */
-  }
-  printf("prompt:> ");
 }

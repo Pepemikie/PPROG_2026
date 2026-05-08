@@ -8,6 +8,8 @@
 CFLAGS=-Wall -g -pedantic -ansi -I./include -lpthread
 CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG -I./include
 LIBS= -L./lib -lscreen
+LIBOBJ= obj/libscreen.o
+LIB= lib/libscreen.a
 #FILES AND OBJECTS
 OBJ=		obj/command.o obj/game.o obj/game_actions.o obj/game_loop.o obj/space.o obj/graphic_engine.o obj/game_reader.o obj/object.o obj/player.o obj/character.o obj/set.o obj/inventory.o obj/link.o
 OBJ_DEBUG = obj/command_d.o obj/game_d.o obj/game_actions_d.o obj/game_loop_d.o obj/space_d.o obj/graphic_engine_d.o obj/game_reader_d.o obj/object_d.o obj/player_d.o obj/character_d.o obj/set_d.o obj/inventory_d.o obj/link_d.o
@@ -25,8 +27,15 @@ EXE_INVENTORY_TEST= inventory_test
 #COMPILE
 #Normal compilation and linking
 all: $(EXE)
-$(EXE): $(OBJ)
+$(EXE): $(LIB) $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LIBS)
+
+$(LIB): $(LIBOBJ)
+	ar rcs $@ $<
+
+obj/libscreen.o: src/libscreen.c
+	mkdir -p obj
+	$(CC) $(CFLAGS) -c src/libscreen.c -o $@
 
 obj/game_loop.o: src/game_loop.c
 	mkdir -p obj

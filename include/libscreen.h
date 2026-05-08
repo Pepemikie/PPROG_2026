@@ -1,102 +1,132 @@
+#ifndef __LIBSCREEN_H
+#define __LIBSCREEN_H
+
 /**
- * @brief It defines the screen interface
- *
- * @file libscreen.h
- * @author Profesores PPROG
- * @version 3.5
- * @date 26-01-2024
- * @copyright GNU Public License
+ * @brief Color of the background frame
  */
-
-#ifndef LIBSCREEN_H
-#define LIBSCREEN_H
-
-/** @brief It defines the Area struct */
-typedef struct _Area Area;
-/** @brief It defines the Frame_color enum */
-typedef enum {BLUE, GREEN, BLACK, RED, YELLOW, PURPLE, CYAN, WHITE} Frame_color;
+typedef enum {
+  BLACK = 0,
+  RED,
+  GREEN,
+  YELLOW,
+  BLUE,
+  PURPLE,
+  CYAN,
+  WHITE
+} Frame_color;
 
 /**
- * @brief It creates a new screen
- * @author Profesores PPROG
- *
- * This function should be called at the beginning of the program,
- *  so the complete screen is allocated before starting defining areas.
- * @param rows the number of rows that will have the full screen
- * @param columns the number of columns that will have the full screen
+ * @brief Opaque type representing a screen area
+ */
+typedef struct _Area Area;
+
+/**
+ * @brief Initializes the screen with the given dimensions.
+ * @param rows    Number of rows
+ * @param columns Number of columns
  */
 void screen_init(int rows, int columns);
 
 /**
- * @brief It destroys a new screen area
- * @author Profesores PPROG
- *
- * As it frees the screen, it must be called at the end of the program,
- *  once the areas created have been freed.
+ * @brief Frees all screen resources.
  */
-void screen_destroy();
+void screen_destroy(void);
 
 /**
- * @brief It paints in the terminal the actual screen composition
- * @author Profesores PPROG
- *
- * This function should be called when some updates
- *  in the screen want to be shown.
+ * @brief Renders the screen buffer to the terminal.
+ * @param color Background frame color
  */
 void screen_paint(Frame_color color);
 
 /**
- * @brief It creates a new area inside a screen
- * @author Profesores PPROG
- *
- * screen_area_init allocates memory for a new area
- *  and initializes its members.
- * @param x the x-coordinate of the up-left corner of the area
- * @param y the x-coordinate of the up-left corner of the area
- * @param width the width of the area
- * @param height the height of the area
- * @return a new area, initialized
+ * @brief Creates a new screen area.
+ * @param x      Column of the top-left corner
+ * @param y      Row of the top-left corner
+ * @param width  Width in columns
+ * @param height Height in rows
+ * @return Pointer to the new Area, or NULL on error
  */
-Area* screen_area_init(int x, int y, int width, int height);
+Area *screen_area_init(int x, int y, int width, int height);
 
 /**
- * @brief It destroys a new screen area
- * @author Profesores PPROG
- *
- * This function should be called once the area is not needed anymore,
- *  before ending the programme.
- * @param area the area to be freed
+ * @brief Frees an area created with screen_area_init.
+ * @param area Target area
  */
-void screen_area_destroy(Area* area);
+void screen_area_destroy(Area *area);
 
 /**
- * @brief It cleares an area, eraising all its content
- * @author Profesores PPROG
- *
- * This function should be called for earaising all the information in an area,
- *  before introducing a new state of it.
- * @param area the area to be cleared
+ * @brief Clears the content of an area (fills with spaces).
+ * @param area Target area
  */
-void screen_area_clear(Area* area);
+void screen_area_clear(Area *area);
 
 /**
- * @brief It resets the cursor of an area
- * @author Profesores PPROG
- *
- * This function reset the cursor to the up-left corner of the area.
- * @param area the involved area
+ * @brief Resets the write cursor to the top-left of the area.
+ * @param area Target area
  */
-void screen_area_reset_cursor(Area* area);
+void screen_area_reset_cursor(Area *area);
 
 /**
- * @brief It introduces some information inside an area
- * @author Profesores PPROG
- *
- * This function sets the string that will be shown in an area.
- *  Each string introduced will be a line in the specified area.
- * @param area the area to be modified
- * @param str a string that contains the information to be included in a particular area
+ * @brief Writes a string in normal style (black on white).
+ * @param area Target area
+ * @param str  String to write
  */
-void screen_area_puts(Area* area, char* str);
+void screen_area_puts(Area *area, char *str);
 
-#endif
+/**
+ * @brief Writes a string in bold style (bold black on white).
+ * @param area Target area
+ * @param str  String to write
+ */
+void screen_area_puts_bold(Area *area, char *str);
+
+/**
+ * @brief Writes a string in bright red on white (entire line).
+ * @param area Target area
+ * @param str  String to write
+ */
+void screen_area_puts_red(Area *area, char *str);
+
+/**
+ * @brief Writes a string in bright yellow on white (entire line).
+ * @param area Target area
+ * @param str  String to write
+ */
+void screen_area_puts_yellow(Area *area, char *str);
+
+/**
+ * @brief Writes a string with a highlighted section in bright blue.
+ * @param area       Target area
+ * @param str        String to write
+ * @param bold_start Start column of the highlighted section
+ * @param bold_len   Length of the highlighted section
+ */
+void screen_area_puts_bold_at(Area *area, char *str, int bold_start, int bold_len);
+
+/**
+ * @brief Writes a string with a highlighted section in a chosen color attribute.
+ *
+ * color_attr should be one of the ATTR_BOLD_* constants defined in libscreen.c,
+ * exposed here through the Color_attr enum below.
+ *
+ * @param area       Target area
+ * @param str        String to write
+ * @param bold_start Start column of the highlighted section
+ * @param bold_len   Length of the highlighted section
+ * @param color_attr Color attribute constant (see Color_attr)
+ */
+void screen_area_puts_bold_color_at(Area *area, char *str, int bold_start, int bold_len, int color_attr);
+
+/**
+ * @brief Color attribute constants for use with screen_area_puts_bold_color_at.
+ */
+typedef enum {
+  COLOR_ATTR_NONE        = 0,
+  COLOR_ATTR_BOLD        = 1,
+  COLOR_ATTR_BOLD_BLUE   = 2,
+  COLOR_ATTR_BOLD_GREEN  = 3,
+  COLOR_ATTR_BOLD_RED    = 4,
+  COLOR_ATTR_BOLD_YELLOW = 5
+} Color_attr;
+
+#endif /* __LIBSCREEN_H */
