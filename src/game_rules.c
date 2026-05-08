@@ -1,22 +1,10 @@
-/**
- * @brief It implements the game rules module
- *
- * @file game_rules.c
- * @author Rodrigo Cruz Asensio
- * @version 1
- * @date 08-05-2026
- * @copyright GNU Public License
- */
-
 #include "game_rules.h"
 #include "game.h"
 #include "player.h"
 #include <stdlib.h>
-#include <time.h>
 
 void game_rules_update(Game *game) {
     Player *current_player = NULL;
-    srand(time(NULL)); /* Initialises the random seed */
     int random_chance = 0;
     Id player_loc = NO_ID;
     Link *door = NULL;
