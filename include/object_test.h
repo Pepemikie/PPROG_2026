@@ -80,6 +80,30 @@ void test1_object_get_description();
 void test2_object_get_description();
 
 /**
+ * @brief Tests setting the graphical description of an object
+ * @author Iñaki López Rocha
+ */
+void test1_object_set_gdesc();
+
+/**
+ * @brief Tests setting the graphical description of an object with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_set_gdesc();
+
+/**
+ * @brief Tests getting the graphical description of an object
+ * @author Iñaki López Rocha
+ */
+void test1_object_get_gdesc();
+
+/**
+ * @brief Tests getting the graphical description of an object with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_object_get_gdesc();
+
+/**
  * @brief Tests setting the object health
  * @author Iñaki López Rocha
  */
