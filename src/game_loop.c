@@ -24,6 +24,7 @@
 #include "command.h"
 #include "game.h"
 #include "game_actions.h"
+#include "game_rules.h"
 #include "graphic_engine.h"
 
 /** @brief Global file pointer for logging */
@@ -161,6 +162,7 @@ int main(int argc, char *argv[]) {
     graphic_engine_paint_game(gengine, game); /* renders current game state */
     command_get_user_input(last_cmd); /* reads user input */
     game_actions_update(game, last_cmd); /* updates game according to input */
+    game_rules_update(game); /* evaluates rules and random events (F15, I4) */
     graphic_engine_paint_game(gengine, game); /* shows result before turn change (F13, I3) */
     #ifndef TEST_MODE
     sleep(2);
