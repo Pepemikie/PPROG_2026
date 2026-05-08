@@ -37,13 +37,6 @@ static pthread_t music_tid;
 static volatile int music_running = 1;
 static int music_thread_started = 0;
 
-/**
- * @brief Background music thread that loops the main theme using aplay
- * @author Jose Miguel Romero Oubina
- *
- * This thread runs in the background and repeatedly plays the main theme
- * WAV file until the game ends.
- */
 static void *music_thread() {
     char *aplay_args[] = {"aplay", "./Main_Theme_2.wav", NULL};
 
@@ -63,13 +56,6 @@ static void *music_thread() {
     return NULL;
 }
 
-/**
- * @brief Stops the background music thread
- * @author Jose Miguel Romero Oubina
- *
- * Sets the music loop flag to 0 and sends a termination signal
- * to the active aplay process.
- */
 static void music_stop() {
     music_running = 0;  /* para el bucle primero */
     if (music_pid > 0) {
@@ -122,28 +108,33 @@ int main(int argc, char *argv[]) {
   char *logfile = NULL;
   char *datafile = NULL;
   int i;
+  int deterministic = 0;
 
-  #ifdef TEST_MODE
-    srand(1);
-  #else
-    srand(time(NULL));
-  #endif
 
   for (i = 1; i < argc; i++) {
     if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
       logfile = argv[i + 1];
       i++;  /* skip the logfile argument */
+    } else if (strcmp(argv[i], "-d") == 0) {
+      deterministic = 1;
     } else if (datafile == NULL) {
       datafile = argv[i];
     } else {
-      fprintf(stderr, "Use: %s [-l logfile] <game_data_file>\n", argv[0]);
+      fprintf(stderr, "Use: %s [-l logfile] [-d] <game_data_file>\n", argv[0]);
       return 1;
     }
   }
 
   if (datafile == NULL) {
-    fprintf(stderr, "Use: %s [-l logfile] <game_data_file>\n", argv[0]);
+    fprintf(stderr, "Use: %s [-l logfile] [-d] <game_data_file>\n", argv[0]); /* We add -d to the usage message (F16,I4) */
     return 1;
+  }
+
+  /* Seed the random number generator (F16,I4) */
+  if (deterministic) {
+    srand(1);
+  } else {
+    srand(time(NULL));
   }
 
   if (logfile) {
