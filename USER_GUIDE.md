@@ -52,28 +52,25 @@ COMMANDS REFERENCE
 ══════════════════
 
 **Movement:**
-- move <direction> (m)           - Move through rooms. Directions: north, south, east, west, up,    down
-- look (l)                       - Examine the current room
+- `move <direction> (m)`           - Move through rooms. Directions: north, south, east, west, up,    down
 
 **Inventory Management:**
-- take <object> (t)              - Pick up an object and add it to your backpack
-- drop <object> (d)              - Leave an object in the current room
-- inspect <object> (i)           - Examine an object to learn its properties
+- `take <object> (t)`              - Pick up an object and add it to your backpack
+- `drop <object> (d)`              - Leave an object in the current room
+- `inspect <object> (i)`           - Examine an object to learn its properties
 
 **Object Usage:**
-- use <object> (u)               - Use an object (e.g., potion to heal)
-- use <object> over <character>  - Use an object on an ally (e.g., heal a recruited character)
-- open <link> with <object>      - Use an object to open a locked door
+- `use <object> (u)`               - Use an object (e.g., potion to heal)
+- `use <object> over <character>`  - Use an object on an ally (e.g., heal a recruited character)
+- `open <link> with <object>`      - Use an object to open a locked door
 
 **Character Interaction:**
-- recruit <character> (rec)      - Recruit a friendly character to follow you and help in combat
-- abandon <character> (a)        - Tell a character to stop following you
-- chat <character> (c)           - Talk to a character
-- attack <character> (at)        - Attack an enemy (allies do more damage if they're following you)
+- `recruit <character> (r)`      - Recruit a friendly character to follow you and help in combat
+- `abandon <character> (b)`        - Tell a character to stop following you
+- `chat <character> (c)`           - Talk to a character
+- `attack <character> (a)`        - Attack an enemy (allies do more damage if they're following you)
 
 **Game Control:**
-- turn (tu)                      - Switch to the next player's turn
-- help (h)                       - Display all available commands
 - exit (q)                       - Exit the game
 
 **Tips:**

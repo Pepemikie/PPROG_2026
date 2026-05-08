@@ -1,3 +1,13 @@
+/**
+ * @brief It implements the screen module
+ *
+ * @file libscreen.c
+ * @author Profesores PPROG
+ * @version 0
+ * @date 24-01-2026
+ * @copyright GNU Public License
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

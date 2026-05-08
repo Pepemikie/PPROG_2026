@@ -120,6 +120,17 @@ int space_get_number_of_objects(Space *space) {
 }
 
 
+/*   It sets the character located in the Space */
+Status space_set_character(Space *space, Id id) {
+  if (!space || id == NO_ID) return ERROR;
+
+  set_destroy(space->characters);
+  space->characters = set_create();
+  if (!space->characters) return ERROR;
+
+  return set_add(space->characters, id);
+}
+
 /*   It adds a character to the Space */
 Status space_add_character(Space *space, Id id) {
   if (!space || id == NO_ID) return ERROR;

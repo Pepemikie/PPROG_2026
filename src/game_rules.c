@@ -70,7 +70,7 @@ void game_rules_update(Game *game) {
 
     /* RULE 5: REST AREA. You recover health in the Lunchroom (ID 16) (10% chance) */
     if (random_chance >= 20 && random_chance < 30 && player_loc == 16) {
-        /* Evitamos que la salud suba infinitamente, por si acaso */
+        /* Prevent health from increasing infinitely */
         if (player_get_health(current_player) < 5) {
             player_modify_health(current_player, 1);
         }

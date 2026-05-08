@@ -9,7 +9,7 @@ CFLAGS=-Wall -g -pedantic -ansi -I./include -lpthread
 CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG -I./include
 CFLAGS_TEST=-Wall -g -pedantic -ansi -DTEST_MODE -I./include -lpthread
 
-LIBS= -L./lib -lscreen
+LIBS= -L./lib -lscreen -lpthread
 LIBOBJ= obj/libscreen.o
 LIB= lib/libscreen.a
 
