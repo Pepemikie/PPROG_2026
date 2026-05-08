@@ -14,9 +14,8 @@ LIBOBJ= obj/libscreen.o
 LIB= lib/libscreen.a
 
 #FILES AND OBJECTS
-OBJ=		obj/command.o obj/game.o obj/game_actions.o obj/game_loop.o obj/space.o obj/graphic_engine.o obj/game_reader.o obj/object.o obj/player.o obj/character.o obj/set.o obj/inventory.o obj/link.o
-
-OBJ_DEBUG = obj/command_d.o obj/game_d.o obj/game_actions_d.o obj/game_loop_d.o obj/space_d.o obj/graphic_engine_d.o obj/game_reader_d.o obj/object_d.o obj/player_d.o obj/character_d.o obj/set_d.o obj/inventory_d.o obj/link_d.o
+OBJ=		obj/command.o obj/game.o obj/game_actions.o obj/game_rules.o obj/game_loop.o obj/space.o obj/graphic_engine.o obj/game_reader.o obj/object.o obj/player.o obj/character.o obj/set.o obj/inventory.o obj/link.o
+OBJ_DEBUG = obj/command_d.o obj/game_d.o obj/game_actions_d.o obj/game_rules_d.o obj/game_loop_d.o obj/space_d.o obj/graphic_engine_d.o obj/game_reader_d.o obj/object_d.o obj/player_d.o obj/character_d.o obj/set_d.o obj/inventory_d.o obj/link_d.o
 
 OBJ_TEST = obj/command_t.o obj/game_t.o obj/game_actions_t.o obj/game_loop_t.o obj/space_t.o obj/graphic_engine_t.o obj/game_reader_t.o obj/object_t.o obj/player_t.o obj/character_t.o obj/set_t.o obj/inventory_t.o obj/link_t.o
 
@@ -62,6 +61,10 @@ obj/game.o: src/game.c
 obj/game_actions.o: src/game_actions.c
 	mkdir -p obj
 	$(CC) $(CFLAGS) -c src/game_actions.c -o $@
+
+obj/game_rules.o: src/game_rules.c
+	mkdir -p obj
+	$(CC) $(CFLAGS) -c src/game_rules.c -o $@
 
 obj/game_reader.o: src/game_reader.c
 	mkdir -p obj
@@ -116,6 +119,10 @@ obj/game_t.o: src/game.c
 obj/game_actions_t.o: src/game_actions.c
 	mkdir -p obj
 	$(CC) $(CFLAGS_TEST) -c src/game_actions.c -o $@
+
+obj/game_rules_t.o: src/game_rules.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/game_rules.c -o $@
 
 obj/game_reader_t.o: src/game_reader.c
 	mkdir -p obj
@@ -174,6 +181,10 @@ obj/game_d.o: src/game.c
 obj/game_actions_d.o: src/game_actions.c
 	mkdir -p obj
 	$(CC) $(CFLAGS_DEBUG) -c src/game_actions.c -o $@
+
+obj/game_rules_d.o: src/game_rules.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_DEBUG) -c src/game_rules.c -o $@
 
 obj/game_reader_d.o: src/game_reader.c
 	mkdir -p obj
