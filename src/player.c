@@ -1,5 +1,5 @@
 /**
- *   It implements the player module
+ * @brief It implements the player module
  *
  * @file player.c
  * @author Jose Miguel Romero Oubina

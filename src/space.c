@@ -1,5 +1,5 @@
 /**
- *   It implements the space module
+ * @brief It implements the space module
  *
  * @file space.c
  * @author Profesores PPROG

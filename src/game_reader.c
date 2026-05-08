@@ -1,5 +1,5 @@
 /**
- *   It implements the game_reader interpreter
+ * @brief It implements the game_reader interpreter
  *
  * @file game_reader.c
  * @author Jose Miguel Romero Oubina

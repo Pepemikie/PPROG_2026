@@ -304,6 +304,10 @@ runcmd4:
 integration: $(EXE_TEST)
 	bash test_script.sh 0
 
+#OPEN DOXYFILE
+opendoc:
+	xdg-open doc/html/index.html
+
 #CLEANING
 #files cleaning
 clean:

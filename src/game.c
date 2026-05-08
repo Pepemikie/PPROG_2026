@@ -1,5 +1,5 @@
 /**
- *   It implements the game structure
+ * @brief It implements the game structure
  *
  * @file game.c
  * @author Profesores PPROG

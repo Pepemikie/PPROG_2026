@@ -37,12 +37,12 @@
 #o:41|Diamond Sword|-[==>*|A Minecraft sword!|131|0|1|-1|-1
 #o:42|Pickaxe|--}|A pickaxe from 1870|132|0|1|-1|-1
 #o:43|Phone|[]|A robbed phone|132|0|1|-1|-1
-#o:44|Wallet|\$\|A wallet you "found" in someone's hand|132|0|1|-1|-1
+#o:44|Wallet|\$\|A wallet you "found" in someone's hands|132|0|1|-1|-1
 #o:50|Key|o-"|A rusty key|12|0|1|-1|5
 
 #c:31|Batman|/(B)\ |24|0|12|I'm Batman|
 #c:32|Police|(P)/=*|10|0|12|HEY! YOU!|
-#c:33|Guide| (G)!>|3|0|13|Welcome to the Loubre Museum|
+#c:33|Guide| (G)!>|3|1|13|Welcome to the Loubre Museum|
 #c:34|Josemi| >(:{)|8|1|13|Malloc|
 #c:35|Inaki| /(:D)|5|1|14|Calloc|
 #c:36|Rodri| \(Bo)|9|1|14|Realloc|
@@ -81,5 +81,5 @@
 #l:21|link161-17|161|17|S|1
 #l:22|link17-161|17|161|N|0
 
-#l:23|link17-18|17|18|U|1
-#l:24|link18-17|18|17|D|0
+#l:23|link17-18|17|18|U|0
+#l:24|link18-17|18|17|D|1

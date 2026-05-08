@@ -1,5 +1,5 @@
 /**
- *   It implements the set module
+ * @brief It implements the set module
  *
  * @file set.c
  * @author  Jorge Garcia Garrido

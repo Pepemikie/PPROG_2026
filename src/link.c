@@ -1,5 +1,5 @@
 /**
- *   It implements the link module
+ * @brief It implements the link module
  *
  * @file link.c
  * @author Jose Miguel Romero Oubina

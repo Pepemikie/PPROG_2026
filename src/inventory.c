@@ -1,5 +1,5 @@
 /**
- *   It implements the inventory module
+ * @brief It implements the inventory module
  *
  * @file inventory.c
  * @author Jose Miguel Romero Oubina

@@ -1,5 +1,5 @@
 /**
- *   It implements the object functionality
+ * @brief It implements the object functionality
  *
  * @file object.c
  * @author Jose Miguel Romero Oubina

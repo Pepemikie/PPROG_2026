@@ -1,5 +1,5 @@
 /**
- *   It implements a textual graphic engine
+ * @brief It implements a textual graphic engine
  *
  * @file graphic_engine.c
  * @author Profesores PPROG
@@ -45,14 +45,15 @@
 /** @brief Width of the character information that is under the map */
 #define HEIGHT_CHAR 11
 
-/**
- * @brief HP thresholds for colour coding.
- *
+/*
  * hp > HP_HIGH  → green   (healthy)
  * HP_LOW < hp ≤ HP_HIGH → yellow  (wounded)
  * hp ≤ HP_LOW  → red     (critical)
  */
+
+/** @brief HP healty*/
 #define HP_HIGH 6
+/** @brief HP critial */
 #define HP_LOW  3
 
 /** @brief Structure representing the graphic engine */
