@@ -14,9 +14,18 @@
 #include <stdlib.h>
 #include <time.h>
 
+/**
+ * @brief It executes the non-deterministic game rules and random events
+ * @author Rodrigo Cruz Asensio
+ *
+ * @param game a pointer to the Game struct
+ *
+ * This function evaluates six automatic rules each turn:
+ * win condition, surprise attack, security door, magic wallet,
+ * rest area, and museum trap.
+ */
 void game_rules_update(Game *game) {
     Player *current_player = NULL;
-    srand(time(NULL)); /* Initialises the random seed */
     int random_chance = 0;
     Id player_loc = NO_ID;
     Link *door = NULL;

@@ -579,7 +579,14 @@ void game_print(Game *game) {
    Implementation of private functions
 */
 
-/*   It gets the id of the space at a given position in the spaces array */
+/**
+ * @brief It gets the id of the space at a given position in the spaces array
+ * @author Profesores PPROG
+ *
+ * @param game a pointer to the Game struct
+ * @param position the index of the space in the spaces array
+ * @return Id of the space at the given position, or NO_ID if the position is invalid
+ */
 Id game_get_space_id_at(Game *game, int position) {
   if (!game || position < 0 || position >= game->n_spaces) return NO_ID;
   return space_get_id(game->spaces[position]);

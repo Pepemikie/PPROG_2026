@@ -123,7 +123,7 @@ int space_get_number_of_objects(Space *space) {
 /*   It adds a character to the Space */
 Status space_add_character(Space *space, Id id) {
   if (!space || id == NO_ID) return ERROR;
-  return set_add(space->characters, id); /* delegates to space_set_character */
+  return set_add(space->characters, id); /* delegates to set_add */
 }
 
 /*   It gets the id of the character located in the Space */
