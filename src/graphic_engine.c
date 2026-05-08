@@ -25,13 +25,13 @@
 #include "game.h"
 
 /** @brief Width of the map area */
-#define WIDTH_MAP 95 
+#define WIDTH_MAP 85 
 /** @brief Width of the description area */
 #define WIDTH_DES 65
 /** @brief Width of the banner area */
 #define WIDTH_BAN 25
 /** @brief Height of the map area */
-#define HEIGHT_MAP 54
+#define HEIGHT_MAP 29 /*en total deben ser 54, hasta que se quiten los characters de la derecha para que no colapse*/
 /** @brief Height of the banner area */
 #define HEIGHT_BAN 1
 /** @brief Height of the help area */
@@ -42,6 +42,8 @@
 #define ROOM_WIDTH 15
 /** @brief Number of char for the P1 and P2 specification*/
 #define PLAYER_ACTION 3
+/** @brief Width of the character information that is under the map */
+#define HEIGHT_CHAR 11
 
 /**
  * @brief HP thresholds for colour coding.
@@ -59,7 +61,8 @@ struct _Graphic_engine {
    *descript, /**< Description area */
    *banner, /**< Banner area */
    *help, /**< Help area */
-   *feedback; /**< Feedback area */
+   *feedback, /**< Feedback area */
+   *char_info; /**< Character area */
 };
 
 /**
@@ -134,17 +137,18 @@ static Color_attr turn_to_text_color(int turn) {
 Graphic_engine *graphic_engine_create() {
   Graphic_engine *ge = NULL;
 
-  screen_init(HEIGHT_MAP + HEIGHT_BAN + HEIGHT_HLP + HEIGHT_FDB + 4, WIDTH_MAP + WIDTH_DES + 3); /* initializes screen with total dimensions */
+  screen_init(HEIGHT_MAP + HEIGHT_CHAR + HEIGHT_BAN + HEIGHT_HLP + HEIGHT_FDB + 5, WIDTH_MAP + WIDTH_DES + 3); /* initializes screen with total dimensions */
   ge = (Graphic_engine *)calloc(1, sizeof(Graphic_engine));
   if (ge == NULL) return NULL;
 
   /* initializes each display area with its position and dimensions */
   ge->map      = screen_area_init(1, 1, WIDTH_MAP, HEIGHT_MAP);
-  ge->descript = screen_area_init(WIDTH_MAP + 2, 1, WIDTH_DES, HEIGHT_MAP);
-  ge->banner   = screen_area_init((int)((WIDTH_MAP + WIDTH_DES + 1 - WIDTH_BAN) / 2), HEIGHT_MAP + 2, WIDTH_BAN, HEIGHT_BAN);
-  ge->help     = screen_area_init(1, HEIGHT_MAP + HEIGHT_BAN + 2, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_HLP);
-  ge->feedback = screen_area_init(1, HEIGHT_MAP + HEIGHT_BAN + HEIGHT_HLP + 3, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_FDB);
-
+  ge->descript = screen_area_init(WIDTH_MAP + 2, 1, WIDTH_DES, HEIGHT_MAP + HEIGHT_CHAR + 1);
+  ge->char_info = screen_area_init(1, HEIGHT_MAP + 2, WIDTH_MAP, HEIGHT_CHAR);
+  ge->banner   = screen_area_init((int)((WIDTH_MAP + WIDTH_DES + 1 - WIDTH_BAN) / 2), HEIGHT_MAP + HEIGHT_CHAR + 3, WIDTH_BAN, HEIGHT_BAN);
+  ge->help     = screen_area_init(1, HEIGHT_MAP + HEIGHT_CHAR + HEIGHT_BAN + 3, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_HLP);
+  ge->feedback = screen_area_init(1, HEIGHT_MAP + HEIGHT_CHAR + HEIGHT_BAN + HEIGHT_HLP + 4, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_FDB);
+  
   return ge;
 }
 
@@ -154,6 +158,7 @@ void graphic_engine_destroy(Graphic_engine *ge) {
 
   /* destroys each display area */
   screen_area_destroy(ge->map);
+  screen_area_destroy(ge->char_info);
   screen_area_destroy(ge->descript);
   screen_area_destroy(ge->banner);
   screen_area_destroy(ge->help);
@@ -251,6 +256,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
 
   /* 2. DESCRIPTION AREA */
   screen_area_clear(ge->descript);
+  screen_area_clear(ge->char_info);
+  screen_area_puts(ge->descript, " ");
+  screen_area_puts(ge->char_info, " ");
 
   /*Players Room name Location*/
   strcpy(room_name, space_get_name(game_get_space(game, game_get_player_location(game))));
@@ -258,57 +266,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_puts(ge->descript, str);
   screen_area_puts(ge->descript, " ");
 
-  /* Objects — prints each object name and its location */
-  screen_area_puts(ge->descript, " Objects:");
-  for (i = 0; i < MAX_OBJECTS; i++) {
-    obj = game_get_object_by_index(game, i);
-    if (!obj) break;
-    obj_loc = game_get_object_location(game, object_get_id(obj)); 
-    obj_space = game_get_space(game, obj_loc);                      /* F12, I3: only show objects that are in discovered spaces */
-    if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
-    sprintf(str, "  %-13s      [ %s ]: %d", object_get_name(obj), object_get_gdesc(obj), (int)obj_loc);
-    screen_area_puts(ge->descript, str);
-  }
-  screen_area_puts(ge->descript, " ");
-
-  /* Characters — prints each character name, location and health (hp coloured green/yellow/red) */
-  screen_area_puts(ge->descript, " Characters:");
-  for (i = 0; i < MAX_CHARACTERS; i++) {
-    character = game_get_character_by_index(game, i);
-    if (!character) break;
-    char_loc = game_get_character_location(game, character_get_id(character));
-    char_space = game_get_space(game, char_loc);                            /* F12, I3: only show characters that are in discovered spaces */
-    if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
-    health = character_get_health(character);
-    if (health > 0) {
-      /*
-       * Build the prefix up to the hp number to calculate the offset,
-       * then build the full string and highlight the hp digits.
-       */
-      char prefix[128];
-      char hp_str[8];
-      sprintf(prefix, "  %-10s: %d (", character_get_name(character), (int)char_loc);
-      hp_offset = (int)strlen(prefix);
-      sprintf(hp_str, "%d", health);
-      hp_len = (int)strlen(hp_str);
-
-      sprintf(str, "  %-10s: %d (%d hp)  [%s] %s",
-              character_get_name(character), (int)char_loc, health,
-              character_get_gdesc(character),
-              character_get_following(character) == player_get_id(p) ? "(Not Recluted)" : "(Recluted)");
-
-      hp_col = hp_to_color(health);
-      screen_area_puts_bold_color_at(ge->descript, str, hp_offset, hp_len, hp_col);
-    } else {
-      sprintf(str, "  %-10s: %d (DEAD)  [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
-      screen_area_puts_red(ge->descript, str);
-      sleep(1);
-      space_del_character(act, character_get_id(character));
-    }
-  }
-  screen_area_puts(ge->descript, " ");
-
-  /* Players — prints each player name, location and health (F13, I3) */
+  /* Players — prints each player name, location and health */
   screen_area_puts(ge->descript, " Players:");
   for (i = 0; i < game_get_num_players(game); i++) {
     p = game_get_player_by_index(game, i);
@@ -318,7 +276,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     health = player_get_health(p);
     {
       char prefix_hp[128];
-      char hp_str2[8];
+      char hp_str2[12];
       int  hp_off2, hp_len2;
 
       sprintf(prefix_hp, "  %-8s: %-3d (", player_get_name(p), (int)player_get_location(p));
@@ -336,12 +294,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-  /* Player — prints location, health and carried object and character recruited */
+/* Player — prints location, health and carried object and character recruited */
   player = game_get_player(game);
   health = player_get_health(player);
   {
     char prefix_hp[128];
-    char hp_str3[8];
+    char hp_str3[12];
     int  hp_off3, hp_len3;
 
     sprintf(prefix_hp, " Player: %s at %d (", player_get_name(player), (int)player_get_location(player));
@@ -378,20 +336,71 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     }
     screen_area_puts(ge->descript, obj_line);
   }
+  screen_area_puts(ge->descript, " ");
+
+
+  /* Objects — prints each object name and its location */
+  screen_area_puts(ge->descript, " Objects:");
+  for (i = 0; i < MAX_OBJECTS; i++) {
+    obj = game_get_object_by_index(game, i);
+    if (!obj) break;
+    obj_loc = game_get_object_location(game, object_get_id(obj));
+    obj_space = game_get_space(game, obj_loc);                      /* Only show objects that are in discovered spaces */
+    if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
+    sprintf(str, "  %-13s      [ %s ]: %d", object_get_name(obj), object_get_gdesc(obj), (int)obj_loc);
+    screen_area_puts(ge->descript, str);
+  }
+  screen_area_puts(ge->descript, " ");
+
+  /* Characters — prints each character name, location and health (hp coloured green/yellow/red) */
+  screen_area_puts(ge->char_info, " Characters:");
+  for (i = 0; i < MAX_CHARACTERS; i++) {
+    character = game_get_character_by_index(game, i);
+    if (!character) break;
+    char_loc = game_get_character_location(game, character_get_id(character));
+    char_space = game_get_space(game, char_loc);                            /* Only show characters that are in discovered spaces */
+    if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
+    health = character_get_health(character);
+    if (health > 0) {
+      /*
+       * Build the prefix up to the hp number to calculate the offset,
+       * then build the full string and highlight the hp digits.
+       */
+      char prefix[128];
+      char hp_str[12];
+      sprintf(prefix, "  %-10s: %d (", character_get_name(character), (int)char_loc);
+      hp_offset = (int)strlen(prefix);
+      sprintf(hp_str, "%d", health);
+      hp_len = (int)strlen(hp_str);
+
+      sprintf(str, "  %-10s: %d (%d hp)  [%s] %s",
+              character_get_name(character), (int)char_loc, health,
+              character_get_gdesc(character),
+              character_get_following(character) == player_get_id(player) ? "(Recruited by you)" : "(Not Recruited by you)");
+
+      hp_col = hp_to_color(health);
+      screen_area_puts_bold_color_at(ge->char_info, str, hp_offset, hp_len, hp_col);
+    } else {
+      sprintf(str, "  %-10s: %d (DEAD)  [%s]", character_get_name(character), (int)char_loc, character_get_gdesc(character));
+      screen_area_puts_red(ge->char_info, str);
+      sleep(1);
+      space_del_character(act, character_get_id(character));
+    }
+  }
 
   /* Chat message — displays and clears last message if present */
-  screen_area_puts(ge->descript, " ");
   if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
     sprintf(str, " Message: %s", game_get_last_message(game));
-    screen_area_puts(ge->descript, str);
+    screen_area_puts(ge->char_info, str);
     game_set_last_message(game, ""); /* clears message after displaying */
   }
   /* Inspect message — displays and clears last message if present */
-  else if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
+  if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
     sprintf(str, " Description: %s", game_get_last_object_description(game));
     screen_area_puts(ge->descript, str);
     game_set_last_object_description(game, ""); /* clears description after displaying */
   }
+
 
   /* 3. BANNER — coloured with active player's colour */
   {
@@ -406,10 +415,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_puts(ge->help, " Movement Commands:  move <dir> or m <n|s|e|w|u|d>");
   screen_area_puts(ge->help, " Object Commands:  take <obj> or t <obj>, drop <obj> or d <obj>, inspect <obj> or i <obj>, open <link> with <object>, use <object> [over <character>]");
   screen_area_puts(ge->help, " Character Commands:  attack <char> or a <char>, char <char> or c <har>, recruit <char> or r <char>, abandon <char> or b <char>");
-  screen_area_puts(ge->help, " Other Commands: music <1,2,3>, exit or e");
+  screen_area_puts(ge->help, " Other Commands:  exit or e");
 
   /* 5. FEEDBACK — shows last command; OK coloured with player colour, ERROR in red */
   screen_area_clear(ge->feedback);
+  screen_area_puts(ge->feedback, " ");
   if(game_get_last_command(game) != NULL && command_get_code(game_get_last_command(game)) != NO_CMD){
     last_cmd = command_get_code(game_get_last_command(game));
     last_cmd_player = game_get_last_command_player(game);
@@ -433,7 +443,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     screen_area_puts(ge->feedback, " No command inserted");
   }
 
-/* 6. Render with player color (F13, I3) */
+/* 6. Render with player color */
   screen_paint(turn_to_frame_color(turn));
   printf("prompt:> ");
 }

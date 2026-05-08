@@ -32,7 +32,9 @@ FILE *g_logfile = NULL;
 /** @brief PID of the aplay process for cleanup */
 
 static pid_t music_pid = -1;
-static volatile int music_running = 1; /* añade esta variable */
+static pthread_t music_tid;
+static volatile int music_running = 1;
+static int music_thread_started = 0;
 
 static void *music_thread() {
     char *aplay_args[] = {"aplay", "./Main_Theme_2.wav", NULL};
@@ -57,12 +59,19 @@ static void music_stop() {
     music_running = 0;  /* para el bucle primero */
     if (music_pid > 0) {
         kill(music_pid, SIGTERM);
-        waitpid(music_pid, NULL, 0);
-        music_pid = -1;
     }
 }
 
+/**
+ * @brief prints the Title
+ * 
+ */
 void print_start();
+
+/**
+ * @brief prints THE END
+ * 
+ */
 void print_end();
 
 /**
@@ -99,10 +108,11 @@ int main(int argc, char *argv[]) {
   char *datafile = NULL;
   int i;
 
-  pthread_t music_tid;
-  pthread_attr_t music_attr;
-
-  srand(time(NULL)); /* initializes random seed */
+  #ifdef TEST_MODE
+    srand(1);
+  #else
+    srand(time(NULL));
+  #endif
 
   for (i = 1; i < argc; i++) {
     if (strcmp(argv[i], "-l") == 0 && i + 1 < argc) {
@@ -138,9 +148,11 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  pthread_attr_init(&music_attr);
-  pthread_attr_setdetachstate(&music_attr, PTHREAD_CREATE_DETACHED);
-  pthread_create(&music_tid, &music_attr, music_thread, NULL); /* start music thread */
+  #ifndef TEST_MODE
+  if (pthread_create(&music_tid, NULL, music_thread, NULL) == 0) {
+    music_thread_started = 1;
+  }
+  #endif
 
   print_start();
   /* Como 'game' ya es puntero, le quitamos el '&' en todas las llamadas */
@@ -150,7 +162,9 @@ int main(int argc, char *argv[]) {
     command_get_user_input(last_cmd); /* reads user input */
     game_actions_update(game, last_cmd); /* updates game according to input */
     graphic_engine_paint_game(gengine, game); /* shows result before turn change (F13, I3) */
-    sleep(2);                                 /* waits 2 seconds before next player (F13, I3) */
+    #ifndef TEST_MODE
+    sleep(2);
+    #endif                                 /* waits 2 seconds before next player (F13, I3) */
     game_next_turn(game);                /* changes player's turn. Multiplayer (F11, I3) */
     last_cmd = game_get_last_command(game); /* actualizamos al final de cada iteración */
   }
@@ -196,6 +210,10 @@ void game_loop_cleanup(Game *game, Graphic_engine *gengine) {
 
   print_end();
   music_stop(); /* stops background music */
+  if (music_thread_started) {
+    pthread_join(music_tid, NULL);
+    music_thread_started = 0;
+  }
   if (game) {
     game_destroy(game); /* destroys game and frees its memory */
   }
@@ -231,7 +249,7 @@ void print_start(){
   printf("            ██|     ██|  ██|     ██|   ████████|   ██|            ██████|    ██|     ██|  \n");  usleep(100000); 
   printf("                           ██████|                 ██████████|               ██|     ██|\n\n");  usleep(100000); 
 
-  for(i=0; i < 25; i++){
+  for(i=0; i < 19; i++){
     printf("\n");
     usleep(100000);
     if (i == 5)
@@ -262,7 +280,7 @@ void print_end(){
   printf("            ██████████|  ██|    ███|  ████████|\n");  usleep(100000); 
   printf("                         ██|     ██|   \n\n");  usleep(100000); 
 
-  for(i=0; i < 25; i++){
+  for(i=0; i < 19; i++){
     printf("\n");
     usleep(100000);
     if (i == 5){
