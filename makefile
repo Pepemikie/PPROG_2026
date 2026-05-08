@@ -313,6 +313,11 @@ clean:
 cleandoc:
 	rm -rf doc
 
+#libscreen cleaning
+cleanlibs: 
+	rm -rf lib/libscreen.a 
+	@echo "<<<< You deleted libscreen.a, use make to compile again"
+
 #All cleaning
 cleanall: clean cleandoc
 
