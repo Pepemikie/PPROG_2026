@@ -37,6 +37,13 @@ static pthread_t music_tid;
 static volatile int music_running = 1;
 static int music_thread_started = 0;
 
+/**
+ * @brief Background music thread that loops the main theme using aplay
+ * @author Jose Miguel Romero Oubina
+ *
+ * This thread runs in the background and repeatedly plays the main theme
+ * WAV file until the game ends.
+ */
 static void *music_thread() {
     char *aplay_args[] = {"aplay", "./Main_Theme_2.wav", NULL};
 
@@ -56,6 +63,13 @@ static void *music_thread() {
     return NULL;
 }
 
+/**
+ * @brief Stops the background music thread
+ * @author Jose Miguel Romero Oubina
+ *
+ * Sets the music loop flag to 0 and sends a termination signal
+ * to the active aplay process.
+ */
 static void music_stop() {
     music_running = 0;  /* para el bucle primero */
     if (music_pid > 0) {
