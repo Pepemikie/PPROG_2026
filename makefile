@@ -7,15 +7,24 @@
 #FLAGS
 CFLAGS=-Wall -g -pedantic -ansi -I./include -lpthread
 CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG -I./include
+CFLAGS_TEST=-Wall -g -pedantic -ansi -DTEST_MODE -I./include -lpthread
+
 LIBS= -L./lib -lscreen
 LIBOBJ= obj/libscreen.o
 LIB= lib/libscreen.a
+
 #FILES AND OBJECTS
 OBJ=		obj/command.o obj/game.o obj/game_actions.o obj/game_loop.o obj/space.o obj/graphic_engine.o obj/game_reader.o obj/object.o obj/player.o obj/character.o obj/set.o obj/inventory.o obj/link.o
+
 OBJ_DEBUG = obj/command_d.o obj/game_d.o obj/game_actions_d.o obj/game_loop_d.o obj/space_d.o obj/graphic_engine_d.o obj/game_reader_d.o obj/object_d.o obj/player_d.o obj/character_d.o obj/set_d.o obj/inventory_d.o obj/link_d.o
+
+OBJ_TEST = obj/command_t.o obj/game_t.o obj/game_actions_t.o obj/game_loop_t.o obj/space_t.o obj/graphic_engine_t.o obj/game_reader_t.o obj/object_t.o obj/player_t.o obj/character_t.o obj/set_t.o obj/inventory_t.o obj/link_t.o
+
 #EXECUTABLES
 EXE= rob_the_museum
 EXE_DEBUG= rob_the_museum_debug
+EXE_TEST= rob_the_museum_test
+
 EXE_SET_TEST= set_test
 EXE_CHARACTER_TEST= character_test
 EXE_SPACE_TEST= space_test
@@ -27,8 +36,13 @@ EXE_INVENTORY_TEST= inventory_test
 #COMPILE
 #Normal compilation and linking
 all: $(EXE)
+
 $(EXE): $(LIB) $(OBJ)
 	$(CC) -o $@ $(OBJ) $(LIBS)
+
+# NEW: integration executable
+$(EXE_TEST): $(LIB) $(OBJ_TEST)
+	$(CC) -o $@ $(OBJ_TEST) $(LIBS)
 
 $(LIB): $(LIBOBJ)
 	ar rcs $@ $<
@@ -89,9 +103,63 @@ obj/link.o: src/link.c
 	mkdir -p obj
 	$(CC) $(CFLAGS) -c src/link.c -o $@
 
+# NEW: TEST_MODE compilation rules
+
+obj/game_loop_t.o: src/game_loop.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/game_loop.c -o $@
+
+obj/game_t.o: src/game.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/game.c -o $@
+
+obj/game_actions_t.o: src/game_actions.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/game_actions.c -o $@
+
+obj/game_reader_t.o: src/game_reader.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/game_reader.c -o $@
+
+obj/command_t.o: src/command.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/command.c -o $@
+
+obj/graphic_engine_t.o: src/graphic_engine.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/graphic_engine.c -o $@
+
+obj/space_t.o: src/space.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/space.c -o $@
+
+obj/object_t.o: src/object.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/object.c -o $@
+
+obj/player_t.o: src/player.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/player.c -o $@
+
+obj/character_t.o: src/character.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/character.c -o $@
+
+obj/set_t.o: src/set.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/set.c -o $@
+
+obj/inventory_t.o: src/inventory.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/inventory.c -o $@
+
+obj/link_t.o: src/link.c
+	mkdir -p obj
+	$(CC) $(CFLAGS_TEST) -c src/link.c -o $@
 
 #Debug compilation and linking
 debug: $(EXE_DEBUG)
+
 $(EXE_DEBUG): $(OBJ_DEBUG)
 	$(CC) -o $(EXE_DEBUG) $(OBJ_DEBUG) $(LIBS)
 
@@ -147,7 +215,6 @@ obj/link_d.o: src/link.c
 	mkdir -p obj
 	$(CC) $(CFLAGS_DEBUG) -c src/link.c -o $@
 
-
 #Test compilation and linking
 test: $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST)
 
@@ -200,7 +267,6 @@ obj/inventory_test.o: src/inventory_test.c
 	mkdir -p obj
 	$(CC) $(CFLAGS) -c src/inventory_test.c -o $@
 
-
 #RUNNING
 #Nomal execution
 run:
@@ -234,10 +300,14 @@ runcmd3:
 runcmd4:
 	./$(EXE) museum.dat -l output.log < game4.cmd
 
+# NEW: automatic integration tests
+integration: $(EXE_TEST)
+	bash test_script.sh 0
+
 #CLEANING
 #files cleaning
 clean:
-	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST)
+	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST)
 
 #Documentation from Doxygen cleaning
 cleandoc:

@@ -6,57 +6,113 @@ if [ -z "$1" ] || [ "$1" != "0" ] && [ "$1" != "1" ]; then
     exit 1
 fi
 
-# We use a variable to store the value of the first argument, which indicates the mode of execution (normal or valgrind)
+# Execution mode:
+# 0 -> normal
+# 1 -> valgrind
 MODE=$1
 
-# We search for the test files in the src/ directory and store their names (without the .c extension) in a variable
+# Search unit test files
 TESTS=$(find src/ -name '*_test.c' -exec basename {} .c \;)
 
-# We check if the second argument is provided, which indicates the name of a specific test to run
+# =========================
+# UNIT TESTS
+# =========================
+
 if [ -n "$2" ]; then
+
     TEST_NAME="$2"
 
-    # We compile the specified test using make
     echo "Compiling the test $TEST_NAME..."
     make "$TEST_NAME"
 
-    # We check if the specified test exists 
     if [ ! -f "$TEST_NAME" ]; then
         echo "Error, the test '$TEST_NAME' does not exist"
         make clean
         exit 1
     fi
 
-    # Execute the test based on the value of MODE (0 for normal execution, 1 for valgrind)
     if [ "$MODE" = "0" ]; then
         echo "Running the test $TEST_NAME..."
         ./"$TEST_NAME"
-
     else
         echo "Running the test $TEST_NAME with valgrind..."
         valgrind --leak-check=full ./"$TEST_NAME"
     fi
 
 else
-    # If therese is no second argument, we execute all the tests found in the src/ directory
-    echo "Compiling all tests..."
+
+    echo "Compiling all unit tests..."
     make test
-    
-    # We loop trough the list of tests and ompile each one
+
     if [ "$MODE" = "0" ]; then
-        echo "Running all tests..."
+
+        echo ""
+        echo "=============================="
+        echo "RUNNING UNIT TESTS"
+        echo "=============================="
+
         for TEST in $TESTS; do
-            echo "Running the test $TEST..."
+            echo ""
+            echo "Running test $TEST..."
             ./"$TEST"
         done
 
     else
-        echo "Running all tests with valgrind..."
+
+        echo ""
+        echo "=============================="
+        echo "RUNNING UNIT TESTS WITH VALGRIND"
+        echo "=============================="
+
         for TEST in $TESTS; do
-            echo "Running the test $TEST with valgrind..."
+            echo ""
+            echo "Running test $TEST with valgrind..."
             valgrind --leak-check=full ./"$TEST"
         done
     fi
+
+    # =========================
+    # INTEGRATION TESTS
+    # =========================
+
+    echo ""
+    echo "=============================="
+    echo "RUNNING INTEGRATION TESTS"
+    echo "=============================="
+
+    # Compile integration version
+    make all
+
+    INTEGRATION_TESTS="game1 game2 game3 game4"
+
+    FAILED=0
+
+    for TEST in $INTEGRATION_TESTS; do
+
+        echo ""
+        echo "Running integration test $TEST..."
+
+        ./rob_the_museum museum.dat -l output.log < ${TEST}.cmd > /dev/null
+
+        diff output.log tests/${TEST}.expected > /dev/null
+
+        if [ $? -eq 0 ]; then
+            echo "[PASS] $TEST"
+        else
+            echo "[FAIL] $TEST"
+            FAILED=1
+
+            echo "Differences found:"
+            diff output.log tests/${TEST}.expected
+        fi
+    done
+
+    echo ""
+
+    if [ $FAILED -eq 0 ]; then
+        echo "ALL INTEGRATION TESTS PASSED"
+    else
+        echo "SOME INTEGRATION TESTS FAILED"
+    fi
 fi
 
-make clean
