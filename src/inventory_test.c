@@ -129,23 +129,28 @@ void test1_inventory_set_objects() {
   inventory_destroy(inv);
 }
 
+/* Tests adding and removing objects from an inventory with invalid inventory pointer */
 void test2_inventory_add_del() {
   Inventory *inv = NULL;
   PRINT_TEST_RESULT(inventory_add_object(inv, 5) == ERROR && inventory_del_object(inv, 5) == ERROR);
 }
 
+/* Tests checking whether an object is in the inventory with invalid inventory pointer */
 void test2_inventory_has_object() {
   PRINT_TEST_RESULT(inventory_has_object(NULL, 5) == FALSE && inventory_has_object(NULL, NO_ID) == FALSE);
 }
 
+/* Tests inventory fullness and emptiness with invalid inventory pointer */
 void test2_inventory_full_empty() {
   PRINT_TEST_RESULT(inventory_is_empty(NULL) == TRUE && inventory_is_full(NULL) == FALSE);
 }
 
+/* Tests getting the inventory objects set pointer with invalid inventory pointer */
 void test2_inventory_get_objects() {
   PRINT_TEST_RESULT(inventory_get_objects(NULL) == NULL);
 }
 
+/* Tests setting inventory objects with invalid parameters */
 void test2_inventory_set_objects() {
   Inventory *inv = inventory_create(2);
   Set *new_objs = set_create();
@@ -154,10 +159,12 @@ void test2_inventory_set_objects() {
   inventory_destroy(inv);
 }
 
+/* Tests getting the number of objects in the inventory with invalid inventory pointer */
 void test2_inventory_number_of_objects() {
   PRINT_TEST_RESULT(inventory_get_number_of_objects(NULL) == -1);
 }
 
+/* Tests getting the inventory max object capacity with invalid inventory pointer */
 void test2_inventory_get_max_objs() {
   PRINT_TEST_RESULT(inventory_get_max_objs(NULL) == -1);
 }

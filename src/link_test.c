@@ -113,36 +113,43 @@ void test2_link_get_name() {
   PRINT_TEST_RESULT(link_get_name(l) == NULL);
 }
 
+/* Tests setting the name of a link with invalid parameters */
 void test2_link_name() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_set_name(l, "door") == ERROR);
 }
 
+/* Tests setting the origin and destination of a link with invalid parameters */
 void test2_link_space_ids() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_set_origin(l, 10) == ERROR && link_set_destination(l, 20) == ERROR);
 }
 
+/* Tests getting the origin and destination of a link with invalid parameters */
 void test2_link_get_space_ids() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_get_origin(l) == NO_ID && link_get_destination(l) == NO_ID);
 }
 
+/* Tests setting the direction of a link with invalid parameters */
 void test2_link_direction() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_set_direction(l, N) == ERROR);
 }
 
+/* Tests getting the direction of a link with invalid parameters */
 void test2_link_get_direction() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_get_direction(l) == UNKNOWN_DIR);
 }
 
+/* Tests setting whether a link is open with invalid parameters */
 void test2_link_open() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_set_open(l, TRUE) == ERROR);
 }
 
+/* Tests getting whether a link is open with invalid parameters */
 void test2_link_get_open() {
   Link *l = NULL;
   PRINT_TEST_RESULT(link_get_open(l) == FALSE);

@@ -151,6 +151,7 @@ void test1_set_get_ids() {
   set_destroy(s);
 }
 
+/* Tests getting the array of ids in a set with invalid parameters */
 void test4_set_add() {
   Set *s = NULL;
   Set *valid = set_create();
@@ -158,6 +159,7 @@ void test4_set_add() {
   set_destroy(valid);
 }
 
+/* Tests adding to a full set */
 void test3_set_del() {
   Set *s = NULL;
   Set *valid = set_create();
@@ -165,6 +167,7 @@ void test3_set_del() {
   set_destroy(valid);
 }
 
+/* Tests finding a non-existent element in a set */
 void test3_set_find() {
   Set *s = NULL;
   Set *empty = set_create();
@@ -172,10 +175,12 @@ void test3_set_find() {
   set_destroy(empty);
 }
 
+/* Tests getting the number of ids in a set with invalid parameters */
 void test2_set_get_n_ids() {
   PRINT_TEST_RESULT(set_get_n_ids(NULL) == -1);
 }
 
+/* Tests getting the array of ids in a set with invalid parameters */
 void test2_set_get_ids() {
   Set *s = set_create();
   PRINT_TEST_RESULT(set_get_ids(NULL) == NULL && set_get_ids(s) == NULL);

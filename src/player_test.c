@@ -169,29 +169,34 @@ void test1_player_get_backpack() {
   player_destroy(p);
 }
 
+/* Tests setting the player health */
 void test1_player_get_id() {
   Player *p = player_create(7);
   PRINT_TEST_RESULT(player_get_id(p) == 7);
   player_destroy(p);
 }
 
+/* Tests setting the player maximum number of objects */
 void test1_player_set_max_objs() {
   Player *p = player_create(1);
   PRINT_TEST_RESULT(player_set_max_objs(p, 5) == OK && inventory_get_max_objs(player_get_backpack(p)) == 5);
   player_destroy(p);
 }
 
+/* Tests setting the player maximum number of objects with invalid parameters */
 void test2_player_set_max_objs() {
   Player *p = NULL;
   PRINT_TEST_RESULT(player_set_max_objs(p, 5) == ERROR);
 }
 
+/* Tests modifying the player health */
 void test1_player_modify_health() {
   Player *p = player_create(1);
   PRINT_TEST_RESULT(player_modify_health(p, 5) == OK && player_get_health(p) == 15 && player_modify_health(p, -10) == OK && player_get_health(p) == 5);
   player_destroy(p);
 }
 
+/* Tests modifying the player health with invalid parameters */
 void test2_player_modify_health() {
   Player *p = NULL;
   PRINT_TEST_RESULT(player_modify_health(p, 5) == ERROR);

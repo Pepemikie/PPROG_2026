@@ -177,17 +177,20 @@ void test2_object_get_gdesc() {
   PRINT_TEST_RESULT(object_get_gdesc(o) == NULL);
 }
 
+/* Tests setting the health of an object */
 void test1_object_set_health() {
   Object *o = object_create(1);
   PRINT_TEST_RESULT(object_set_health(o, 15) == OK);
   object_destroy(o);
 }
 
+/* Tests setting the health of an object with invalid parameters */
 void test2_object_set_health() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_set_health(o, 15) == ERROR);
 }
 
+/* Tests getting the health of an object */
 void test1_object_get_health() {
   Object *o = object_create(1);
   object_set_health(o, 20);
@@ -195,22 +198,26 @@ void test1_object_get_health() {
   object_destroy(o);
 }
 
+/* Tests getting the health of an object with invalid parameters */
 void test2_object_get_health() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_get_health(o) == 0);
 }
 
+/* Tests setting whether an object is movable */
 void test1_object_set_movable() {
   Object *o = object_create(1);
   PRINT_TEST_RESULT(object_set_movable(o, TRUE) == OK);
   object_destroy(o);
 }
 
+/* Tests setting whether an object is movable with invalid parameters */
 void test2_object_set_movable() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_set_movable(o, TRUE) == ERROR);
 }
 
+/* Tests getting whether an object is movable */
 void test1_object_get_movable() {
   Object *o = object_create(1);
   object_set_movable(o, TRUE);
@@ -218,22 +225,26 @@ void test1_object_get_movable() {
   object_destroy(o);
 }
 
+/* Tests getting whether an object is movable with invalid parameters */
 void test2_object_get_movable() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_get_movable(o) == FALSE);
 }
 
+/* Tests setting the dependency of an object */
 void test1_object_set_dependency() {
   Object *o = object_create(1);
   PRINT_TEST_RESULT(object_set_dependency(o, 4) == OK);
   object_destroy(o);
 }
 
+/* Tests setting the dependency of an object with invalid parameters */
 void test2_object_set_dependency() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_set_dependency(o, 4) == ERROR);
 }
 
+/* Tests getting the dependency of an object */
 void test1_object_get_dependency() {
   Object *o = object_create(1);
   object_set_dependency(o, 4);
@@ -241,22 +252,26 @@ void test1_object_get_dependency() {
   object_destroy(o);
 }
 
+/* Tests getting the dependency of an object with invalid parameters */
 void test2_object_get_dependency() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_get_dependency(o) == NO_ID);
 }
 
+/* Tests setting the open id of an object */
 void test1_object_set_open() {
   Object *o = object_create(1);
   PRINT_TEST_RESULT(object_set_open(o, 7) == OK);
   object_destroy(o);
 }
 
+/* Tests setting the open id of an object with invalid parameters */
 void test2_object_set_open() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_set_open(o, 7) == ERROR);
 }
 
+/* Tests getting the open id of an object */
 void test1_object_get_open() {
   Object *o = object_create(1);
   object_set_open(o, 7);
@@ -264,6 +279,7 @@ void test1_object_get_open() {
   object_destroy(o);
 }
 
+/* Tests getting the open id of an object with invalid parameters */
 void test2_object_get_open() {
   Object *o = NULL;
   PRINT_TEST_RESULT(object_get_open(o) == NO_ID);

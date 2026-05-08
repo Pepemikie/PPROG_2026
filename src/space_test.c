@@ -130,6 +130,8 @@ void test2_space_set_object() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_add_object(s, 1) == ERROR);
 }
+
+/* Tests getting the id of a space */
 void test1_space_set_gdesc() {
   Space *s = space_create(1);
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1] = {
@@ -143,12 +145,14 @@ void test1_space_set_gdesc() {
   space_destroy(s);
 }
 
+/* Tests setting the graphical description of a space with invalid parameters */
 void test2_space_set_gdesc() {
   Space *s = space_create(1);
   PRINT_TEST_RESULT(space_set_gdesc(s, NULL) == ERROR);
   space_destroy(s);
 }
 
+/* Tests getting the graphical description of a space */
 void test1_space_get_gdesc() {
   Space *s = space_create(1);
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1] = {
@@ -163,35 +167,41 @@ void test1_space_get_gdesc() {
   space_destroy(s);
 }
 
+/* Tests getting the graphical description of a space with invalid parameters */
 void test2_space_get_gdesc() {
   Space *s = space_create(1);
   PRINT_TEST_RESULT(space_get_gdesc(s, -1) == NULL && space_get_gdesc(NULL, 0) == NULL);
   space_destroy(s);
 }
 
+/* Tests setting whether a space has been discovered */
 void test1_space_set_discovered() {
   Space *s = space_create(1);
   PRINT_TEST_RESULT(space_set_discovered(s, TRUE) == OK && space_get_discovered(s) == TRUE);
   space_destroy(s);
 }
 
+/* Tests getting whether a space has been discovered with invalid parameters */
 void test1_space_get_discovered() {
   Space *s = space_create(1);
   PRINT_TEST_RESULT(space_get_discovered(s) == FALSE);
   space_destroy(s);
 }
 
+/* Tests adding a character to a space */
 void test1_space_add_character() {
   Space *s = space_create(1);
   PRINT_TEST_RESULT(space_add_character(s, 10) == OK && space_has_character(s, 10) == TRUE);
   space_destroy(s);
 }
 
+/* Tests adding a character to a space with invalid parameters */
 void test2_space_add_character() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_add_character(s, 10) == ERROR);
 }
 
+/* Tests checking whether a space has a character */
 void test1_space_has_character() {
   Space *s = space_create(1);
   space_add_character(s, 10);
@@ -199,11 +209,13 @@ void test1_space_has_character() {
   space_destroy(s);
 }
 
+/* Tests checking whether a space has a character with invalid parameters */
 void test2_space_has_character() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_has_character(s, 10) == FALSE);
 }
 
+/* Tests getting the number of characters in a space */
 void test1_space_get_number_of_characters() {
   Space *s = space_create(1);
   space_add_character(s, 10);
@@ -212,6 +224,7 @@ void test1_space_get_number_of_characters() {
   space_destroy(s);
 }
 
+/* Tests getting the characters in a space */
 void test1_space_get_character() {
   Space *s = space_create(1);
   Id *characters = NULL;
@@ -222,6 +235,7 @@ void test1_space_get_character() {
   space_destroy(s);
 }
 
+/* Tests deleting a character from a space */
 void test1_space_del_character() {
   Space *s = space_create(1);
   space_add_character(s, 12);
@@ -229,6 +243,7 @@ void test1_space_del_character() {
   space_destroy(s);
 }
 
+/* Tests deleting a non-existent character from a space */
 void test2_space_del_character() {
   Space *s = space_create(1);
   PRINT_TEST_RESULT(space_del_character(s, NO_ID) == ERROR);
