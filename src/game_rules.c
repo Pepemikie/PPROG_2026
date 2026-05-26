@@ -43,15 +43,14 @@ void game_rules_update(Game *game) {
 
     /* RULE 1: WIN CONDITION (If the crown [29] is taken, it disappears from the map) */
     /* If its location is NO_ID, it means it's in an inventory */
-    if (game_get_object_location(game, 29) == NO_ID) {
+    if (player_has_object(current_player, 29) == TRUE){
         /* We finish the game if it's stolen (Adjust the function to your game_set_finished if needed) */
         game_set_finished(game, TRUE);
     }
-
     /* RULE 2: SURPRISE ATTACK OF BATMAN. 10% chance if you are in room 12 */
     if (random_chance < 10 && player_loc == 12) {
         /* Batman takes away 1 health point */
-        player_modify_health(current_player, -1);
+        player_modify_health(current_player, -3);
     }
 
     /* RULE 3: SECURITY SYSTEM. The door (ID 14) closes automatically (5% chance) */
@@ -65,11 +64,11 @@ void game_rules_update(Game *game) {
     /* RULE 4: THE MAGIC WALLET. It teleports you to a different room (5% chance) */
     if (random_chance >= 15 && random_chance < 20) {
         /* Changes from the current room to room 111 (Bathroom) */
-        game_set_object_location(game, 44, 111);
+        game_set_player_location(game, 111);
     }
 
-    /* RULE 5: REST AREA. You recover health in the Lunchroom (ID 16) (10% chance) */
-    if (random_chance >= 20 && random_chance < 30 && player_loc == 16) {
+    /* RULE 5: REST AREA. You recover health in the Lunchroom (ID 16) (30% chance) */
+    if (random_chance >= 0 && random_chance < 30 && player_loc == 16) {
         /* Prevent health from increasing infinitely */
         if (player_get_health(current_player) < 5) {
             player_modify_health(current_player, 1);

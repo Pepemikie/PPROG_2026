@@ -14,7 +14,7 @@
 ══════════════════
 STORY & OBJECTIVE
 ══════════════════
-- You are two master thieves who have infiltrated one of the most famous museums in the world. Your mission: steal the priceless Crown located deep within the Mesopotamian Room. But you're not alone—the museum is guarded by dangerous enemies like the Police and Batman, while mysterious allies roam the halls (Guide, Josemi, Inaki, and Rodri) who may help you if you convince them.
+- You are two master thieves who have infiltrated one of the most famous museums in the world. Your mission: steal the priceless Crown located deep within the Mesopotamian Room. But you're not alone—the museum is guarded by dangerous enemies like the Police, Guide and Batman, while mysterious allies roam the halls (Josemi, Inaki, and Rodri) who may help you if you convince them.
 
 -To reach your objective, you'll need to navigate through 13 different rooms, collect weapons and protective gear, recruit allies, and solve the museum's puzzles. Many doors are locked—but you'll find a KEY in the Prehistory Room that can unlock the passage to the Greek Room, opening up new paths to the Crown. Along the way, you'll discover mysterious objects with special properties: some heal you, others harm enemies, and some reveal secret passages.
 
@@ -45,7 +45,7 @@ HOW TO PLAY
 - Type commands followed by Enter
 - Example: `move north` → Move to the North
 - Type `help` to see all available commands
-- Type `exit` or `quit` to leave the game
+- Type `exit` to leave the game
 
 ══════════════════
 COMMANDS REFERENCE
@@ -71,7 +71,7 @@ COMMANDS REFERENCE
 - `attack <character> (a)`        - Attack an enemy (allies do more damage if they're following you)
 
 **Game Control:**
-- exit (q)                       - Exit the game
+- exit (e)                       - Exit the game
 
 **Tips:**
 - Use short forms (in parentheses) for faster typing
@@ -95,15 +95,15 @@ CHARACTERS GUIDE
 - Description: "HEY! YOU!" - A museum guard trying to stop your heist
 - Strategy: Weaker than Batman but still a threat; recruit allies before engaging
 
+**Guide** (Health: 3)
+- Location: Mesopotamian Room (Room 13)
+- Description: "Welcome to the Loubre museum" - A friendly tour guide
+- Ability: Can follow you and provide combat advantage
+- Strategy: Easy to recruit and helpful in fights, but fragile (low health)
+
 ---
 
 **ALLIES - Recruit Them!**
-
-**Guide** (Health: 3)
-- Location: Mesopotamian Room (Room 13)
-- Description: "Welcome to the 05 museum" - A friendly tour guide
-- Ability: Can follow you and provide combat advantage
-- Strategy: Easy to recruit and helpful in fights, but fragile (low health)
 
 **Josemi** (Health: 8)
 - Location: Mesopotamian Room (Room 13)
@@ -195,22 +195,9 @@ Copy and paste these exact commands to execute the Walkthrough automatically and
 ```text
 move u
 take key
-turn
+move w
 move u
 move n
 recruit Josemi
 take Crown
-turn
-open link12-131 with key
-move w
-move u
-take Apple
-use Apple
-turn
-move w
-chat Inaki
-turn
-move s
-look
-exit
 ```
