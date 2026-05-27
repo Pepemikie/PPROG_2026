@@ -5,7 +5,7 @@
 # @version 4.2
 
 #FLAGS
-CFLAGS=-Wall -g -pedantic -ansi -I./include -lpthread
+CFLAGS=-Wall -pedantic -ansi -I./include -lpthread
 CFLAGS_DEBUG=-Wall -g -ansi -pedantic -DDEBUG -I./include
 CFLAGS_TEST=-Wall -g -pedantic -ansi -DTEST_MODE -I./include -lpthread
 
