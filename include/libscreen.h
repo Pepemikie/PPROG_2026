@@ -32,7 +32,7 @@ typedef struct _Area Area;
 
 /**
  * @brief Initializes the screen with the given dimensions.
- * @param rows    Number of rows
+ * @param rows Number of rows
  * @param columns Number of columns
  */
 void screen_init(int rows, int columns);
@@ -50,9 +50,9 @@ void screen_paint(Frame_color color);
 
 /**
  * @brief Creates a new screen area.
- * @param x      Column of the top-left corner
- * @param y      Row of the top-left corner
- * @param width  Width in columns
+ * @param x Column of the top-left corner
+ * @param y Row of the top-left corner
+ * @param width Width in columns
  * @param height Height in rows
  * @return Pointer to the new Area, or NULL on error
  */
@@ -106,23 +106,20 @@ void screen_area_puts_yellow(Area *area, char *str);
 
 /**
  * @brief Writes a string with a highlighted section in bright blue.
- * @param area       Target area
- * @param str        String to write
+ * @param area Target area
+ * @param str String to write
  * @param bold_start Start column of the highlighted section
- * @param bold_len   Length of the highlighted section
+ * @param bold_len Length of the highlighted section
  */
 void screen_area_puts_bold_at(Area *area, char *str, int bold_start, int bold_len);
 
 /**
  * @brief Writes a string with a highlighted section in a chosen color attribute.
  *
- * color_attr should be one of the ATTR_BOLD_* constants defined in libscreen.c,
- * exposed here through the Color_attr enum below.
- *
- * @param area       Target area
- * @param str        String to write
+ * @param area Target area
+ * @param str String to write
  * @param bold_start Start column of the highlighted section
- * @param bold_len   Length of the highlighted section
+ * @param bold_len Length of the highlighted section
  * @param color_attr Color attribute constant (see Color_attr)
  */
 void screen_area_puts_bold_color_at(Area *area, char *str, int bold_start, int bold_len, int color_attr);

@@ -14,6 +14,15 @@
 #include <stdlib.h>
 #include <time.h>
 
+/*
+Tengo pensado que para hacer el juego tengas que conseuir la corona,
+que solo se puede robar de BATMAN si ha muerto.
+Si matas al policia de la sala 12, consigues una pistola para poder matar mas facil
+a BATMAN. Si matas a la guia te dará la llave para poder pasar de la 12 a la 131 e ir a por BATMAN mas facil
+AL conseguir la corona, tendrás que avanzar hasta la sala de la crona. SI no tienes la corona, te quedas encerrado
+en la 18 porq no se podrá salir y todo dependera del otro player.
+*/
+
 /**
  * @brief It executes the non-deterministic game rules and random events
  * @author Rodrigo Cruz Asensio
@@ -44,12 +53,11 @@ void game_rules_update(Game *game) {
     /* RULE 1: WIN CONDITION (If the crown [29] is taken, it disappears from the map) */
     /* If its location is NO_ID, it means it's in an inventory */
     if (player_has_object(current_player, 29) == TRUE){
-        /* We finish the game if it's stolen (Adjust the function to your game_set_finished if needed) */
         game_set_finished(game, TRUE);
     }
     /* RULE 2: SURPRISE ATTACK OF BATMAN. 10% chance if you are in room 12 */
     if (random_chance < 10 && player_loc == 12) {
-        /* Batman takes away 1 health point */
+        /* Batman takes away 3 health points */
         player_modify_health(current_player, -3);
     }
 
@@ -61,7 +69,7 @@ void game_rules_update(Game *game) {
         }
     }
 
-    /* RULE 4: THE MAGIC WALLET. It teleports you to a different room (5% chance) */
+    /* RULE 4: TELEPORTATION. It teleports you to a different room (5% chance) */
     if (random_chance >= 15 && random_chance < 20) {
         /* Changes from the current room to room 111 (Bathroom) */
         game_set_player_location(game, 111);

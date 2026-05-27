@@ -14,7 +14,7 @@ la carpeta tests debe existir?, son .c
 
 quitar el gdesc del objeto y que muestre por pantalla el nombre
 
-comprobar la F2 f)
+comprobar la F2 f) dependency
 
 cuidado, solo podrá haber un enemigo por
 espacio
@@ -37,6 +37,7 @@ De la F12 ver si sigue lo del turn o esta bien implementado (porq ahora se puede
 Preguntar si el modo de juego determinista tanbien tiene en cuenta la aleatoriedad de los ataques
 
 F15 comprobar si el turn es solo de 2 o se pueden 3?
+        SOLO DEJA TURNO DE 2. CAMBIARLO PARA QUE DEJE LOS QUE SE QUIERA (O NO?)
 
 F15 mantener el turno de uno en uno pero se aplica o de reintentar comandos hasta que se introduzca uno correcto
 
