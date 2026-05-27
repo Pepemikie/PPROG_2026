@@ -167,23 +167,13 @@ int space_get_number_of_objects(Space* space);
 CHARACTERS
 */
 /**
- * @brief It sets the character located in the Space
- * @author Jose Miguel Romero Oubina
- *
- * @param space a pointer to the Space
- * @param id the id of the character to be assigned to the Space
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status space_set_character(Space* space, Id id);
-
-/**
  * @brief It adds a character to the Space
  * 
  * @param space a pointer to the Space
  * @param id the id of the character to be added to the Space
  * @return OK, if everything goes well or ERROR if there was some mistake 
  */
-Status space_add_character(Space *space, Id id);
+Status space_add_character(Space *space, Id id, Bool character_is_friendly);
 
 /**
  * @brief It gets the id of the character located in the Space

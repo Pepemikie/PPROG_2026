@@ -49,7 +49,9 @@ Link *link_create(Id id) {
 /*   It destroys a Link, freeing the allocated memory */
 Status link_destroy(Link *link) {
   if (!link) return ERROR;
+
   free(link);
+  link = NULL;
   return OK;
 }
 

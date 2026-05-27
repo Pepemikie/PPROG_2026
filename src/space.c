@@ -21,7 +21,8 @@ struct _Space {
   Set *objects; /**< The set of objects in the space */
   Set *characters; /**< The id of the character located in the space */
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]; /**< The graphic description of the space */
-  Bool discovered;  /**< If a space has been discovered (F12, I3) */                                         
+  Bool discovered;  /**< If a space has been discovered (F12, I3) */
+  Bool has_enemy;
 };
 
 /*   It creates a new Space, allocating memory and initializing its members */
@@ -37,7 +38,8 @@ Space *space_create(Id id) {
   /* initializes all fields by default */
   newSpace->id = id;
   newSpace->name[0] = '\0';
-  newSpace->discovered = FALSE;       /* undiscovered by default (F12, I3) */
+  newSpace->discovered = FALSE;       /* undiscovered by default*/
+  newSpace->has_enemy = FALSE;       /* no enemy by default */
 
   newSpace->objects = set_create(); /* creates the object set */
   if (!newSpace->objects) {
@@ -65,6 +67,7 @@ Status space_destroy(Space *space) {
   if (space->characters) set_destroy(space->characters); /* destroys the character set */
 
   free(space);
+  space = NULL;
   return OK;
 }
 
@@ -119,22 +122,17 @@ int space_get_number_of_objects(Space *space) {
   return set_get_n_ids(space->objects); /* delegates to the set module */
 }
 
-
-/*   It sets the character located in the Space */
-Status space_set_character(Space *space, Id id) {
-  if (!space || id == NO_ID) return ERROR;
-
-  set_destroy(space->characters);
-  space->characters = set_create();
-  if (!space->characters) return ERROR;
-
-  return set_add(space->characters, id);
-}
-
 /*   It adds a character to the Space */
-Status space_add_character(Space *space, Id id) {
-  if (!space || id == NO_ID) return ERROR;
-  return set_add(space->characters, id); /* delegates to set_add */
+Status space_add_character(Space *space, Id id, Bool character_is_friendly) {
+  if (!space || id == NO_ID) return ERROR;  
+
+  if (space->has_enemy && character_is_friendly == FALSE) return ERROR;
+
+  set_add(space->characters, id); /* delegates to set_add */
+
+  if (character_is_friendly == FALSE)
+    space->has_enemy = TRUE;
+  return OK;
 }
 
 /*   It gets the id of the character located in the Space */

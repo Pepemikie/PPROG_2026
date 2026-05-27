@@ -47,7 +47,9 @@ Character* character_create(Id id) {
 
 Status character_destroy(Character* c) {
   if (!c) return ERROR;
+
   free(c);
+  c = NULL;
   return OK;
 }
 

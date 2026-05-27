@@ -16,7 +16,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 30
+#define MAX_TESTS 28
 
 /** 
  * @brief Main function for SPACE unit tests. 
@@ -72,8 +72,6 @@ int main(int argc, char** argv) {
   if (all || test == 26) test1_space_get_character();
   if (all || test == 27) test1_space_del_character();
   if (all || test == 28) test2_space_del_character();
-  if (all || test == 29) test1_space_set_character();
-  if (all || test == 30) test2_space_set_character();
 
   PRINT_PASSED_PERCENTAGE;
 
@@ -301,19 +299,4 @@ void test2_space_get_object() {
 void test3_space_get_object() {
   Space *s = NULL;
   PRINT_TEST_RESULT(space_has_object(s, 1) == FALSE);
-}
-
-/* Tests setting a character in a space */
-void test1_space_set_character() {
-  Space *s = space_create(1);
-  space_add_character(s, 10);
-  space_add_character(s, 11);
-  PRINT_TEST_RESULT(space_set_character(s, 20) == OK && space_has_character(s, 20) == TRUE && space_get_number_of_characters(s) == 1);
-  space_destroy(s);
-}
-
-/* Tests setting a character in a space with invalid parameters */
-void test2_space_set_character() {
-  Space *s = NULL;
-  PRINT_TEST_RESULT(space_set_character(s, 10) == ERROR);
 }

@@ -53,6 +53,7 @@ Status player_destroy(Player* player) {
     inventory_destroy(player->backpack);
   }
   free(player);
+  player = NULL;
   return OK;
 }
 
@@ -185,21 +186,11 @@ Status player_set_gdesc(Player* player, char* gdesc) {
   return OK;
 }
 
-Status player_set_max_objs(Player* player, int max_objs) {
-  if (!player || max_objs < 0) {
-    return ERROR;
+int player_get_number_of_items_in_backpack(Player* player) {
+  if (!player || !player->backpack) {
+    return -1; /* error control */
   }
-  
-  if (player->backpack) {
-    inventory_destroy(player->backpack); /* destroy the old backpack */
-  }
-  
-  player->backpack = inventory_create(max_objs); /* create a new backpack with the maximum objects */
-  if (!player->backpack) {
-    return ERROR;
-  }
-
-  return OK;
+  return inventory_get_number_of_objects(player->backpack);
 }
 
 #ifdef DEBUG

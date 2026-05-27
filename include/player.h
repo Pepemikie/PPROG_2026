@@ -11,7 +11,7 @@
 #define PLAYER_H
 
 #define P_GDESC_SIZE 7/**< Maximum size of the player's description */
-#define MAX_BACKPACK_SIZE 3/**< Maximum size of the player's backpack */
+#define MAX_BACKPACK_SIZE 15/**< Maximum size of the player's backpack */
 
 #include "types.h"
 #include "inventory.h"
@@ -146,11 +146,11 @@ int player_get_health(Player* player);
  * @brief It sets the health of a Player
  * @author Profesores PPROG
  *
- * @param pplayer a pointer to the Player
+ * @param player a pointer to the Player
  * @param health the health points to be assigned to the Player
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Status player_set_health(Player* pplayer, int health);
+Status player_set_health(Player* player, int health);
 
 /**
  * @brief It gets the graphic description of a Player
@@ -172,14 +172,13 @@ const char* player_get_gdesc(Player* player);
 Status player_set_gdesc(Player* player, char* gdesc);
 
 /**
- * @brief It sets the maximum number of objects that a Player can carry in their inventory (F11, I3)
- * @author Rodrigo Cruz Asensio
+ * @brief It gets the number of objects currently in the player's inventory
+ * @author Jose Miguel Romero Oubina
  * 
  * @param player a pointer to the Player
- * @param max_objs the maximum number of objects 
- * @return OK, if everything goes well or ERROR if there was some mistake
+ * @return the number of objects in the player's backpack, or -1 if there was some mistake
  */
-Status player_set_max_objs(Player* player, int max_objs);
+int player_get_number_of_items_in_backpack(Player* player);
 
 #ifdef DEBUG
 /**

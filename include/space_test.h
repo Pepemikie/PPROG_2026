@@ -178,16 +178,4 @@ void test1_space_del_character();
  */
 void test2_space_del_character();
 
-/**
- * @brief Tests setting the character in a space
- * @author Jose Miguel Romero Oubina
- */
-void test1_space_set_character();
-
-/**
- * @brief Tests setting the character in a space with invalid parameters
- * @author Jose Miguel Romero Oubina
- */
-void test2_space_set_character();
-
 #endif

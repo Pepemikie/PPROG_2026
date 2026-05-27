@@ -2,20 +2,21 @@
 #p:1|Robber (1)|$P1|11|6|7|
 #p:2|Robber (2)|$P2|111|10|3|
 #p:3|Robber (3)|$P3|11|10|3|
+#p:4|Robber (4)|$P4|11|1|1|
 
-# id name gdesc
-#s:11|Entry|//ENTRY//|._______.|!  //   !|!__//___!|!_______!|
-#s:111|Bathroom|       _  |      ! ! |   ___! ! |  (    .' |   )  (   |
-#s:112|Garden| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
-#s:12|Prehistoric Room|      __ |     / _)|  /\/ /  |<(___/   |   ^^    |
-#s:13|Mesopotamian Room|   __   |   ][   |  /  \  | ( ++ ) |  \__/  |
-#s:131|Greek Room| 0=====0 |  ! ! !  |  ! ! !  | _!_!_!_ |[-_-_-_-]|
-#s:14|Armor Room|  %\    |  ( )>  |  /_o-->|  ! !   |   V_   |
-#s:15|Art Room|+-------+|!  .... !|! /(0-0)!|!  /b d\!|+-------+|
-#s:16|Lunchroom|        | \.../  |  \_/   |   Y    |  _!_   |
-#s:161|Talking Room| .-===-. | ! . . ! | ! .'. ! |()_____()|II_____II|
-#s:17|Space Room|  /\    | (__)   | [ J]   | }__{   | /^^\   |
-#s:18|Crown Room|    _   |  _*_*_ | {._._.}| !_____!| _$$$$$_|
+# id name discovered gdesc
+#s:11|Entry|0|//ENTRY//|._______.|!  //   !|!__//___!|!_______!|
+#s:111|Bathroom|0|       _  |      ! ! |   ___! ! |  (    .' |   )  (   |
+#s:112|Garden|0| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
+#s:12|Prehistoric Room|0|      __ |     / _)|  /\/ /  |<(___/   |   ^^    |
+#s:13|Mesopotamian Room|0|   __   |   ][   |  /  \  | ( ++ ) |  \__/  |
+#s:131|Greek Room|0| 0=====0 |  ! ! !  |  ! ! !  | _!_!_!_ |[-_-_-_-]|
+#s:14|Armor Room|0|  %\    |  ( )>  |  /_o-->|  ! !   |   V_   |
+#s:15|Art Room|0|+-------+|!  .... !|! /(0-0)!|!  /b d\!|+-------+|
+#s:16|Lunchroom|0|        | \.../  |  \_/   |   Y    |  _!_   |
+#s:161|Talking Room|0| .-===-. | ! . . ! | ! .'. ! |()_____()|II_____II|
+#s:17|Space Room|0|  /\    | (__)   | [ J]   | }__{   | /^^\   |
+#s:18|Crown Room|0|    _   |  _*_*_ | {._._.}| !_____!| _$$$$$_|
 
 # id name gdesc description location health movable dependency open
 #o:21|Knife|-->|A sharp knife|11|0|1|-1|-1

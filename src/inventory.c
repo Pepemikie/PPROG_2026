@@ -50,6 +50,7 @@ Status inventory_destroy(Inventory *inventory){
     set_destroy(inventory->objs);
 
     free(inventory);
+    inventory = NULL;
     return OK;
 }
 

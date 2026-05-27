@@ -46,9 +46,9 @@
 #define HEIGHT_CHAR 11
 
 /*
- * hp > HP_HIGH  → green   (healthy)
- * HP_LOW < hp ≤ HP_HIGH → yellow  (wounded)
- * hp ≤ HP_LOW  → red     (critical)
+ * hp > HP_HIGH  -> green   (healthy)
+ * HP_LOW < hp ≤ HP_HIGH -> yellow  (wounded)
+ * hp ≤ HP_LOW  -> red     (critical)
  */
 
 /** @brief HP healty*/
@@ -98,9 +98,9 @@ static Status graphic_engine_get_characters_str(Game *game, Space *space, char *
 /**
  * @brief Returns the Color_attr that matches a given hp value.
  *
- * hp > HP_HIGH  → COLOR_ATTR_BOLD_GREEN
- * HP_LOW < hp ≤ HP_HIGH → COLOR_ATTR_BOLD_YELLOW
- * hp ≤ HP_LOW  → COLOR_ATTR_BOLD_RED
+ * hp > HP_HIGH  -> COLOR_ATTR_BOLD_GREEN
+ * HP_LOW < hp ≤ HP_HIGH -> COLOR_ATTR_BOLD_YELLOW
+ * hp ≤ HP_LOW  -> COLOR_ATTR_BOLD_RED
  */
 static Color_attr hp_to_color(int hp) {
   if (hp > HP_HIGH) return COLOR_ATTR_BOLD_GREEN;
@@ -111,22 +111,23 @@ static Color_attr hp_to_color(int hp) {
 /**
  * @brief Returns the Frame_color that corresponds to a player turn index.
  *
- * turn 0 → BLUE
- * turn 1 → GREEN
- * others → BLACK
+ * turn 0 -> BLUE
+ * turn 1 -> GREEN
+ * others -> BLACK
  */
 static Frame_color turn_to_frame_color(int turn) {
   if (turn == 0) return BLUE;
   if (turn == 1) return GREEN;
+  if( turn == 2) return YELLOW;
   return BLACK;
 }
 
 /**
  * @brief Returns the Color_attr that matches the active player's frame color.
  *
- * turn 0 → COLOR_ATTR_BOLD_BLUE
- * turn 1 → COLOR_ATTR_BOLD_GREEN
- * others → COLOR_ATTR_BOLD
+ * turn 0 -> COLOR_ATTR_BOLD_BLUE
+ * turn 1 -> COLOR_ATTR_BOLD_GREEN
+ * others -> COLOR_ATTR_BOLD
  */
 static Color_attr turn_to_text_color(int turn) {
   if (turn == 0) return COLOR_ATTR_BOLD_BLUE;
@@ -194,6 +195,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   int turn = 0;
   int last_cmd_player = -1;
   char player_label[PLAYER_ACTION];
+  char player_num = '0';
+  Bool cmd_ok = FALSE;
 
   char room_name[498];
 
@@ -363,10 +366,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
     health = character_get_health(character);
     if (health > 0) {
-      /*
-       * Build the prefix up to the hp number to calculate the offset,
-       * then build the full string and highlight the hp digits.
-       */
+      /* Build the prefix up to the hp number to calculate the offset,
+        then build the full string and highlight the hp digits */
       char prefix[128];
       char hp_str[12];
       sprintf(prefix, "  %-10s: %d (", character_get_name(character), (int)char_loc);
@@ -425,19 +426,18 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     last_cmd = command_get_code(game_get_last_command(game));
     last_cmd_player = game_get_last_command_player(game);
 
-    if      (last_cmd_player == 0) strcpy(player_label, "P1");
-    else if (last_cmd_player == 1) strcpy(player_label, "P2");
-    else                           strcpy(player_label, "??");
+    player_label[0] = 'P';
+    player_num = (char)(last_cmd_player + 1 + '0');
+    player_label[1] = player_num;
+    player_label[2] = '\0';
 
-    {
-      Bool cmd_ok = (game_get_last_status(game) == OK);
-      sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], player_label, cmd_ok ? "OK" : "ERROR");
-      if (cmd_ok) {
-        int ok_offset = (int)strlen(str) - 2; /* points at "OK" */
-        screen_area_puts_bold_color_at(ge->feedback, str, ok_offset, 2, turn_to_text_color(last_cmd_player));
-      } else {
-        screen_area_puts_red(ge->feedback, str);
-      }
+    cmd_ok = (game_get_last_status(game) == OK);
+    sprintf(str, " %s (%s): %s", cmd_to_str[last_cmd][CMDL], player_label, cmd_ok ? "OK" : "ERROR");
+    if (cmd_ok) {
+      int ok_offset = (int)strlen(str) - 2; /* points at "OK" */
+      screen_area_puts_bold_color_at(ge->feedback, str, ok_offset, 2, turn_to_text_color(last_cmd_player));
+    } else {
+      screen_area_puts_red(ge->feedback, str);
     }
   }
   else{

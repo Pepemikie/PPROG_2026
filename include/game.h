@@ -23,7 +23,7 @@
 #define MAX_OBJECTS 30 /**< Maximum number of objects in the game */
 #define MAX_CHARACTERS 8 /**< Maximum number of characters in the game */
 #define MAX_LINKS 400 /**< Maximum number of links in the game */
-#define MAX_PLAYERS 2 /**< Maximum number of players in the game */
+#define MAX_PLAYERS 4 /**< Maximum number of players in the game */
 
 /** @brief It defines the Game struct */
 typedef struct _Game Game;
@@ -177,6 +177,24 @@ Space *game_get_space(Game *game, Id id);
  */
 Status game_add_space(Game *game, Space *space);
 
+/**
+ * @brief It gets the number of spaces in the game
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return the number of spaces in the game, or 0 if there was some mistake
+ */
+int game_get_num_spaces(Game *game);
+
+/**
+ * @brief It gets an spaces from the game by its index
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @param index the position of the space in the game's space array
+ * @return a pointer to the Space at the given index, or NULL if not found
+ */
+Space *game_get_space_by_index(Game *game, int index);
 
 
 
@@ -301,6 +319,15 @@ Status game_set_object_location(Game *game, Id space_id, Id object_id);
 Status game_add_object(Game *game, Object *object);
 
 /**
+ * @brief It gets the number of objects in the game
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return the number of objects in the game, or 0 if there was some mistake
+ */
+int game_get_num_objects(Game *game);
+
+/**
  * @brief It sets the last object description displayed in the game
  * @author Jose Miguel Romero Oubina
  *
@@ -380,6 +407,15 @@ Status game_set_character_location(Game *game, Id space_id, Id character_id);
 Status game_add_character(Game *game, Character *character);
 
 /**
+ * @brief It gets the number of characters in the game
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return the number of characters in the game, or 0 if there was some mistake
+ */
+int game_get_num_characters(Game *game);
+
+/**
  * @brief It sets the last message displayed in the game
  * @author Profesores PPROG
  *
@@ -433,7 +469,16 @@ LINKS
  * @param link a pointer to the Link to be added
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
-Status game_add_link(Game *game, Link *link);
+Status game_add_links(Game *game, Link *link);
+
+/**
+ * @brief It gets the number of links in the game
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return the number of links in the game, or 0 if there was some mistake
+ */
+int game_get_num_links(Game *game);
 
 /**
  * @brief It gets the id of the destination space given an origin space and a direction
@@ -455,7 +500,7 @@ Id game_get_connection(Game *game, Id space_id, Direction direction);
  * @param direction the direction of the link
  * @return TRUE if the link is open, FALSE otherwise
  */
-Bool game_connection_is_open(Game *game, Id space_id, Direction direction);
+Bool game_get_connection_status(Game *game, Id space_id, Direction direction);
 
 /**
  * @brief It gets a link from the game by its id
@@ -468,7 +513,7 @@ Bool game_connection_is_open(Game *game, Id space_id, Direction direction);
 Link* game_get_link(Game *game, Id id);
 
 /**
- * @brief It marks a Space as discovered (F12, I3)
+ * @brief It marks a Space as discovered
  * @author Rodrigo Cruz Asensio
  *
  * @param game a pointer to the Game struct
@@ -478,7 +523,7 @@ Link* game_get_link(Game *game, Id id);
 Status game_discover_space(Game *game, Id space_id);
 
 /**
- * @brief It gets a link from the game by its name (F11, I4) 
+ * @brief It gets a link from the game by its name
  * @author Rodrigo Cruz Asensio
  *
  * @param game a pointer to the Game struct
@@ -486,6 +531,16 @@ Status game_discover_space(Game *game, Id space_id);
  * @return a pointer to the Link or NULL if not found
  */
 Link* game_get_link_by_name(Game *game, const char *name);
+
+/**
+ * @brief It gets a link from the game by its index
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param index the position of the link in the game's link array
+ * @return a pointer to the Link at the given index, or NULL if not found
+ */
+Link *game_get_link_by_index(Game *game, int index);
 
 #ifdef DEBUG
 /**

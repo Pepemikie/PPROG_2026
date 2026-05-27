@@ -315,17 +315,21 @@ Status game_actions_update(Game *game, Command *command) {
   /* Log the command if logging is enabled */
   if (g_logfile != NULL && cmd != UNKNOWN && cmd != NO_CMD) {
     char arg[WORD_SIZE] = "";
+    char player_str[16] = "";
+
     if (command_get_arg(command) != NULL) {
       strcpy(arg, command_get_arg(command));
     }
+
+    sprintf(player_str, "P%d", game_get_turn(game) + 1);  /* P1, P2, P3... */
+
     if (arg[0] != '\0') {
-      fprintf(g_logfile, "%s %s: %s (%s)\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR", game_get_turn(game) == 0 ? "P1" : "P2");
+      fprintf(g_logfile, "%s %s: %s (%s)\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR", player_str);
     } else {
-      fprintf(g_logfile, "%s: %s (%s)\n", cmd_to_str[cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR", game_get_turn(game) == 0 ? "P1" : "P2");
+      fprintf(g_logfile, "%s: %s (%s)\n", cmd_to_str[cmd][CMDL], game_get_last_status(game) == OK ? "OK" : "ERROR", player_str);
     }
     fflush(g_logfile);
   }
-
   return OK;
 }
 
@@ -476,7 +480,7 @@ Status game_actions_move(Game *game) {
 
   current_space = game_get_player_location(game);
 
-  if (!game_connection_is_open(game, current_space, dir))
+  if (!game_get_connection_status(game, current_space, dir))
     return ERROR;
 
   next_space = game_get_connection(game, current_space, dir);
@@ -497,7 +501,7 @@ Status game_actions_move(Game *game) {
     if (character_get_following(aux) == player_id && character_get_health(aux) > 0) {
       follower = aux;
       space_del_character(game_get_space(game, current_space), character_get_id(follower));
-      space_add_character(game_get_space(game, next_space), character_get_id(follower));
+      space_add_character(game_get_space(game, next_space), character_get_id(follower), character_is_friendly(follower));
     }
   }
 
