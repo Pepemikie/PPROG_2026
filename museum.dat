@@ -1,12 +1,46 @@
-# id name gdesc location health backpack
-#p:1|Robber (1)|$P1|11|6|7|
-#p:2|Robber (2)|$P2|111|10|3|
-#p:3|Robber (3)|$P3|11|10|3|
-#p:4|Robber (4)|$P4|11|1|1|
+# id name gdesc location health max_object team num_objects (objects)
+#p:1|Robber_1|$P1|11|6|7|-1|0|
+#p:2|Robber_2|$P2|111|10|3|-1|0|
+
+# id name gdesc helth friendly location following message
+#c:31|Batman|/(B)\ |24|0|131|-1|I'm Batman|
+#c:32|Police|(P)/=*|10|0|12|-1|HEY! YOU!|
+#c:33|Guide|(G)!> |3|0|11|-1|Welcome to the Loubre Museum|
+#c:34|Josemi| >(:{)|8|1|11|-1|Malloc|
+#c:35|Inaki| /(:D)|5|1|14|-1|Calloc|
+#c:36|Rodri| \(Bo)|9|1|14|-1|Realloc|
+#c:37|Baby|:?!}  |18|1|18|-1|Can't escape, you needed crown|
+
+# id name gdesc description location health movable dependency open
+#o:21|Knife|-->|A sharp knife|11|4|1|37|-1|
+#o:22|Shield|\^/|A sturdy shield|14|4|1|-1|-1|
+#o:23|Sword|-[==>|A slightly broken sword|14|0|1|-1|-1|
+#o:24|Rock|0|A hard rock|112|0|1|-1|-1|
+#o:25|Skull|(:)]|A skull from an anonymous|12|0|1|-1|-1|
+#o:26|Bone|E===3|A very big bone|12|0|1|-1|-1|
+#o:27|Map|[".]|Sorry! An useless map|11|0|1|-1|-1|
+#o:28|Bomb|@|KBOOM?|112|0|1|-1|22|
+#o:29|Crown|MM|A SHINY and PRECIOUS crown!|131|0|1|-1|-1|
+#o:30|Gun|/=*|A killing weapon|15|0|1|-1|-1|
+#o:31|Engine|/^^\|You don't need that|17|0|1|-1|-1|
+#o:32|Moonrock|"0"|A rock with 1/6 Earth's Gravity|17|0|1|-1|-1|
+#o:33|Necklace|****|A shiny necklace|161|0|1|-1|-1|
+#o:34|Apple|O-`|A red apple|16|0|1|-1|-1|
+#o:35|Martini|U|Probably it's not a very good moment for that right now|16|0|1|-1|-1|
+#o:36|Rum|U*|Why not?|16|0|1|-1|-1|
+#o:37|Paperroll|[]P|Nowadays this is valuable|111|0|1|-1|-1|
+#o:38|Hieroglyphs|$%&+?|Yeah, whathever...|12|0|1|-1|-1|
+#o:39|Banana|.<7'|A banana that was glued to a wall|15|1|1|-1|-1|
+#o:40|Whip|.G|That's something harmfull|131|0|1|-1|-1|
+#o:41|Diamond|<]|DIAMONDS!|18|0|1|-1|-1|
+#o:42|Pickaxe|--}|A pickaxe from 1870|11|0|1|-1|-1|
+#o:43|Phone|[]|A robbed phone|161|0|1|-1|-1|
+#o:44|Wallet|\$\|A wallet you "found" in someone's hands|17|0|1|-1|-1|
+#o:50|Key|o-"|A rusty key|12|0|1|-1|14|
 
 # id name discovered gdesc
 #s:11|Entry|0|//ENTRY//|._______.|!  //   !|!__//___!|!_______!|
-#s:111|Bathroom|0|       _  |      ! ! |   ___! ! |  (    .' |   )  (   |
+#s:111|Bathroom|0|      _  |     ! ! |  ___! ! | (    .' |  )  (   |
 #s:112|Garden|0| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
 #s:12|Prehistoric Room|0|      __ |     / _)|  /\/ /  |<(___/   |   ^^    |
 #s:13|Mesopotamian Room|0|   __   |   ][   |  /  \  | ( ++ ) |  \__/  |
@@ -18,75 +52,39 @@
 #s:17|Space Room|0|  /\    | (__)   | [ J]   | }__{   | /^^\   |
 #s:18|Crown Room|0|    _   |  _*_*_ | {._._.}| !_____!| _$$$$$_|
 
-# id name gdesc description location health movable dependency open
-#o:21|Knife|-->|A sharp knife|11|0|1|-1|-1
-#o:22|Shield|\^/|A sturdy shield|14|4|1|-1|-1
-#o:23|Sword|-[==>|A slightly broken sword|14|0|1|-1|-1
-#o:24|Rock|0|A hard rock|112|0|1|-1|-1
-#o:25|Skull|(:)]|A skull from an anonymous|12|0|1|-1|-1
-#o:26|Bone|E===3|A very big bone|12|0|1|-1|-1
-#o:27|Map|[".]|Sorry! An useless map|11|0|1|-1|-1
-#o:28|Fossil|@|A very interesting fossil|112|0|1|-1|-1
-#o:29|Crown|MM|A SHINY and PRECIOUS crown!|131|0|1|-1|-1
-#o:30|Gun|/=*|A killing weapon|15|0|1|-1|-1
-#o:31|Engine|/^^\|You don't need that|17|0|1|-1|-1
-#o:32|Moonrock|"0"|A rock with 1/6 Earth's Gravity|17|0|1|-1|-1
-#o:33|Necklace|****|A shiny necklace|161|0|1|-1|-1
-#o:34|Apple|O-`|A red apple|16|0|1|-1|-1
-#o:35|Martini|U|Probably it's not a very good moment for that right now|16|0|1|-1|-1
-#o:36|Rum|U*|Why not?|16|0|1|-1|-1
-#o:37|paperroll|[]P|Nowadays this is valuable|111|0|1|-1|-1
-#o:38|Hieroglyphs|$%&+?|Yeah, whathever...|12|0|1|-1|-1
-#o:39|Banana|.<7'|A banana that was glued to a wall|15|1|1|-1|-1
-#o:40|Whip|.G|That's something harmfull|131|0|1|-1|-1
-#o:41|Diamond|<]|DIAMONDS!|18|0|1|-1|-1
-#o:42|Pickaxe|--}|A pickaxe from 1870|11|0|1|-1|-1
-#o:43|Phone|[]|A robbed phone|161|0|1|-1|-1
-#o:44|Wallet|\$\|A wallet you "found" in someone's hands|17|0|1|-1|-1
-#o:50|Key|o-"|A rusty key|12|0|1|-1|14
+# id name origin destination open direction
+#l:1|link11-111|11|111|1|W|
+#l:2|link111-11|111|11|1|E|
 
-# id name gdesc helth friendly location message
-#c:31|Batman|/(B)\ |24|0|131|I'm Batman|
-#c:32|Police|(P)/=*|10|0|12|HEY! YOU!|
-#c:33|Guide|(G)!> |3|0|11|Welcome to the Loubre Museum|
-#c:34|Josemi| >(:{)|8|1|13|Malloc|
-#c:35|Inaki| /(:D)|5|1|14|Calloc|
-#c:36|Rodri| \(Bo)|9|1|14|Realloc|
-#c:37|Baby|:?!}  |18|1|18|Can't escape, you needed crown|
+#l:3|link11-112|11|112|1|E|
+#l:4|link112-11|112|11|1|W|
 
-# id name origin destination direction open
-#l:1|link11-111|11|111|W|1
-#l:2|link111-11|111|11|E|1
+#l:5|link11-12|11|12|1|U|
+#l:6|link12-11|12|11|1|D|
 
-#l:3|link11-112|11|112|E|1
-#l:4|link112-11|112|11|W|1
+#l:7|link12-13|12|13|1|N|
+#l:8|link13-12|13|12|0|S|
 
-#l:5|link11-12|11|12|U|1
-#l:6|link12-11|12|11|D|1
+#l:9|link13-14|13|14|1|W|
+#l:10|link14-13|14|13|1|E|
 
-#l:7|link12-13|12|13|N|1
-#l:8|link13-12|13|12|S|0
+#l:11|link14-131|14|131|1|S|
+#l:12|link131-14|131|14|0|N|
 
-#l:9|link13-14|13|14|W|1
-#l:10|link14-13|14|13|E|1
+#l:13|link131-12|131|12|1|E|
+#l:14|Door|12|131|0|W|
 
-#l:11|link14-131|14|131|S|1
-#l:12|link131-14|131|14|N|0
+#l:15|link131-15|131|15|1|U|
+#l:16|link15-131|15|131|1|D|
 
-#l:13|link131-12|131|12|E|1
-#l:14|door|12|131|W|0
+#l:17|link15-16|15|16|1|S|
+#l:18|link16-15|16|15|1|N|
 
-#l:15|link131-15|131|15|U|1
-#l:16|link15-131|15|131|D|1
+#l:19|link16-161|16|161|1|E|
+#l:20|link161-16|161|16|1|W|
 
-#l:17|link15-16|15|16|S|1
-#l:18|link16-15|16|15|N|1
+#l:21|link161-17|161|17|1|S|
+#l:22|Security_lock|17|161|0|N|
 
-#l:19|link16-161|16|161|E|1
-#l:20|link161-16|161|16|W|1
-
-#l:21|link161-17|161|17|S|1
-#l:22|link17-161|17|161|N|0
-
-#l:23|link17-18|17|18|U|1
-#l:24|link18-17|18|17|D|0
+#l:23|link17-18|17|18|1|U|
+#l:24|link18-17|18|17|0|D|

@@ -191,6 +191,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Id *ids = NULL;
   int n = 0;
   char obj_line[512];
+  char char_line[512];
   int health = 0;
   int turn = 0;
   int last_cmd_player = -1;
@@ -375,11 +376,24 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       sprintf(hp_str, "%d", health);
       hp_len = (int)strlen(hp_str);
 
+      strcpy(char_line, "[");
+      if (character_is_friendly(character) == TRUE) {
+        strcat(char_line, "Ally");
+        strcat(char_line, "]");
+        if (character_get_following(character) == player_get_id(player)) {
+          strcat(char_line, " (Recruited)");
+        } else {
+          strcat(char_line, " (Not Recruited)");
+        }
+      } else {
+        strcat(char_line, "Enemy");
+        strcat(char_line, "]");
+      }
+
       sprintf(str, "  %-10s: %d (%d hp)  [%s] %s",
               character_get_name(character), (int)char_loc, health,
-              character_get_gdesc(character),
-              character_get_following(character) == player_get_id(player) ? "(Recruited by you)" : "(Not Recruited by you)");
-
+              character_get_gdesc(character), char_line);
+   
       hp_col = hp_to_color(health);
       screen_area_puts_bold_color_at(ge->char_info, str, hp_offset, hp_len, hp_col);
     } else {
@@ -389,18 +403,17 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       space_del_character(act, character_get_id(character));
     }
   }
+  screen_area_puts(ge->char_info, " ");
 
   /* Chat message — displays and clears last message if present */
   if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
     sprintf(str, " Message: %s", game_get_last_message(game));
     screen_area_puts(ge->char_info, str);
-    game_set_last_message(game, ""); /* clears message after displaying */
   }
   /* Inspect message — displays and clears last message if present */
   if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
     sprintf(str, " Description: %s", game_get_last_object_description(game));
     screen_area_puts(ge->descript, str);
-    game_set_last_object_description(game, ""); /* clears description after displaying */
   }
 
 
@@ -414,10 +427,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
 
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
-  screen_area_puts(ge->help, " Movement Commands:  move <dir> or m <n|s|e|w|u|d>");
-  screen_area_puts(ge->help, " Object Commands:  take <obj> or t <obj>, drop <obj> or d <obj>, inspect <obj> or i <obj>, open <link> with <object>, use <object> [over <character>]");
-  screen_area_puts(ge->help, " Character Commands:  attack <char> or a <char>, char <char> or c <har>, recruit <char> or r <char>, abandon <char> or b <char>");
-  screen_area_puts(ge->help, " Other Commands:  exit or e");
+  screen_area_puts(ge->help, " Player Commands:  move <dir> or m <n|s|e|w|u|d>, colab <player> or k <player>");
+  screen_area_puts(ge->help, " Object Commands:  take <obj> or t <obj>, drop <obj> or d <obj>, inspect <obj> or i <obj>, open <link> with <object>, use <object> over <character>");
+  screen_area_puts(ge->help, " Character Commands:  attack <char> or a <char>, char <char> or c <har>, recruit <char> or r <char>, abandon <char/player> or b <char/player>");
+  screen_area_puts(ge->help, " Other Commands:  save <file> or s <file>, load <file> or l <file>, exit or e");
 
   /* 5. FEEDBACK — shows last command; OK coloured with player colour, ERROR in red */
   screen_area_clear(ge->feedback);

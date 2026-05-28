@@ -15,12 +15,29 @@
 #include <time.h>
 
 /*
-Tengo pensado que para hacer el juego tengas que conseuir la corona,
+Tengo pensado que para hacer el juego tengas que conseguir la corona,
 que solo se puede robar de BATMAN si ha muerto.
-Si matas al policia de la sala 12, consigues una pistola para poder matar mas facil
-a BATMAN. Si matas a la guia te dará la llave para poder pasar de la 12 a la 131 e ir a por BATMAN mas facil
-AL conseguir la corona, tendrás que avanzar hasta la sala de la crona. SI no tienes la corona, te quedas encerrado
+Si matas al policia de la sala 12, consigues una pistola.
+Si matas a la guia te dará la llave para poder pasar de la 12 a la 131 e ir a por BATMAN mas facil
+AL conseguir la corona, tendrás que avanzar hasta la sala de la corona. SI no tienes la corona, te quedas encerrado
 en la 18 porq no se podrá salir y todo dependera del otro player.
+*/
+
+/*
+***FALTA***
+Regla 1. La corona aparece cuando Batman muere
+
+
+Regla 2. Si estás en la sala 12, tienes un 10% más de probabilidad de ganar en un ataque a Batman
+Regla 3. La puerta que se abre con la llave se cierra automáticamente con un 5% de probabilidad
+Regla 4. Recuperas, con una probabilidad del 30%, 1 de vida si estás en el Lunchroom (ID 16)
+Regla 5. Hay un 5% de probabilidad de que cuando se entre en el Art Room (ID 15), se caiga y pierda 1 de vida
+
+***FALTA***
+Regla 6. Si matas al policia de la sala 12, consigues una pistola que te da más vida al usarla
+Regla 7. Si matas a la guia te dará la llave para poder pasar de la 12 a la 131 e ir a por BATMAN mas facil
+Regla 8. Solo ganas el juego si entras a la sala de la corona con la corona
+
 */
 
 /**
@@ -55,6 +72,7 @@ void game_rules_update(Game *game) {
     if (player_has_object(current_player, 29) == TRUE){
         game_set_finished(game, TRUE);
     }
+
     /* RULE 2: SURPRISE ATTACK OF BATMAN. 10% chance if you are in room 12 */
     if (random_chance < 10 && player_loc == 12) {
         /* Batman takes away 3 health points */

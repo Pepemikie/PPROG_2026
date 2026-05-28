@@ -107,15 +107,14 @@ Status game_create_from_file(Game *game, char *filename) {
   return OK;
 }
 
-/*   It destroys a Game, freeing the allocated memory */
-Status game_destroy(Game *game) {
+Status game_clear(Game *game) {
   int i = 0;
 
   if (!game) return ERROR;
 
   for (i = 0; i < game->n_spaces; i++) space_destroy(game->spaces[i]); /* destroys all spaces */
 
-  for (i = 0; i < game->n_players; i++) player_destroy(game->players[i]); /* destroys all players. Multiplayer (F11, I3) */
+  for (i = 0; i < game->n_players; i++) player_destroy(game->players[i]); /* destroys all players. Multiplayer */
 
   for (i = 0; i < game->n_characters; i++) character_destroy(game->characters[i]); /* destroys all characters */
 
@@ -123,7 +122,26 @@ Status game_destroy(Game *game) {
 
   for (i = 0; i < game->n_links; i++) link_destroy(game->links[i]); /* destroys all links */
 
-  command_destroy(game->last_cmd);
+  /*command_reset(game->last_cmd);*/
+
+  game->n_spaces = 0;
+  game->n_players = 0;
+  game->n_characters = 0;
+  game->n_objects = 0;
+  game->n_links = 0;
+  game->turn = 0;
+  game->finished = FALSE;
+  strcpy(game->last_message, "");
+  strcpy(game->last_object_description, "");
+
+  return OK;
+}
+
+/*   It destroys a Game, freeing the allocated memory */
+Status game_destroy(Game *game) {
+  if (!game) return ERROR;
+
+  if(game_clear(game) == ERROR) return ERROR; /* clears current game data */
 
   free(game);
   return OK;
@@ -286,6 +304,22 @@ Player *game_get_player_by_index(Game *game, int index) {
   if (!game || index < 0 || index >= game->n_players) return NULL;
 
   return game->players[index];           /* returns the player at the given index */
+}
+
+/* It gets a player by its name*/
+Player *game_get_player_by_name(Game *game, const char *name) {
+  int i;
+  if (!game || !name) return NULL;
+
+  for ( i = 0; i < MAX_PLAYERS; i++) {
+    Player *p = game_get_player_by_index(game, i);
+    if (p && strcasecmp(player_get_name(p), name) == 0) {
+      return p;
+    }
+    if (!p) break;
+  }
+
+  return NULL;
 }
 
 

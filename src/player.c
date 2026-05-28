@@ -22,6 +22,7 @@ struct _Player {
   Inventory *backpack;  /**< The inventory of the player, containing the objects they carry */
   int health; /**< The health points of the player */
   char gdesc[P_GDESC_SIZE]; /**< Graphic description: a string of 4 characters plus null terminator */
+  Id team; /**< The id of the player's team mate, or NO_ID if the player has no team mate */
 };
 
 /*   It creates a new Player, allocating memory and initializing its members */
@@ -41,6 +42,7 @@ Player* player_create(Id id) {
   new_player->backpack = inventory_create(MAX_BACKPACK_SIZE);
   new_player->health = 10;
   new_player->gdesc[0]= '\0';
+  new_player->team = NO_ID;
   return new_player;
 }
 
@@ -117,6 +119,7 @@ Status player_del_object(Player* player, Id object) {
   if (!player || object == NO_ID || !player->backpack) {
     return ERROR;/*error control*/
   }
+
   return inventory_del_object(player->backpack, object);
 }
 
@@ -168,6 +171,23 @@ Status player_modify_health(Player* player, int health) {
   return player_set_health(player, player_get_health(player) + health);
 }
 
+/*   It sets the team mate of a Player */
+Status player_set_team(Player* player, Id team) {
+  if (!player) {
+    return ERROR;
+  }
+  player->team = team;
+  return OK;
+}
+
+/*   It gets the team mate of a Player */
+Id player_get_team(Player* player) {
+  if (!player) {
+    return NO_ID;
+  }
+  return player->team;
+}
+
 /*   It gets the graphic description of a Player */
 const char* player_get_gdesc(Player* player) {
   if (!player) {
@@ -198,8 +218,8 @@ Status player_print(Player* player) {
   if (!player) {
     return ERROR;
   }
-  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %d; Health: %d; Desc: %s)\n", 
-  player->id, player->name, player->location, inventory_get_number_of_objects(player->backpack), player->health, player->gdesc); /* prints all player fields */
+  fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location: %ld; Objects: %d; Health: %d; Team: %ld; Desc: %s)\n", 
+  player->id, player->name, player->location, inventory_get_number_of_objects(player->backpack), player->health, player->team, player->gdesc); /* prints all player fields */
   return OK;
 }
 #endif

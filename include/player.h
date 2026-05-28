@@ -201,4 +201,23 @@ Status player_print(Player* player);
  */
 Status player_modify_health(Player* player, int health);
 
+/**
+ * @brief It sets the team mate of a Player
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param player a pointer to the Player
+ * @param team the id of the player that is going to be the team mate
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status player_set_team(Player* player, Id team);
+
+/**
+ * @brief It gets the team mate of a Player
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param player a pointer to the Player
+ * @return the id of the player's team mate, or NO_ID if the player has no team mate
+ */
+Id player_get_team(Player* player);
+
 #endif

@@ -50,6 +50,15 @@ Game* game_create();
 Status game_create_from_file(Game *game, char *filename);
 
 /**
+ * @brief It clears the current game data, freeing all allocated memory for spaces, players, characters, objects and links, and resetting all counters and flags
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status game_clear(Game *game);
+
+/**
  * @brief It destroys a Game, freeing the allocated memory
  * @author Profesores PPROG
  *
@@ -259,7 +268,15 @@ Status game_set_player_location(Game *game, Id id);
  */
 Player *game_get_player_by_index(Game *game, int index);
 
-
+/**
+ * @brief It gets a player from the game by its name
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param name a string with the name of the player to retrieve
+ * @return a pointer to the Player with the given name, or NULL if not found
+ */
+Player *game_get_player_by_name(Game *game, const char *name);
 
 
 

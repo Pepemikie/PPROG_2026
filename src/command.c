@@ -38,7 +38,10 @@ char *cmd_to_str[N_CMD][N_CMDT] = {
   {"r", "Recruit"}, /**< RECRUIT */
   {"b", "Abandon"}, /**< ABANDON */
   {"o", "Open"},    /**< OPEN */
-  {"u", "Use"}      /**< USE */
+  {"u", "Use"},     /**< USE */
+  {"s", "Save"},    /**< SAVE */
+  {"l", "Load"},    /**< LOAD */
+  {"k", "Colab"}    /**< COLAB */
 };
 
 /**

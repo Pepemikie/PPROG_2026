@@ -316,7 +316,7 @@ integration: $(EXE_TEST)
 	bash test_script.sh 0
 
 #OPEN DOXYFILE
-opendoc:
+opendoxyfile:
 	xdg-open doc/html/index.html
 
 #CLEANING
@@ -325,7 +325,7 @@ clean:
 	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST)
 
 #Documentation from Doxygen cleaning
-cleandoc:
+cleandoxyfile:
 	rm -rf doc
 
 #libscreen cleaning
@@ -334,9 +334,9 @@ cleanlibs:
 	@echo "<<<< You deleted libscreen.a, use make to compile again"
 
 #All cleaning
-cleanall: clean cleandoc
+cleanall: clean cleandoxyfile
 
 #DOCUMENTATION
-doxygen:
+doxyfile:
 	mkdir -p doc
 	doxygen Doxyfile

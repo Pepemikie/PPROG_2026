@@ -21,14 +21,14 @@
 /**
  * @brief Number of commands available in the game
  */
-#define N_CMD 12
+#define N_CMD 15
 
 /**
  * @brief Defines the type of command input: short (CMDS) or long (CMDL)
  */
 typedef enum {
-  CMDS, /**< Short version of the command (e.g. "e") */
-  CMDL  /**< Long version of the command (e.g. "Exit") */
+  CMDS, /**< Short version of the command ("e") */
+  CMDL  /**< Long version of the command ("Exit") */
 } CommandType;
 
 /**
@@ -47,7 +47,10 @@ typedef enum {
   RECRUIT,      /**< Recruit a character to follow the player */
   ABANDON,      /**< Abandon a character following the player */
   OPEN,         /**< Open a link with an object */  
-  USE           /**< Use an object on the player or a friendly character */
+  USE,          /**< Use an object on the player or a friendly character */
+  SAVE,         /**< Save the game state to a file */
+  LOAD,          /**< Load the game state from a file */
+  COLAB          /**< Collaborate with another player */
 } CommandCode;
 
 /**
