@@ -17,13 +17,17 @@
 #pragma GCC diagnostic ignored "-Wpedantic"
 
 /* Global variables */
-int ROWS = 23;
-int COLUMNS = 80;
+int ROWS = 23; /**< Number of rows in the screen */
+int COLUMNS = 80; /**< Number of columns in the screen */
 
-#define TOTAL_DATA ((ROWS * COLUMNS) + 1)
-#define BG_CHAR '~'
-#define FG_CHAR ' '
-#define ACCESS(d, x, y) ((d) + ((y) * COLUMNS) + (x))
+/** @brief Total data size for the screen buffer */
+#define TOTAL_DATA ((ROWS * COLUMNS) + 1) 
+/** @brief Background character */
+#define BG_CHAR '~' 
+/** @brief Foreground character */
+#define FG_CHAR ' ' 
+/** @brief Macro to access a specific position in the screen buffer */
+#define ACCESS(d, x, y) ((d) + ((y) * COLUMNS) + (x)) 
 
 /**
  * @brief Structure representing a screen area
@@ -40,12 +44,18 @@ static char *__data  = NULL;
 static unsigned char *__attrs = NULL;
 
 /* Attribute constants */
-#define ATTR_NONE 0
-#define ATTR_BOLD 1
-#define ATTR_BOLD_BLUE 2
-#define ATTR_BOLD_GREEN 3
-#define ATTR_BOLD_RED 4
-#define ATTR_BOLD_YELLOW 5
+/** @brief No attribute */
+#define ATTR_NONE 0 
+/** @brief Bold attribute */
+#define ATTR_BOLD 1 
+/** @brief Bold blue attribute */
+#define ATTR_BOLD_BLUE 2 
+/** @brief Bold green attribute */
+#define ATTR_BOLD_GREEN 3 
+/** @brief Bold red attribute */
+#define ATTR_BOLD_RED 4 
+/** @brief Bold yellow attribute */
+#define ATTR_BOLD_YELLOW 5 
 
 /* Private function */
 static int screen_area_cursor_is_out_of_bounds(Area *area);

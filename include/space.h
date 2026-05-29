@@ -21,7 +21,6 @@
 typedef struct _Space Space;
 
 
-
 /*
 SPACE
 */
@@ -171,6 +170,7 @@ CHARACTERS
  * 
  * @param space a pointer to the Space
  * @param id the id of the character to be added to the Space
+ * @param character_is_friendly whether the character is friendly or not
  * @return OK, if everything goes well or ERROR if there was some mistake 
  */
 Status space_add_character(Space *space, Id id, Bool character_is_friendly);

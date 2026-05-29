@@ -1,7 +1,7 @@
 /**
  * @brief It implements the game_management interpreter
  *
- * @file game_managment.c
+ * @file game_management.c
  * @author Jose Miguel Romero Oubina
  * @version 1
  * @date 12-03-2026
@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "game_managment.h"
+#include "game_management.h"
 #include "game.h"
 #include "space.h"
 #include "object.h"
@@ -21,7 +21,7 @@
 #include "link.h"
 
 /* It reads the spaces from a file, creates each space with its name and connections, and adds them to the game */
-Status game_managment_load_spaces(Game *game, char *filename) {
+Status game_management_load_spaces(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -79,7 +79,7 @@ Status game_managment_load_spaces(Game *game, char *filename) {
 }
 
 /* It reads the objects from a file, creates each object with its name and id, and adds them to the game */
-Status game_managment_load_objects(Game *game, char *filename) {
+Status game_management_load_objects(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -147,7 +147,7 @@ Status game_managment_load_objects(Game *game, char *filename) {
 }
 
 /* It reads the characters from a file, creates each character with its name, description and other attributes, and adds them to the game */
-Status game_managment_load_characters(Game *game, char *filename) {
+Status game_management_load_characters(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   Id id = NO_ID;
@@ -213,7 +213,7 @@ Status game_managment_load_characters(Game *game, char *filename) {
 }
 
 /* It reads the links from a file, creates each link with its attributes, and adds them to the game */
-Status game_managment_load_links(Game *game, char *filename) {
+Status game_management_load_links(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -278,7 +278,7 @@ Status game_managment_load_links(Game *game, char *filename) {
 }
 
 /* It reads the players from a file, creates each player and adds them to the game. Multiplayer */
-Status game_managment_load_players(Game *game, char *filename) {
+Status game_management_load_players(Game *game, char *filename) {
   FILE *file = NULL;
   char line[WORD_SIZE] = "";
   char name[WORD_SIZE] = "";
@@ -351,7 +351,7 @@ Status game_managment_load_players(Game *game, char *filename) {
 }
 
 
-Status game_managment_save(Game *game, char *filename) {
+Status game_management_save(Game *game, char *filename) {
   FILE *file = NULL;
   Player *player = NULL;
   Space *space = NULL;
@@ -452,7 +452,7 @@ Status game_managment_save(Game *game, char *filename) {
   return OK;
 }
 
-Status game_managment_load(Game *game, char *filename){
+Status game_management_load(Game *game, char *filename){
   FILE *file = NULL;
 
   if (!game || !filename) return ERROR; /* error control */
@@ -464,11 +464,11 @@ Status game_managment_load(Game *game, char *filename){
   if(game_clear(game) == ERROR) return ERROR; /* clears current game data */
 
   /* load new game data from file */
-  if (game_managment_load_spaces(game, filename) == ERROR) return ERROR;
-  if (game_managment_load_players(game, filename) == ERROR) return ERROR;
-  if (game_managment_load_characters(game, filename) == ERROR) return ERROR;
-  if (game_managment_load_objects(game, filename) == ERROR) return ERROR;
-  if (game_managment_load_links(game, filename) == ERROR) return ERROR;
+  if (game_management_load_spaces(game, filename) == ERROR) return ERROR;
+  if (game_management_load_players(game, filename) == ERROR) return ERROR;
+  if (game_management_load_characters(game, filename) == ERROR) return ERROR;
+  if (game_management_load_objects(game, filename) == ERROR) return ERROR;
+  if (game_management_load_links(game, filename) == ERROR) return ERROR;
 
   return OK;
 }

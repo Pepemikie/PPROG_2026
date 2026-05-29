@@ -22,8 +22,16 @@ void test1_player_create();
  */
 void test2_player_create();
 
+/**
+ * @brief Tests destroying a player
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_player_destroy();
 
+/**
+ * @brief Tests destroying a player with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_player_destroy();
 
 /**
@@ -80,6 +88,10 @@ void test2_player_get_location();
  */
 void test1_player_add_object();
 
+/**
+ * @brief Tests adding an object to the player's inventory with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_player_add_object();
 
 /**
@@ -142,6 +154,10 @@ void test1_player_set_gdesc();
  */
 void test1_player_get_gdesc();
 
+/**
+ * @brief Tests getting the player graphic description with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_player_get_gdesc();
 
 /**
@@ -162,8 +178,16 @@ void test1_player_modify_health();
  */
 void test2_player_modify_health();
 
+/**
+ * @brief Tests setting the player team
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_player_set_team();
 
+/**
+ * @brief Tests setting the player team with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_player_set_team();
 
 #endif

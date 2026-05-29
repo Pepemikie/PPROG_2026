@@ -22,7 +22,7 @@ struct _Space {
   Set *characters; /**< The id of the character located in the space */
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]; /**< The graphic description of the space */
   Bool discovered;  /**< If a space has been discovered (F12, I3) */
-  Bool has_enemy;
+  Bool has_enemy; /**< If a space has an enemy character (F12, I3) */
 };
 
 /*   It creates a new Space, allocating memory and initializing its members */

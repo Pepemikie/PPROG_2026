@@ -9,7 +9,7 @@
  */
 
 #include "game_actions.h"
-#include "game_managment.h"
+#include "game_management.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -189,8 +189,16 @@ Status save_game_state(Game *game, const char *filename);
  */
 Status load_game_state(Game *game, const char *filename);
 
-/* Implementation of auxiliary functions */
+/**
+ * @brief Gets the team player of the current player, if any
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return a pointer to the team Player, or NULL if there is no team player
+ */
+Player *game_player_get_team(Game *game);
 
+/* Implementation of auxiliary functions */
 
 Player *game_player_get_team(Game *game) {
   Id player_id = NO_ID;
@@ -1294,11 +1302,11 @@ Status game_actions_colab(Game *game) {
 Status save_game_state(Game *game, const char *filename) {
   if (!game || !filename || filename[0] == '\0') return ERROR;
 
-  return game_managment_save(game, (char *) filename);
+  return game_management_save(game, (char *) filename);
 }
 
 Status load_game_state(Game *game, const char *filename) {
   if (!game || !filename || filename[0] == '\0') return ERROR;
 
-  return game_managment_load(game, (char *) filename);
+  return game_management_load(game, (char *) filename);
 }

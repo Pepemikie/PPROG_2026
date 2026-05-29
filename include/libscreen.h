@@ -15,14 +15,14 @@
  * @brief Color of the background frame
  */
 typedef enum {
-  BLACK = 0,
-  RED,
-  GREEN,
-  YELLOW,
-  BLUE,
-  PURPLE,
-  CYAN,
-  WHITE
+  BLACK = 0, /**< Black color */
+  RED,       /**< Red color */
+  GREEN,     /**< Green color */
+  YELLOW,    /**< Yellow color */
+  BLUE,      /**< Blue color */
+  PURPLE,    /**< Purple color */
+  CYAN,      /**< Cyan color */
+  WHITE      /**< White color */
 } Frame_color;
 
 /**

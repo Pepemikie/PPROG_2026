@@ -16,7 +16,16 @@
  */
 void test1_set_create();
 
+/**
+ * @brief Tests destroying a set
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_set_destroy();
+
+/**
+ * @brief Tests destroying a set with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_set_destroy();
 
 /**

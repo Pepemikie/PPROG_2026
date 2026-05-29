@@ -22,10 +22,16 @@ void test1_character_create();
  */
 void test2_character_create();
 
-
+/**
+ * @brief Tests destroying a character
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_character_destroy();
 
-
+/**
+ * @brief Tests destroying a character with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_character_destroy();
 
 /**

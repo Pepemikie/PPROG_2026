@@ -22,11 +22,17 @@ void test1_link_create();
  */
 void test2_link_create();
 
-
+/**
+ * @brief Tests destroying a link
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_link_destroy();
 
+/**
+ * @brief Tests destroying a link with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_link_destroy();
-
 
 /**
  * @brief Tests getting the id of a link
@@ -34,6 +40,10 @@ void test2_link_destroy();
  */
 void test1_link_get_id();
 
+/**
+ * @brief Tests getting the id of a link with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_link_get_id();
 
 /**

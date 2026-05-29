@@ -22,8 +22,16 @@ void test1_space_create();
  */
 void test2_space_create();
 
+/**
+ * @brief Tests destroying a space
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_space_destroy();
 
+/**
+ * @brief Tests destroying a space with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_space_destroy();
 
 /**

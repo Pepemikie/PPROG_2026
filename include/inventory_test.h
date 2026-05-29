@@ -22,8 +22,16 @@ void test1_inventory_create();
  */
 void test2_inventory_create();
 
+/**
+ * @brief Tests destroying an inventory
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_inventory_destroy();
 
+/**
+ * @brief Tests destroying an inventory with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_inventory_destroy();
 
 /**

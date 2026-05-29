@@ -26,13 +26,7 @@ Regla 7. Si matas a la guia te dará la llave para poder pasar de la 12 a la 131
 Regla 8. Solo ganas el juego si entras a la sala de la corona con la corona
 */
 
-/**
- * @brief It executes the non-deterministic game rules and random events
- * @author Rodrigo Cruz Asensio
- *
- * @param game a pointer to the Game struct
- *
- */
+
 void game_rules_update(Game *game) {
     Player *current_player = NULL;
     int random_chance = 0;

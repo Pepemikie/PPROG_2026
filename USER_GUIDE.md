@@ -3,16 +3,16 @@
 ---------------------------------------------------------
 # INDEX
 
-1.  [PLOT](#plot)
-2.  [HOW TO PLAY](#how-to-play)
-3.  [COMMAND REFERENCE](#command-reference)
-4.  [PLAYERS](#players)
-5.  [CHARACTERS](#characters)
-6.  [SPACES](#spaces)
-7.  [GAME RULES](#game-rules)
-8.  [THE MAP](#the-map)
-9.  [COMPLETE WALKTHROUGH](#complete-walkthrough)
-10. [SOLUTION](#solution)
+1.  PLOT
+2.  HOW TO PLAY
+3.  COMMAND REFERENCE
+4.  PLAYERS
+5.  CHARACTERS
+6.  SPACES
+7.  GAME RULES
+8.  THE MAP
+9.  COMPLETE WALKTHROUGH
+10. SOLUTION
 -----------------------
 ## **PLOT**
 
@@ -80,7 +80,6 @@
       - `<char>` refers to the ally's name 
 
 ### _OTHER COMMANDS_
-save <file> or s <file>, load <file> or l <file>, exit or e
 - `save <file> or s <file>`  
       -  Saves your game, so you can load it later  
       - `<file>` refers to the slot's name where the game is saved

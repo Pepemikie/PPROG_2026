@@ -22,7 +22,16 @@ void test1_object_create();
  */
 void test2_object_create();
 
+/**
+ * @brief Tests destroying an object
+ * @author Jose Miguel Romero Oubina
+ */
 void test1_object_destroy();
+
+/**
+ * @brief Tests destroying an object with invalid parameters
+ * @author Jose Miguel Romero Oubina
+ */
 void test2_object_destroy();
 
 /**
