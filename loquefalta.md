@@ -1,6 +1,3 @@
-
-Mejorar las reglas particulares del juego enejecucion
-
 La generación de un fichero con el registro de comandos ejecutados y los correspondientes resultados obtenidos.
 
 EL user guide
@@ -33,13 +30,11 @@ F6      **HECHO**
 F7      **HECHO**
 F8      **HECHO**
 F9      **HECHO**
-F10
-- drop con dependencias de colab
-
-
+F10     **HECHO**
 F11     **HECHO**
 F12     **HECHO**
-F13
+F13     **HECHO**
+
 F14 falta
 F15 falta
 F16

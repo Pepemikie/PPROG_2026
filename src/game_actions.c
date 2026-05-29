@@ -191,6 +191,27 @@ Status load_game_state(Game *game, const char *filename);
 
 /* Implementation of auxiliary functions */
 
+
+Player *game_player_get_team(Game *game) {
+  Id player_id = NO_ID;
+  Player *aux_player = NULL;
+  int i = 0;
+
+  player_id = player_get_id(game_get_player(game));
+
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    aux_player = game_get_player_by_index(game, i);
+    if (!aux_player) break;
+
+    if (aux_player != game_get_player(game)) {
+      if (player_get_team(aux_player) == player_id || player_get_team(game_get_player(game)) == player_get_id(aux_player))
+        return aux_player;
+    }
+  }
+  return NULL;
+}
+
+
 /* Checks if an object can be taken by the player */
 Bool can_take_object(Game *game, Object *obj) {
   Player *aux_player = NULL;
@@ -247,10 +268,15 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
   Id object_id, player_location;
   Set *inv_set = NULL;
   Id *ids = NULL;
-  int n = 0, i = 0, num_to_drop = 0, j = 0;
+  int n = 0, i = 0, num_to_drop = 0, num_to_drop1 = 0, num_to_drop2 = 0, j = 0;
   Id *to_drop = NULL;
   Object *dep_obj = NULL;
-  
+  Player *team = NULL;
+  Set *inv_team = NULL;
+  Id *ids_team = NULL;
+  int n_team = 0;
+  Bool team_drop = FALSE;
+
   if (!game || !obj || !current_space) return ERROR;
   
   object_id = object_get_id(obj);
@@ -260,44 +286,92 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
 
   space_add_object(current_space, object_id);
   game_set_object_location(game, player_location, object_id);
-  
+
   /* Drop dependent objects */
   inv_set = inventory_get_objects(player_get_backpack(game_get_player(game)));
   if (!inv_set) return OK; /* No inventory, nothing to drop */
   
   n = set_get_n_ids(inv_set);
   ids = set_get_ids(inv_set);
-  if (!ids || n <= 0) return OK;
-  
+  /* if (!ids || n <= 0) return OK; */
+
   /* Count dependent objects */
   for (i = 0; i < n; i++) {
     dep_obj = game_get_object(game, ids[i]);
     if (dep_obj && object_get_dependency(dep_obj) == object_id) {
-      num_to_drop++;
+      num_to_drop1++;
     }
   }
-  
+
+  /* Count dependent objects in team player */
+  team = game_player_get_team(game);
+  if (team) {
+    team_drop = TRUE;
+    inv_team = inventory_get_objects(player_get_backpack(team));
+    if (inv_team) {
+      n_team = set_get_n_ids(inv_team);
+      ids_team = set_get_ids(inv_team);
+      if (ids_team && n_team > 0) {
+        for (i = 0; i < n_team; i++) {
+          dep_obj = game_get_object(game, ids_team[i]);
+          if (dep_obj && object_get_dependency(dep_obj) == object_id) {
+            num_to_drop2++;
+          }
+        }
+      }
+    }
+  }
+
+  num_to_drop = num_to_drop1 + num_to_drop2;
+  printf("Number of dependent objects to drop: %d = %d in player + %d in team\n", num_to_drop, num_to_drop1, num_to_drop2);
+
   if (num_to_drop == 0) return OK;
+  printf("Number of dependent objects to drop: %d\n", num_to_drop);
   
   to_drop = (Id*)malloc(sizeof(Id) * num_to_drop);
   if (!to_drop) return OK; /* Memory error, but object was dropped */
   
   /* Collect ids of dependent objects */
   j = 0;
-  for (i = 0; i < n; i++) {
+  for (i = 0; i < num_to_drop1; i++) {
     dep_obj = game_get_object(game, ids[i]);
     if (dep_obj && object_get_dependency(dep_obj) == object_id) {
       to_drop[j++] = ids[i];
     }
   }
-  
-  /* Drop dependent objects */
-  for (i = 0; i < num_to_drop; i++) {
-    player_del_object(game_get_player(game), to_drop[i]);
-    space_add_object(current_space, to_drop[i]);
-    game_set_object_location(game, player_location, to_drop[i]);
+
+  /* Collect ids of dependent objects in team player */
+  if (team_drop) {
+    for (i = 0; i < num_to_drop2; i++) {
+      dep_obj = game_get_object(game, ids_team[i]);
+      if (dep_obj && object_get_dependency(dep_obj) == object_id) {
+        to_drop[j++] = ids_team[i];
+      }
+    }
   }
-  
+
+  /* Drop dependent objects */
+  for (i = 0; i < num_to_drop1; i++) {
+    object_id = to_drop[i];
+    player_del_object(game_get_player(game), object_id);
+    space_add_object(current_space, object_id);
+    game_set_object_location(game, player_location, to_drop[i]);
+    printf("Dropped: %ld to space: %ld\n", to_drop[i], player_location);
+  }
+
+  /* Drop dependent objects in team player */
+  if (team_drop) {
+    for (i = num_to_drop1; i < num_to_drop; i++) {
+      object_id = to_drop[i];
+      player_del_object(team, object_id);
+      printf("Deleting object %ld from team player %s\n", object_id, player_get_name(team));
+      space_add_object(current_space, object_id);
+      printf("Added object %ld to space %ld\n", object_id, space_get_id(current_space));
+      game_set_object_location(game, player_location, to_drop[i]);
+      printf("Dropped from team: %ld to space: %ld\n", to_drop[i], player_location);
+    }
+  }
+
   free(to_drop);
   return OK;
 }
@@ -397,6 +471,13 @@ Status game_actions_update(Game *game, Command *command) {
   }
   return OK;
 }
+
+
+/* void game_retry_command(Game *game, int max_intentos, int intento) {
+  
+
+} */
+
 
 /*   Makes the player pick up the named object in the current space */
 Status game_actions_take(Game *game) {
@@ -767,7 +848,7 @@ Status game_actions_attack(Game *game) {
     }
 
     /* Si el jugador muere, fin del juego */
-    if (player_get_health(p) <= 0) {
+    if (player_get_health(p) <= 0 || player_get_health(game_player_get_team(game)) <= 0) {
       game_set_finished(game, TRUE);
     }
   } else {
@@ -780,7 +861,7 @@ Status game_actions_attack(Game *game) {
         damage = character_get_health(c);
 
       character_set_health(c, character_get_health(c) - damage);
-  }
+    }
 
   return OK;
 }
@@ -858,7 +939,7 @@ Status game_actions_abandon(Game *game) {
   Command *last_cmd = NULL;
   char *arg = NULL;
   Player *player = NULL;
-  Player *mate = NULL;
+  /*Player *mate = NULL;*/
   Id current_player_id = NO_ID;
 
   if (!game) return ERROR;
@@ -885,6 +966,7 @@ Status game_actions_abandon(Game *game) {
   }
   
   /* Then player - team mate */
+  /*
   mate = game_get_player_by_name(game, arg);
   if (mate) {
     if(player_get_team(mate) == NO_ID) return ERROR;
@@ -894,6 +976,7 @@ Status game_actions_abandon(Game *game) {
       return OK;
     }
   }
+  */
 
   return ERROR; /* No se encontró un personaje con ese nombre, o no es un seguidor del jugador */
 }

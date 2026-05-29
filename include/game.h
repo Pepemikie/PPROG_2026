@@ -205,6 +205,16 @@ int game_get_num_spaces(Game *game);
  */
 Space *game_get_space_by_index(Game *game, int index);
 
+/**
+ * @brief It gets a space by its name
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param name a string with the name of the space to retrieve
+ * @return a pointer to the Space with the given name, or NULL if not found
+ */
+Space *game_get_space_by_name(Game *game, const char *name);
+
 
 
 
@@ -363,7 +373,15 @@ Status game_set_last_object_description(Game *game, const char *description);
  */
 const char *game_get_last_object_description(Game *game);
 
-
+/**
+ * @brief It gets an object from the game by its name
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param name the name of the object to retrieve
+ * @return a pointer to the Object with the given name, or NULL if not found
+ */
+Object *game_get_object_by_name(Game *game, const char *name);
 
 
 

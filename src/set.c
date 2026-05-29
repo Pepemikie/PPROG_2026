@@ -116,7 +116,7 @@ Id set_get_id(Set *set, int array_position) {
 Id* set_get_ids(Set *set) {
   if (set == NULL || set->n_ids == 0) {
     return NULL; 
-    }
+  }
   return set->ids;
 }
 

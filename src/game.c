@@ -248,6 +248,23 @@ Space *game_get_space_by_index(Game *game, int index) {
   return game->spaces[index];
 }
 
+/* It gets a space by its name*/
+Space *game_get_space_by_name(Game *game, const char *name) {
+  int i;
+  if (!game || !name) return NULL;
+
+  for ( i = 0; i < MAX_SPACES; i++) {
+    Space *s = game_get_space_by_index(game, i);
+    if (s && strcasecmp(space_get_name(s), name) == 0) {
+      return s;
+    }
+    if (!s) break;
+  }
+
+  return NULL;
+}
+
+
 
 
 /*
@@ -404,6 +421,22 @@ Status game_set_last_object_description(Game *game, const char *description) {
 const char *game_get_last_object_description(Game *game) {
   if (!game) return NULL;
   return game->last_object_description;
+}
+
+/* It gets a object by its name*/
+Object *game_get_object_by_name(Game *game, const char *name) {
+  int i;
+  if (!game || !name) return NULL;
+  
+  for ( i = 0; i < MAX_OBJECTS; i++) {
+    Object *o = game_get_object_by_index(game, i);
+    if (o && strcasecmp(object_get_name(o), name) == 0) {
+      return o;
+    }
+    if (!o) break;
+  }
+
+  return NULL;
 }
 
 

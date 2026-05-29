@@ -11,7 +11,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#define WORD_SIZE 1000 /**< Maximum size of strings for names and descriptions */
+#define WORD_SIZE 1100 /**< Maximum size of strings for names and descriptions */
 #define NO_ID -1 /**< Constant representing an invalid or uninitialized Id */
 
 /** @brief It defines the Id type */

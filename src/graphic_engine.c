@@ -177,7 +177,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Space *act = NULL;
   Space *obj_space = NULL;         /* F12, I3: only show objects if space is discovered */
   Space *char_space = NULL;        /* F12, I3: only show characters if space is discovered */
-  char str[512];
+  char str[WORD_SIZE];
   CommandCode last_cmd = UNKNOWN;
   extern char *cmd_to_str[N_CMD][N_CMDT];
   int i;
@@ -191,7 +191,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Id *ids = NULL;
   int n = 0;
   char obj_line[512];
-  char char_line[512];
+  char char_line[1024];
   int health = 0;
   int turn = 0;
   int last_cmd_player = -1;
@@ -343,7 +343,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-
+/*health movable dependency*/
   /* Objects — prints each object name and its location */
   screen_area_puts(ge->descript, " Objects:");
   for (i = 0; i < MAX_OBJECTS; i++) {
@@ -352,7 +352,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     obj_loc = game_get_object_location(game, object_get_id(obj));
     obj_space = game_get_space(game, obj_loc);                      /* Only show objects that are in discovered spaces */
     if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
-    sprintf(str, "  %-13s      [ %s ]: %d", object_get_name(obj), object_get_gdesc(obj), (int)obj_loc);
+
+    sprintf(str, "  %-13s   [ %s ] at %d (%d hp, %s, %s)", object_get_name(obj), object_get_gdesc(obj),(int)obj_loc, object_get_health(obj), object_get_movable(obj) ? "mov" : "fix", object_get_dependency(obj) != NO_ID ? "dep" : "indep");
+
     screen_area_puts(ge->descript, str);
   }
   screen_area_puts(ge->descript, " ");

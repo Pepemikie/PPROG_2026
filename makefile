@@ -322,7 +322,7 @@ opendoxyfile:
 #CLEANING
 #files cleaning
 clean:
-	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST)
+	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST) slot1
 
 #Documentation from Doxygen cleaning
 cleandoxyfile:
