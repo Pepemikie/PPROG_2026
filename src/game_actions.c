@@ -838,7 +838,7 @@ Status game_actions_attack(Game *game) {
     /* Gana el enemigo: inflige daño al jugador o al follower (50/50) */
     if (n_followers > 0 && player_character == 1) {
       follower = followers[rand() % n_followers];
-      /* Daño al follower que toca*/
+      /* Daño al follower del jugador actual que toca*/
       character_set_health(follower, character_get_health(follower) - 1);
     } else {
       /* Daño al jugador */
@@ -865,11 +865,16 @@ Status game_actions_attack(Game *game) {
     }
 
     /* Si el jugador muere, fin del juego */
-    if (player_get_health(p) <= 0 || player_get_health(game_player_get_team(game)) <= 0) {
+    if (player_get_health(p) <= 0) {
       game_set_finished(game, TRUE);
+    } else {
+      Player *team = game_player_get_team(game);
+      if (team != NULL && player_get_health(team) <= 0) {
+        game_set_finished(game, TRUE);
+      }
     }
   } else {
-    /* Gana el jugador: el follower ayuda si existe */
+    /* Gana el jugador: el follower del jugador actual ayuda si existe */
       damage = 1 + n_followers;
       
       if (player_get_team(p) != NO_ID) damage++; /* Bonus por tener team */

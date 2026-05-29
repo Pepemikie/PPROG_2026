@@ -1,203 +1,362 @@
-═══════════════════════════════════════════════════════════════
-        MUSEUM ROBBERY - User Documentation & Guide
-═══════════════════════════════════════════════════════════════
 
-1. STORY & OBJECTIVE
-2. HOW TO PLAY
-3. COMMANDS REFERENCE
-4. CHARACTERS GUIDE
-5. OBJECTS & LOCATIONS
-6. THE MAP
-7. COMPLETE WALKTHROUGH
-8. SOLUTION (Step-by-step commands)
+#     **MUSEUM ROBBERY - User Documentation & Guide**
+---------------------------------------------------------
+# INDEX
 
-══════════════════
-STORY & OBJECTIVE
-══════════════════
-- You are two master thieves who have infiltrated one of the most famous museums in the world. Your mission: steal the priceless Crown located deep within the Mesopotamian Room. But you're not alone—the museum is guarded by dangerous enemies like the Police, Guide and Batman, while mysterious allies roam the halls (Josemi, Inaki, and Rodri) who may help you if you convince them.
+1.  [PLOT](#plot)
+2.  [HOW TO PLAY](#how-to-play)
+3.  [COMMAND REFERENCE](#command-reference)
+4.  [PLAYERS](#players)
+5.  [CHARACTERS](#characters)
+6.  [SPACES](#spaces)
+7.  [GAME RULES](#game-rules)
+8.  [THE MAP](#the-map)
+9.  [COMPLETE WALKTHROUGH](#complete-walkthrough)
+10. [SOLUTION](#solution)
+-----------------------
+## **PLOT**
 
--To reach your objective, you'll need to navigate through 13 different rooms, collect weapons and protective gear, recruit allies, and solve the museum's puzzles. Many doors are locked—but you'll find a KEY in the Prehistory Room that can unlock the passage to the Greek Room, opening up new paths to the Crown. Along the way, you'll discover mysterious objects with special properties: some heal you, others harm enemies, and some reveal secret passages.
+### _PLOT_
+- You are a master thief who has infiltrated one of the world’s most famous museums. Your mission: to steal the museum’s most prized possession, the priceless crown.
 
--Your Goal: Reach the Crown Room, grab the Crown, and survive long enough to escape with your treasure. Work together with your partner, recruit allies for combat advantage, and use every object wisely. The museum is full of dangers and surprises—use strategy to outsmart the guards and claim your prize!
-
-══════════════════
-HOW TO PLAY
-══════════════════
-## 🎮 HOW TO PLAY
-
-**Compilation:**
-  make 
-
-**Execution:**
-./rob_the_museum                  # Normal mode
-./rob_the_museum -d               # Deterministic mode (for testing)
-./rob_the_museum -l log.txt       # With log file
+- To achieve your goal, you’ll need to navigate 13 different rooms, collect armour and healing items, recruit allies, battle enemies to earn rewards, and solve the museum’s puzzles. During the heist, you’ll discover locked doors that can be opened with various items.
 
 
-**Gameplay:**
-- Two players take turns controlling a robber each
-- Each player starts in the Entry room with 5 health points and a backpack of 3 slots
-- Type commands to move, collect objects, recruit characters, and interact with the world
-- **Objective:** Reach the Crown Room and grab the Crown
-- The game ends when you successfully escape with the Crown or when your health reaches 0
+### _GOAL_
+- Your goal: to get hold of the precious crown, reach the Crown Room, and survive long enough to escape with your treasure. Work with your partner, recruit allies to gain an advantage in combat, and use each item wisely. The museum is full of dangers and surprises: use strategy to outwit the guards and claim your prize!
 
-**Controls:**
-- Type commands followed by Enter
-- Example: `move north` → Move to the North
-- Type `help` to see all available commands
-- Type `exit` to leave the game
+-----------------------
+## **HOW TO PLAY**
 
-══════════════════
-COMMANDS REFERENCE
-══════════════════
 
-**Movement:**
-- `move <direction> (m)`           - Move through rooms. Directions: north, south, east, west, up,    down
+### _EXECUTION_
+- `./rob_the_museum museum.dat` -> Normal mode  
+- `./rob_the_museum museum.dat -d` -> Deterministic mode (for testing)  
+- `./rob_the_museum museum.dat -l output.log` -> With log file
 
-**Inventory Management:**
-- `take <object> (t)`              - Pick up an object and add it to your backpack
-- `drop <object> (d)`              - Leave an object in the current room
-- `inspect <object> (i)`           - Examine an object to learn its properties
+-----------------------
+## **COMMAND REFERENCE**
 
-**Object Usage:**
-- `use <object> (u)`               - Use an object (e.g., potion to heal)
-- `use <object> over <character>`  - Use an object on an ally (e.g., heal a recruited character)
-- `open <link> with <object>`      - Use an object to open a locked door
 
-**Character Interaction:**
-- `recruit <character> (r)`      - Recruit a friendly character to follow you and help in combat
-- `abandon <character> (b)`        - Tell a character to stop following you
-- `chat <character> (c)`           - Talk to a character
-- `attack <character> (a)`        - Attack an enemy (allies do more damage if they're following you)
+### _PLAYER COMMANDS_
+- `move <dir> or m <n|s|e|w|u|d>`  
+      - Move trough rooms.     
+      - `<dir>` refers to north, south, east, west, up and down.
+- `colab <player> or k <player> `  
+      - `<player>` refers to the team mate's name.
 
-**Game Control:**
-- exit (e)                       - Exit the game
+### _OBJECT COMMANDS_
+- `take <obj> or t <obj>`  
+      - Pick up an object and add it to your backpack  
+      - `<obj>` refers to the object's name
+- `drop <obj> or d <obj>`  
+      -  Leave an object in the current room  
+      - `<obj>` refers to the object's name
+- `inspect <obj> or i <obj>`  
+      -  Examine an object to learn its properties  
+      - `<obj>` refers to the object's name
+- `open <link> with <obj>`  
+      -  Open the link between 2 rooms  
+      - `<link>` refers to the link's name  
+      - `<obj>` refers to the object's name
+- `use <obj> over <char>`  
+      -  Uses an object to gain or loose health points, over character is optional,   
+      if you don't specify, you will use it for yourself  
+      - `<obj>` refers to the object's name  
+      - `<char>` refers to the ally's name
 
-**Tips:**
+### _CHARACTER COMMANDS_
+- `attack <char> or a <char>`  
+      -  Attacks the enemy with the sum of all your allies  
+      - `<char>` refers to the enemy's name 
+- `char <char> or c <char>`  
+      -  Chats with the ally to receive some information  
+      - `<char>` refers to the ally's name  
+- `recruit <char> or r <char>`  
+      -  Recruits the ally so you can have more opportunities   
+      - `<char>` refers to the ally's name 
+- `abandon <char> or b <char>`  
+      -  Abandons the ally that you have previously recruited  
+      - `<char>` refers to the ally's name 
+
+### _OTHER COMMANDS_
+save <file> or s <file>, load <file> or l <file>, exit or e
+- `save <file> or s <file>`  
+      -  Saves your game, so you can load it later  
+      - `<file>` refers to the slot's name where the game is saved
+- `load <file> or l <file>`  
+      -  Load the game that you saved before  
+      - `<file>` refers to the slot's name where the game is saved
+- `exit or e`  
+      -  Exits the game  
+
+### _TIPS_
 - Use short forms (in parentheses) for faster typing
 - Type command names in lowercase or uppercase
 - Most commands are case-insensitive
+- Save the game with the name of "slot1"
 
-══════════════════
-CHARACTERS GUIDE
-══════════════════
-**ENEMIES - Avoid or Defeat:**
+-----------------------
+## **PLAYERS**
+### _PLAYER 1_
+- Name: Robber_1
+- Graphic Description: $P1
+- Init position: Entry
+- Init health points: 10
+- Max backpack: 5
+### _PLAYER 2_
+- Name: Robber_2
+- Graphic Description: $P2
+- Init position: Bathroom
+- Init health points: 14
+- Max backpack: 7
 
-**Batman** (Health: 24)
-- Location: Prehistory Room (Room 12)
-- Danger Level: ⚠️⚠️⚠️ (Very Dangerous)
-- Description: "I'm Batman" - A powerful vigilante who will attack you on sight
-- Strategy: Attack with allies for advantage, or recruit friends to help in combat
+-----------------------
+## **CHARACTERS**
+### _BATMAN_
+- Name: Batman
+- Graphic Description: /(B)\
+- Health points: 25
+- Enemy
+- Location: Greek Room
+- Message: I'm Batman
 
-**Police** (Health: 10)
-- Location: Prehistory Room (Room 12)
-- Danger Level: ⚠️⚠️ (Dangerous)
-- Description: "HEY! YOU!" - A museum guard trying to stop your heist
-- Strategy: Weaker than Batman but still a threat; recruit allies before engaging
+### _POLICE_
+- Name: Police
+- Graphic Description: (P)/=*
+- Health points: 12
+- Enemy
+- Location: Prehistoric Room
+- Message: HEY! YOU!
 
-**Guide** (Health: 3)
-- Location: Mesopotamian Room (Room 13)
-- Description: "Welcome to the Loubre museum" - A friendly tour guide
-- Ability: Can follow you and provide combat advantage
-- Strategy: Easy to recruit and helpful in fights, but fragile (low health)
+### _GUIDE_
+- Name: Guide
+- Graphic Description: (G)!>
+- Health points: 3
+- Enemy
+- Location: Entry Room
+- Message: Welcome to the Museum
 
----
+### _JOSEMI_
+- Name: Josemi
+- Graphic Description: >(:{)
+- Health points: 8
+- Ally
+- Location: Mesopotamic Room
+- Message: Malloc
 
-**ALLIES - Recruit Them!**
+### _INAKI_
+- Name: Inaki
+- Graphic Description: /(:D)
+- Health points: 5
+- Ally
+- Location: Armor Room
+- Message: Calloc
 
-**Josemi** (Health: 8)
-- Location: Mesopotamian Room (Room 13)
-- Description: "Malloc" - A mysterious ally
-- Ability: Can follow you and help in combat
-- Strategy: Moderate health; good support character
+### _RODRI_
+- Name: Rodri
+- Graphic Description: \\(Bo)
+- Health points: 9
+- Ally
+- Location: Lunchroom
+- Message: Realloc
 
-**Inaki** (Health: 5)
-- Location: Armor Room (Room 14)
-- Description: "Calloc" - Another friend
-- Ability: Can follow you and provide combat support
-- Strategy: Lower health, but still useful for numbers advantage
+### _BABY_
+- Name: Baby
+- Graphic Description: :?!}
+- Health points: 1
+- Ally
+- Location: Crown Room
+- Message: Can't escape, you needed crown
 
-**Rodri** (Health: 9)
-- Location: Armor Room (Room 14)
-- Description: "Realloc" - A capable ally
-- Ability: Can follow you and help in combat
-- Strategy: Good health balance; solid choice for recruitment
+-----------------------
+## **SPACES**
 
----
+### _BASEMENT_
+- Name: Basement
+- ID: 10
 
-**Recruitment Tip:**
-Use `recruit <character>` to make an ally follow you. The more allies you have, the more damage you deal in combat!
+### _ENTRY_
+- Name: Entry
+- ID: 11
 
-══════════════════
-OBJECTS & LOCATIONS
-══════════════════
-The museum is filled with interactive items. Some heal you, some are needed to progress, and some are just heavy!
+### _BATHROOM_
+- Name: Bathroom
+- ID: 111
 
-**Key Items:**
-- **Key (id: 50):** Found in the Prehistoric Room. Essential for opening the locked door.
-- **Crown (id: 29):** The ultimate prize! Located in the Mesopotamian Room.
+### _GARDEN_
+- Name: Garden
+- ID: 112
 
-**Consumables & Weapons:**
-- **Apple (id: 34):** Found in the Art Room. Use it to restore health!
-- **Rum / Martini:** Found in the Lunchroom/Art Room. Use them at your own risk.
-- **Sword / Gun / Knife:** Weapons scattered across the Entry, Prehistoric, and Armor rooms.
+### _PREHISTORIC ROOM_
+- Name: Prehistoric Room
+- ID: 12
 
-**Notable Rooms:**
-- **11 - Entry:** The starting point. Safe, but empty.
-- **12 - Prehistoric Room:** The central hub, but highly dangerous. Batman and Police are here!
-- **13 - Mesopotamian Room:** Where the Crown is initially kept, guarded by the Guide and Josemi.
-- **131 - Greek Room:** Accessible from Room 12 or 14. Leads to the upper floors.
-- **18 - Crown Room:** The highest point of the museum. A great place to escape from!
+### _MESOPOTAMIAN ROOM_
+- Name: Mesopotamian Room
+- ID: 13
 
-══════════════════
-THE MAP
-══════════════════
+### _GREEK ROOM_
+- Name: Greek Room
+- ID: 131
+
+### _ARMOR ROOM_
+- Name: Armor Room
+- ID: 14
+
+### _ART ROOM_
+- Name: Art Room
+- ID: 15
+
+### _LUNCHROOM_
+- Name: Lunchroom
+- ID: 16
+
+### _TALKING ROOM_
+- Name: Talking Room
+- ID: 161
+
+### _SPACE ROOM_
+- Name: Space Room
+- ID: 17
+
+### _CROWN ROOM_
+- Name: Crown Room
+- ID: 18
+
+-----------------------
+## **GAME RULES**
+### _RULE 1_
+- The crown appears when Batman dies
+
+### _RULE 2_
+- If you are in room the Greek Room, you have a 20% chance of receiving a Batman attack
+- This only affects the player who entered the room
+
+### _RULE 3_
+- The door opened with the key has a 10% chance of closing automatically
+
+### _RULE 4_
+- While in the Lunchroom, you have a 30% chance of gaining 1 health point
+
+### _RULE 5_
+- In the Art Room, there is a 10% chance of slipping and losing 1 health point
+
+### _RULE 6_
+- If you kill the Police in Prehisotric room, you obtain a gun
+- The gun grants additional health when used
+
+### _RULE 7_
+- If you kill the Guide, you obtain a key
+- This key allows you to open a door and makes Batman easier to find
+
+### _RULE 8_
+- You only win if you enter the Crown Room while carrying the Crown in your inventory
+
+-----------------------
+## **THE MAP**
+
 A visual representation of the museum's layout based on the security blueprints.
-
 ```text
-                                [18 Crown Rm]
-                                      ^ (Up)
-                                      |
-                                [17 Space Rm]
-                                      ^ (South) 
-                                      |
-        [161 Talking] <--(East)-- [16 Lunchroom]
-                                      ^ (South) 
-                                      |
-                                  [15 Art Rm]
-                                      ^ (Up)
-                                      |
-        [14 Armor Rm] --(South)-->[131 Greek Rm] <--(West)-- [12 Prehistoric] (Batman, Police)
-             ^                                                    ^      | 
-             | (West)                                     (North) |      | (Down)
-             |                                                    |      v
-        [13 Mesopotamian] <---------------------------------------/  [11 Entry] (START)
-        (Crown, Guide, Josemi)
+Piso 3
+[Crown Room 18]
+ (Diamond / Baby)
+           ^17
 ```
-*Note: The link West from 12 to 131 (link12-131) is LOCKED and requires the Key.*
+```text
+Piso 2
+[Art Room 15] (Banana)
+      ^ ^131
+      |
+      v
+[Lunchroom 16] <---> [Talking Room 161]
+(Rum/Martini/Rodri)   (Necklace/Phone/Wallet)
+                              X
+                              |
+                              v   X18
+                        [Space Room 17]
+                        (Engine/Moonrock)
+```
+```text
+Piso 1
+(Inaki/Shield/Sword)
+[Armor Room 14]  <---> [Mesopothamic Room 13](Josemi/Vessel)
+      X                       ^
+      |                       |
+      v     v15               X
+[Greek Room 131] X---> [Prehistoric Room 12](Police/Skull/Hieroglyphs)
+(Batman/Bone)                          ^11
+```
+```text
+Piso 0
+                         v12
+(P2/Paperroll) (P1/Guide/Knife/Map/Pickaxe)            
+[Bathroom 111] <---> [Entry 11] <---> [Garden 112](Snail)
+                           ^10
+```
+```text
+Piso -1
+        v11
+[Basement 10](Bomb)         
+```
+**Note_1: The link West from 12 to 131 (Door) is LOCKED and requires the Key.**  
+**Note_2: The link North from 171 to 161 (Security_lock) is LOCKED and requires the Bomb.**
 
-══════════════════
-COMPLETE WALKTHROUGH
-══════════════════
-To successfully demonstrate all the features of the game (taking objects, recruiting allies, opening locked doors, and using items), follow this narrative path:
+-----------------------
+## **COMPLETE WALKTHROUGH**
+To ensure all the game’s features work correctly (picking up items, recruiting allies, opening locked doors and using items), follow this sequence:
 
-1. **The Infiltration:** Both players start in the Entry. Player 1 moves Up to the Prehistoric Room and immediately grabs the **Key** lying around, ignoring Batman for now.
-2. **Recruiting Backup:** Player 2 moves Up, then North into the Mesopotamian Room. Realizing the danger, Player 2 recruits **Josemi** to help with any potential fights, and then secures the **Crown**!
-3. **Opening Paths:** It's Player 1's turn again. The path West is blocked, so Player 1 uses the Key to open the locked link (`link12-131`). With the path clear, Player 1 moves West into the Greek Room, and then Up into the Art Room.
-4. **Survival & Healing:** In the Art Room, Player 1 finds an **Apple**. Taking damage from a fall, Player 1 takes the Apple and uses it to heal.
-5. **Regroup & Escape:** Player 2 moves West into the Armor Room to meet up with more allies, talking to Inaki. The players have successfully secured the Crown, formed a team, unlocked the museum's secrets, and are ready to escape!
-
-══════════════════
-SOLUTION
-══════════════════
-Copy and paste these exact commands to execute the Walkthrough automatically and see all game functionalities in action:
+1. Robber_1 attacks the Guide while Robber_2 takes some Paperroll from the Bathroom so they can pick up the knife without leaving fingerprints.
+2. Once the Guide has been defeated, both players work together to move forward more quickly and simultaneously use the key dropped by the Guide to open the Door.
+3. Passing the Police in the Prehistoric Room, we go through the Mesopotamian Room and the Armor Room to recruit Josemi and Inaki.
+4. We head down to the Greek Room, where Batman will be waiting for us to enter. After defeating Batman as a team, we take the Crown he was guarding and head up to the Art Room.
+5. We proceed to the Talking Room, where we’ll speak to Josemi for some words of encouragement and examine the Crown to see just how interesting it is.
+6. We proceed to the Crown Room, where we’ll find our secret passage so we can escape the museum without being defeated.
+-----------------------
+## **SOLUTION**
+**List of all commands that you will need to use to do de "COMPLETE WALKTHROUGH"**
 
 ```text
-move u
+
+attack guide
+attack guide
+attack guide
+attack guide
+attack guide
+attack guide
 take key
-move w
-move u
-move n
-recruit Josemi
-take Crown
+move up
+move north
+recruit josemi
+move west
+recruit inaki
+take sword
+take shield
+use shield
+use sword
+move south
+take bone
+move east
+take skull
+use skull
+open door with key
+move west
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+attack batman
+take crown
+move up
+move south
+move east
+move south
+move up
 ```

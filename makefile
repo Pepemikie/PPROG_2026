@@ -300,16 +300,22 @@ runtest:
 
 #Run game with specific commands
 runcmd1:
-	./$(EXE) museum.dat -l output.log < game1.cmd
+	./$(EXE) museum_uniplayer.dat -l output.log < game1.cmd
 
 runcmd2:
-	./$(EXE) museum.dat -l output.log < game2.cmd
+	./$(EXE) museum_uniplayer.dat -l output.log < game2.cmd
 
 runcmd3:
-	./$(EXE) museum.dat -l output.log < game3.cmd
+	./$(EXE) museum_uniplayer.dat -l output.log < game3.cmd
 
 runcmd4:
-	./$(EXE) museum.dat -l output.log < game4.cmd
+	./$(EXE) museum_uniplayer.dat -l output.log < game4.cmd
+
+runcmdteam:
+	./$(EXE) museum.dat -l output.log < game_team.cmd
+
+runcmdwin:
+	./$(EXE) museum_uniplayer.dat -l output.log < game_win.cmd
 
 # NEW: automatic integration tests
 integration: $(EXE_TEST)
@@ -322,7 +328,7 @@ opendoxyfile:
 #CLEANING
 #files cleaning
 clean:
-	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST) slot1
+	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST) slot1 *.log
 
 #Documentation from Doxygen cleaning
 cleandoxyfile:

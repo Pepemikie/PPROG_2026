@@ -22,6 +22,12 @@ void test1_character_create();
  */
 void test2_character_create();
 
+
+void test1_character_destroy();
+
+
+void test2_character_destroy();
+
 /**
  * @brief Tests setting the name of a character
  * @author Profesores Pprog

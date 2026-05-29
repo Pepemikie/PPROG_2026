@@ -16,7 +16,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 17
+#define MAX_TESTS 19
 
 /** @brief Main function for running the Set module unit tests */
 int main(int argc, char** argv) {
@@ -32,22 +32,24 @@ int main(int argc, char** argv) {
   }
 
   if (all || test == 1) test1_set_create();
-  if (all || test == 2) test1_set_add();
-  if (all || test == 3) test2_set_add();
-  if (all || test == 4) test3_set_add();
-  if (all || test == 5) test1_set_del();
-  if (all || test == 6) test2_set_del();
-  if (all || test == 7) test1_set_find();
-  if (all || test == 8) test2_set_find();
-  if (all || test == 9) test1_set_get_n_ids();
-  if (all || test == 10) test1_set_get_id();
-  if (all || test == 11) test2_set_get_id();
-  if (all || test == 12) test1_set_get_ids();
-  if (all || test == 13) test4_set_add();
-  if (all || test == 14) test3_set_del();
-  if (all || test == 15) test3_set_find();
-  if (all || test == 16) test2_set_get_n_ids();
-  if (all || test == 17) test2_set_get_ids();
+  if (all || test == 2) test1_set_destroy();
+  if (all || test == 3) test2_set_destroy();
+  if (all || test == 4) test1_set_add();
+  if (all || test == 5) test2_set_add();
+  if (all || test == 6) test3_set_add();
+  if (all || test == 7) test1_set_del();
+  if (all || test == 8) test2_set_del();
+  if (all || test == 9) test1_set_find();
+  if (all || test == 10) test2_set_find();
+  if (all || test == 11) test1_set_get_n_ids();
+  if (all || test == 12) test1_set_get_id();
+  if (all || test == 13) test2_set_get_id();
+  if (all || test == 14) test1_set_get_ids();
+  if (all || test == 15) test4_set_add();
+  if (all || test == 16) test3_set_del();
+  if (all || test == 17) test3_set_find();
+  if (all || test == 18) test2_set_get_n_ids();
+  if (all || test == 19) test2_set_get_ids();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -58,6 +60,15 @@ void test1_set_create() {
   Set *s = set_create();
   PRINT_TEST_RESULT(s != NULL);
   set_destroy(s);
+}
+
+void test1_set_destroy() {
+  Set *s = set_create();
+  PRINT_TEST_RESULT(set_destroy(s) == OK);
+}
+
+void test2_set_destroy() {
+  PRINT_TEST_RESULT(set_destroy(NULL) == ERROR);
 }
 
 /* Tests adding an element to a set */

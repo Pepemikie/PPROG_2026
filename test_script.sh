@@ -83,18 +83,43 @@ else
     # Compile integration version
     make all
 
-    INTEGRATION_TESTS="game1 game2 game3 game4"
+    INTEGRATION_TESTS_UNIPLAYER="game1 game2 game3 game4 game_win"
+    INTEGRATION_TESTS_MULTIPLAYER="game_team"
 
     FAILED=0
 
-    for TEST in $INTEGRATION_TESTS; do
+    for TEST in $INTEGRATION_TESTS_UNIPLAYER; do
 
         echo ""
         echo "Running integration test $TEST..."
 
-        ./rob_the_museum museum.dat -l output.log < ${TEST}.cmd > /dev/null
+        rm -f ${TEST}.log
 
-        diff output.log tests/${TEST}.expected > /dev/null
+        ./rob_the_museum museum_uniplayer.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
+
+        diff ${TEST}.log tests/${TEST}.expected > /dev/null
+
+        if [ $? -eq 0 ]; then
+            echo "[PASS] $TEST"
+        else
+            echo "[FAIL] $TEST"
+            FAILED=1
+
+            echo "Differences found:"
+            diff output.log tests/${TEST}.expected
+        fi
+    done
+
+    for TEST in $INTEGRATION_TESTS_MULTIPLAYER; do
+
+        echo ""
+        echo "Running integration test $TEST..."
+
+        rm -f ${TEST}.log
+
+        ./rob_the_museum museum.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
+
+        diff ${TEST}.log tests/${TEST}.expected > /dev/null
 
         if [ $? -eq 0 ]; then
             echo "[PASS] $TEST"

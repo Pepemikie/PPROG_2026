@@ -18,7 +18,7 @@
 /**
  * @brief Maximum number of tests available for the Character module
  */
-#define MAX_TESTS 28
+#define MAX_TESTS 30
 
 /**
  * @brief Main function for the Character test module
@@ -44,66 +44,81 @@ int main(int argc, char** argv) {
     }
   }
 
-  if (all || test == 1)  test1_character_create();
-  if (all || test == 2)  test2_character_create();
-  if (all || test == 3)  test1_character_set_name();
-  if (all || test == 4)  test2_character_set_name();
-  if (all || test == 5)  test1_character_get_name();
-  if (all || test == 6)  test2_character_get_name();
-  if (all || test == 7)  test1_character_set_health();
-  if (all || test == 8)  test2_character_set_health();
-  if (all || test == 9)  test1_character_get_health();
-  if (all || test == 10) test2_character_get_health();
-  if (all || test == 11) test1_character_set_friendly();
-  if (all || test == 12) test2_character_set_friendly();
-  if (all || test == 13) test1_character_is_friendly();
-  if (all || test == 14) test2_character_is_friendly();
-  if (all || test == 15) test1_character_set_message();
-  if (all || test == 16) test2_character_set_message();
-  if (all || test == 17) test1_character_get_message();
-  if (all || test == 18) test2_character_get_message();
-  if (all || test == 19) test1_character_get_id();
-  if (all || test == 20) test2_character_get_id();
-  if (all || test == 21) test1_character_set_gdesc();
-  if (all || test == 22) test2_character_set_gdesc();
-  if (all || test == 23) test1_character_get_gdesc();
-  if (all || test == 24) test2_character_get_gdesc();
-  if (all || test == 25) test1_character_set_following();
-  if (all || test == 26) test2_character_set_following();
-  if (all || test == 27) test1_character_get_following();
-  if (all || test == 28) test2_character_get_following();
+  if (all || test == 1) test1_character_create();
+  if (all || test == 2) test2_character_create();
+  if (all || test == 3) test1_character_destroy();
+  if (all || test == 4) test2_character_destroy();
+  if (all || test == 5) test1_character_get_id();
+  if (all || test == 6) test2_character_get_id();
+  if (all || test == 7) test1_character_set_name();
+  if (all || test == 8) test2_character_set_name();
+  if (all || test == 9) test1_character_get_name();
+  if (all || test == 10) test2_character_get_name();
+  if (all || test == 11) test1_character_set_health();
+  if (all || test == 12) test2_character_set_health();
+  if (all || test == 13) test1_character_get_health();
+  if (all || test == 14) test2_character_get_health();
+  if (all || test == 15) test1_character_set_friendly();
+  if (all || test == 16) test2_character_set_friendly();
+  if (all || test == 17) test1_character_is_friendly();
+  if (all || test == 18) test2_character_is_friendly();
+  if (all || test == 19) test1_character_set_message();
+  if (all || test == 20) test2_character_set_message();
+  if (all || test == 21) test1_character_get_message();
+  if (all || test == 22) test2_character_get_message();
+  if (all || test == 23) test1_character_set_gdesc();
+  if (all || test == 24) test2_character_set_gdesc();
+  if (all || test == 25) test1_character_get_gdesc();
+  if (all || test == 26) test2_character_get_gdesc();
+  if (all || test == 27) test1_character_set_following();
+  if (all || test == 28) test2_character_set_following();
+  if (all || test == 29) test1_character_get_following();
+  if (all || test == 30) test2_character_get_following();
 
   PRINT_PASSED_PERCENTAGE;
   return 1;
 }
 
-/* Test functions for the Character module */
+
 void test1_character_create() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(c != NULL);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_create() {
   Character *c = character_create(NO_ID);
   PRINT_TEST_RESULT(c == NULL);
+  character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
+void test1_character_destroy() {
+  Character *c = character_create(1);
+  PRINT_TEST_RESULT(character_destroy(c) == OK);
+}
+
+
+void test2_character_destroy() {
+  Character *c = character_create(NO_ID);
+  PRINT_TEST_RESULT(character_destroy(c) == ERROR);
+}
+
+
 void test1_character_set_name() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_name(c, "Inaki") == OK);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_set_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_name(c, "Inaki") == ERROR);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_get_name() {
   Character *c = character_create(1);
   character_set_name(c, "Inaki");
@@ -111,26 +126,26 @@ void test1_character_get_name() {
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_get_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_name(c) == NULL);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_set_following() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_following(c, 2) == OK);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_set_following() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_following(c, 2) == ERROR);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_get_following() {
   Character *c = character_create(1);
   character_set_following(c, 3);
@@ -138,26 +153,26 @@ void test1_character_get_following() {
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_get_following() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_following(c) == NO_ID);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_set_health() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_health(c, 10) == OK);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_set_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_health(c, 10) == ERROR);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_get_health() {
   Character *c = character_create(1);
   character_set_health(c, 25);
@@ -165,26 +180,26 @@ void test1_character_get_health() {
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_get_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_health(c) == -1);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_set_friendly() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_friendly(c, FALSE) == OK);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_set_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_friendly(c, FALSE) == ERROR);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_is_friendly() {
   Character *c = character_create(1);
   character_set_friendly(c, TRUE);
@@ -192,26 +207,26 @@ void test1_character_is_friendly() {
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_is_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_is_friendly(c) == FALSE);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_set_message() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_message(c, "Hola") == OK);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_set_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_message(c, "Hola") == ERROR);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_get_message() {
   Character *c = character_create(1);
   character_set_message(c, "Test Message");
@@ -219,39 +234,39 @@ void test1_character_get_message() {
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_get_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_message(c) == NULL);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_get_id() {
   Character *c = character_create(3);
   PRINT_TEST_RESULT(character_get_id(c) == 3);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_get_id() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_id(c) == NO_ID);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_set_gdesc() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_gdesc(c, "HELLO ") == OK);
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_set_gdesc() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_gdesc(c, "HELLO ") == ERROR);
 }
 
-/* Test functions for the Character module */
+
 void test1_character_get_gdesc() {
   Character *c = character_create(1);
   character_set_gdesc(c, "HELLO ");
@@ -259,7 +274,7 @@ void test1_character_get_gdesc() {
   character_destroy(c);
 }
 
-/* Test functions for the Character module */
+
 void test2_character_get_gdesc() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_gdesc(c) == NULL);

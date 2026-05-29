@@ -15,7 +15,7 @@
 #include "game.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 15
+#define MAX_TESTS 18
 
 /** @brief Main function for running the Link module unit tests */
 int main(int argc, char** argv) {
@@ -36,19 +36,22 @@ int main(int argc, char** argv) {
 
   if (all || test == 1) test1_link_create();
   if (all || test == 2) test2_link_create();
-  if (all || test == 3) test1_link_get_id();
-  if (all || test == 4) test1_link_name();
-  if (all || test == 5) test1_link_space_ids();
-  if (all || test == 6) test1_link_direction();
-  if (all || test == 7) test1_link_open();
-  if (all || test == 8) test2_link_name();
-  if (all || test == 9) test2_link_get_name();
-  if (all || test == 10) test2_link_space_ids();
-  if (all || test == 11) test2_link_get_space_ids();
-  if (all || test == 12) test2_link_direction();
-  if (all || test == 13) test2_link_get_direction();
-  if (all || test == 14) test2_link_open();
-  if (all || test == 15) test2_link_get_open();
+  if (all || test == 3) test1_link_destroy();
+  if (all || test == 4) test2_link_destroy();
+  if (all || test == 5) test1_link_get_id();
+  if (all || test == 6) test2_link_get_id();
+  if (all || test == 7) test1_link_name();
+  if (all || test == 8) test1_link_space_ids();
+  if (all || test == 9) test1_link_direction();
+  if (all || test == 10) test1_link_open();
+  if (all || test == 11) test2_link_name();
+  if (all || test == 12) test2_link_get_name();
+  if (all || test == 13) test2_link_space_ids();
+  if (all || test == 14) test2_link_get_space_ids();
+  if (all || test == 15) test2_link_direction();
+  if (all || test == 16) test2_link_get_direction();
+  if (all || test == 17) test2_link_open();
+  if (all || test == 18) test2_link_get_open();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -67,11 +70,31 @@ void test2_link_create() {
   PRINT_TEST_RESULT(l == NULL);
 }
 
+/* Tests link destroy */
+void test1_link_destroy() {
+  Link *l = link_create(1);
+  PRINT_TEST_RESULT(link_destroy(l) == OK);
+}
+
+/* Tests link destroy with invalid link */
+void test2_link_destroy() {
+  Link *l = link_create(NO_ID);
+  PRINT_TEST_RESULT(link_destroy(l) == ERROR);
+}
+
 /* Tests getting the id of a link */
 void test1_link_get_id() {
   Link *l = link_create(2);
   PRINT_TEST_RESULT(link_get_id(l) == 2);
   link_destroy(l);
+}
+
+/* Tests getting the id of a link */
+void test2_link_get_id() {
+  Link *l = link_create(NO_ID);
+  PRINT_TEST_RESULT(link_get_id(l) == NO_ID);
+  link_destroy(l);
+  PRINT_TEST_RESULT(link_get_id(l) == NO_ID);
 }
 
 /* Tests setting and getting the link name */

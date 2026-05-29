@@ -22,13 +22,22 @@ void test1_link_create();
  */
 void test2_link_create();
 
+
+void test1_link_destroy();
+
+void test2_link_destroy();
+
+
 /**
  * @brief Tests getting the id of a link
  * @author Iñaki López Rocha
  */
 void test1_link_get_id();
 
+void test2_link_get_id();
+
 /**
+ * 
  * @brief Tests setting and getting the link name
  * @author Iñaki López Rocha
  */

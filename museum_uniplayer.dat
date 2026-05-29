@@ -1,6 +1,5 @@
 # id name gdesc location health max_object team num_objects (objects)
 #p:1|Robber_1|$P1|11|10|5|-1|0|
-#p:2|Robber_2|$P2|111|14|7|-1|0|
 
 # id name gdesc health friendly location following message
 #c:31|Batman|/(B)\ |25|0|131|-1|I'm Batman|

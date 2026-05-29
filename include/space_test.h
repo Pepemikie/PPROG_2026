@@ -22,6 +22,10 @@ void test1_space_create();
  */
 void test2_space_create();
 
+void test1_space_destroy();
+
+void test2_space_destroy();
+
 /**
  * @brief Tests setting the name of a space
  * @author Profesores Pprog

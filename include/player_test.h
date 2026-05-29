@@ -22,6 +22,10 @@ void test1_player_create();
  */
 void test2_player_create();
 
+void test1_player_destroy();
+
+void test2_player_destroy();
+
 /**
  * @brief Tests setting the player name
  * @author Iñaki López Rocha
@@ -75,6 +79,8 @@ void test2_player_get_location();
  * @author Iñaki López Rocha
  */
 void test1_player_add_object();
+
+void test2_player_add_object();
 
 /**
  * @brief Tests removing an object from the player's inventory
@@ -136,6 +142,8 @@ void test1_player_set_gdesc();
  */
 void test1_player_get_gdesc();
 
+void test2_player_get_gdesc();
+
 /**
  * @brief Tests getting the player id
  * @author Iñaki López Rocha
@@ -153,5 +161,9 @@ void test1_player_modify_health();
  * @author Iñaki López Rocha
  */
 void test2_player_modify_health();
+
+void test1_player_set_team();
+
+void test2_player_set_team();
 
 #endif

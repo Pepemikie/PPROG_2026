@@ -16,7 +16,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 28
+#define MAX_TESTS 30
 
 /** 
  * @brief Main function for SPACE unit tests. 
@@ -46,32 +46,34 @@ int main(int argc, char** argv) {
 
   if (all || test == 1)  test1_space_create();
   if (all || test == 2)  test2_space_create();
-  if (all || test == 3)  test1_space_set_name();
-  if (all || test == 4)  test2_space_set_name();
-  if (all || test == 5)  test3_space_set_name();
-  if (all || test == 6)  test1_space_set_object();
-  if (all || test == 7)  test2_space_set_object();
-  if (all || test == 8)  test1_space_get_id();
-  if (all || test == 9)  test2_space_get_id();
-  if (all || test == 10) test1_space_get_name();
-  if (all || test == 11) test2_space_get_name();
-  if (all || test == 12) test1_space_get_object();
-  if (all || test == 13) test2_space_get_object();
-  if (all || test == 14) test3_space_get_object();
-  if (all || test == 15) test1_space_set_gdesc();
-  if (all || test == 16) test2_space_set_gdesc();
-  if (all || test == 17) test1_space_get_gdesc();
-  if (all || test == 18) test2_space_get_gdesc();
-  if (all || test == 19) test1_space_set_discovered();
-  if (all || test == 20) test1_space_get_discovered();
-  if (all || test == 21) test1_space_add_character();
-  if (all || test == 22) test2_space_add_character();
-  if (all || test == 23) test1_space_has_character();
-  if (all || test == 24) test2_space_has_character();
-  if (all || test == 25) test1_space_get_number_of_characters();
-  if (all || test == 26) test1_space_get_character();
-  if (all || test == 27) test1_space_del_character();
-  if (all || test == 28) test2_space_del_character();
+  if (all || test == 3)  test1_space_destroy();
+  if (all || test == 4)  test2_space_destroy();
+  if (all || test == 5)  test1_space_set_name();
+  if (all || test == 6)  test2_space_set_name();
+  if (all || test == 7)  test3_space_set_name();
+  if (all || test == 8)  test1_space_set_object();
+  if (all || test == 9)  test2_space_set_object();
+  if (all || test == 10)  test1_space_get_id();
+  if (all || test == 11)  test2_space_get_id();
+  if (all || test == 12) test1_space_get_name();
+  if (all || test == 13) test2_space_get_name();
+  if (all || test == 14) test1_space_get_object();
+  if (all || test == 15) test2_space_get_object();
+  if (all || test == 16) test3_space_get_object();
+  if (all || test == 17) test1_space_set_gdesc();
+  if (all || test == 18) test2_space_set_gdesc();
+  if (all || test == 19) test1_space_get_gdesc();
+  if (all || test == 20) test2_space_get_gdesc();
+  if (all || test == 21) test1_space_set_discovered();
+  if (all || test == 22) test1_space_get_discovered();
+  if (all || test == 23) test1_space_add_character();
+  if (all || test == 24) test2_space_add_character();
+  if (all || test == 25) test1_space_has_character();
+  if (all || test == 26) test2_space_has_character();
+  if (all || test == 27) test1_space_get_number_of_characters();
+  if (all || test == 28) test1_space_get_character();
+  if (all || test == 29) test1_space_del_character();
+  if (all || test == 30) test2_space_del_character();
 
   PRINT_PASSED_PERCENTAGE;
 
@@ -93,6 +95,18 @@ void test2_space_create() {
   Space *s;
   s = space_create(NO_ID);
   PRINT_TEST_RESULT(s == NULL);
+}
+
+void test1_space_destroy() {
+  Space *s;
+  s = space_create(5);
+  PRINT_TEST_RESULT(space_destroy(s) == OK);
+}
+
+void test2_space_destroy() {
+  Space *s;
+  s = space_create(NO_ID);
+  PRINT_TEST_RESULT(space_destroy(s) == ERROR);
 }
 
 /* Tests setting the name of a space */
@@ -191,20 +205,20 @@ void test1_space_get_discovered() {
 /* Tests adding a character to a space */
 void test1_space_add_character() {
   Space *s = space_create(1);
-  PRINT_TEST_RESULT(space_add_character(s, 10) == OK && space_has_character(s, 10) == TRUE);
+  PRINT_TEST_RESULT(space_add_character(s, 10, TRUE) == OK && space_has_character(s, 10) == TRUE);
   space_destroy(s);
 }
 
 /* Tests adding a character to a space with invalid parameters */
 void test2_space_add_character() {
   Space *s = NULL;
-  PRINT_TEST_RESULT(space_add_character(s, 10) == ERROR);
+  PRINT_TEST_RESULT(space_add_character(s, 10, TRUE) == ERROR);
 }
 
 /* Tests checking whether a space has a character */
 void test1_space_has_character() {
   Space *s = space_create(1);
-  space_add_character(s, 10);
+  space_add_character(s, 10, TRUE);
   PRINT_TEST_RESULT(space_has_character(s, 10) == TRUE && space_has_character(s, NO_ID) == FALSE);
   space_destroy(s);
 }
@@ -218,8 +232,8 @@ void test2_space_has_character() {
 /* Tests getting the number of characters in a space */
 void test1_space_get_number_of_characters() {
   Space *s = space_create(1);
-  space_add_character(s, 10);
-  space_add_character(s, 11);
+  space_add_character(s, 10, TRUE);
+  space_add_character(s, 11, TRUE);
   PRINT_TEST_RESULT(space_get_number_of_characters(s) == 2);
   space_destroy(s);
 }
@@ -229,7 +243,7 @@ void test1_space_get_character() {
   Space *s = space_create(1);
   Id *characters = NULL;
 
-  space_add_character(s, 12);
+  space_add_character(s, 12, TRUE);
   characters = space_get_character(s);
   PRINT_TEST_RESULT(characters != NULL && characters[0] == 12);
   space_destroy(s);
@@ -238,7 +252,7 @@ void test1_space_get_character() {
 /* Tests deleting a character from a space */
 void test1_space_del_character() {
   Space *s = space_create(1);
-  space_add_character(s, 12);
+  space_add_character(s, 12, TRUE);
   PRINT_TEST_RESULT(space_del_character(s, 12) == OK && space_has_character(s, 12) == FALSE);
   space_destroy(s);
 }

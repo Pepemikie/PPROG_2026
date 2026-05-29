@@ -22,6 +22,9 @@ void test1_object_create();
  */
 void test2_object_create();
 
+void test1_object_destroy();
+void test2_object_destroy();
+
 /**
  * @brief Tests setting the object name
  * @author Iñaki López Rocha

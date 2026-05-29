@@ -16,6 +16,9 @@
  */
 void test1_set_create();
 
+void test1_set_destroy();
+void test2_set_destroy();
+
 /**
  * @brief Tests adding an element to a set
  * @author Profesores Pprog

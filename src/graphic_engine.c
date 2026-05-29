@@ -470,8 +470,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   /* 4. HELP — lists all available commands */
   screen_area_clear(ge->help);
   screen_area_puts(ge->help, " Player Commands:  move <dir> or m <n|s|e|w|u|d>, colab <player> or k <player>");
-  screen_area_puts(ge->help, " Object Commands:  take <obj> or t <obj>, drop <obj> or d <obj>, inspect <obj> or i <obj>, open <link> with <object>, use <object> over <character>");
-  screen_area_puts(ge->help, " Character Commands:  attack <char> or a <char>, char <char> or c <har>, recruit <char> or r <char>, abandon <char/player> or b <char/player>");
+  screen_area_puts(ge->help, " Object Commands:  take <obj> or t <obj>, drop <obj> or d <obj>, inspect <obj> or i <obj>, open <link> with <obj>, use <obj> over <char>");
+  screen_area_puts(ge->help, " Character Commands:  attack <char> or a <char>, char <char> or c <har>, recruit <char> or r <char>, abandon <char> or b <char>");
   screen_area_puts(ge->help, " Other Commands:  save <file> or s <file>, load <file> or l <file>, exit or e");
 
   /* 5. FEEDBACK — shows last command; OK coloured with player colour, ERROR in red */

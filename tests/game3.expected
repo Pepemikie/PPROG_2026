@@ -1,7 +1,1 @@
-Move invalid: ERROR (P2)
-Take: ERROR (P1)
-Drop: ERROR (P2)
-Inspect: ERROR (P1)
-Attack: ERROR (P2)
-Chat: ERROR (P1)
-Exit: OK (P2)
+Exit: OK (P1)

@@ -22,47 +22,15 @@ void test1_inventory_create();
  */
 void test2_inventory_create();
 
+void test1_inventory_destroy();
+
+void test2_inventory_destroy();
+
 /**
  * @brief Tests adding and removing objects from an inventory
  * @author Iñaki López Rocha
  */
 void test1_inventory_add_del();
-
-/**
- * @brief Tests checking whether an object is in the inventory
- * @author Iñaki López Rocha
- */
-void test1_inventory_has_object();
-
-/**
- * @brief Tests inventory fullness and emptiness
- * @author Iñaki López Rocha
- */
-void test1_inventory_full_empty();
-
-/**
- * @brief Tests getting and setting the inventory max object capacity
- * @author Iñaki López Rocha
- */
-void test1_inventory_max_objs();
-
-/**
- * @brief Tests getting the number of objects in the inventory
- * @author Iñaki López Rocha
- */
-void test1_inventory_number_of_objects();
-
-/**
- * @brief Tests getting the inventory objects set pointer
- * @author Iñaki López Rocha
- */
-void test1_inventory_get_objects();
-
-/**
- * @brief Tests setting inventory objects with a new set
- * @author Iñaki López Rocha
- */
-void test1_inventory_set_objects();
 
 /**
  * @brief Tests adding an object with invalid parameters
@@ -71,10 +39,22 @@ void test1_inventory_set_objects();
 void test2_inventory_add_del();
 
 /**
+ * @brief Tests checking whether an object is in the inventory
+ * @author Iñaki López Rocha
+ */
+void test1_inventory_has_object();
+
+/**
  * @brief Tests getting whether the inventory has an object with invalid parameters
  * @author Iñaki López Rocha
  */
 void test2_inventory_has_object();
+
+/**
+ * @brief Tests inventory fullness and emptiness
+ * @author Iñaki López Rocha
+ */
+void test1_inventory_full_empty();
 
 /**
  * @brief Tests inventory empty/full behavior with invalid parameters
@@ -83,16 +63,16 @@ void test2_inventory_has_object();
 void test2_inventory_full_empty();
 
 /**
- * @brief Tests getting the inventory objects set pointer with invalid parameters
+ * @brief Tests getting and setting the inventory max object capacity
  * @author Iñaki López Rocha
  */
-void test2_inventory_get_objects();
+void test1_inventory_max_objs();
 
 /**
- * @brief Tests setting the inventory objects with invalid parameters
+ * @brief Tests getting and setting the inventory max object capacity  with invalid parameters
  * @author Iñaki López Rocha
  */
-void test2_inventory_set_objects();
+void test2_inventory_max_objs();
 
 /**
  * @brief Tests getting the inventory max objects with invalid parameters
@@ -101,9 +81,39 @@ void test2_inventory_set_objects();
 void test2_inventory_get_max_objs();
 
 /**
+ * @brief Tests getting the number of objects in the inventory
+ * @author Iñaki López Rocha
+ */
+void test1_inventory_number_of_objects();
+
+/**
  * @brief Tests getting the number of objects with invalid parameters
  * @author Iñaki López Rocha
  */
 void test2_inventory_number_of_objects();
+
+/**
+ * @brief Tests getting the inventory objects set pointer
+ * @author Iñaki López Rocha
+ */
+void test1_inventory_get_objects();
+
+/**
+ * @brief Tests getting the inventory objects set pointer with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_inventory_get_objects();
+
+/**
+ * @brief Tests setting inventory objects with a new set
+ * @author Iñaki López Rocha
+ */
+void test1_inventory_set_objects();
+
+/**
+ * @brief Tests setting the inventory objects with invalid parameters
+ * @author Iñaki López Rocha
+ */
+void test2_inventory_set_objects();
 
 #endif

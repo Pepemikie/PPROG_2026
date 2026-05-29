@@ -180,17 +180,6 @@ Status player_set_gdesc(Player* player, char* gdesc);
  */
 int player_get_number_of_items_in_backpack(Player* player);
 
-#ifdef DEBUG
-/**
- * @brief It prints the data of a Player
- * @author Profesores PPROG
- *
- * @param player a pointer to the Player
- * @return OK, if everything goes well or ERROR if there was some mistake
- */
-Status player_print(Player* player);
-#endif
-
 /**
  * @brief It modifies the health of a Player by adding the given amount
  * @author Profesores PPROG
@@ -220,4 +209,14 @@ Status player_set_team(Player* player, Id team);
  */
 Id player_get_team(Player* player);
 
+#ifdef DEBUG
+/**
+ * @brief It prints the data of a Player
+ * @author Profesores PPROG
+ *
+ * @param player a pointer to the Player
+ * @return OK, if everything goes well or ERROR if there was some mistake
+ */
+Status player_print(Player* player);
+#endif
 #endif

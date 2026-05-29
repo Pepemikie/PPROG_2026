@@ -1,11 +1,3 @@
-La generación de un fichero con el registro de comandos ejecutados y los correspondientes resultados obtenidos.
-
-EL user guide
-
-Preguntar si el modo de juego determinista tanbien tiene en cuenta la aleatoriedad de los ataques (GANA SIEMPRE EL PLAYER)
-
----
-
 PROCESO
 
 F1      **HECHO**
@@ -21,33 +13,24 @@ F10     **HECHO**
 F11     **HECHO**
 F12     **HECHO**
 F13     **HECHO**
-
-F14 falta
-- modificar los .cmd
-
+F14     **HECHO**
 F15     **HECHO**
 F16     **HECHO**
-
-F17
-- a
-- b
-- c
-- d
-- e
+F17     **HECHO**
 
 ***
 
 P1
-- space
-- object
-- player
-- set
-- character
-- link
-- inventory
+- space         **HECHO**
+- object        **HECHO**
+- player        **HECHO**
+- set           **HECHO**
+- character     **HECHO**
+- link          **HECHO**
+- inventory     **HECHO**
 
-P2
-P3
+P2      **HECHO**
+P3      **HECHO**
 
 ***
 

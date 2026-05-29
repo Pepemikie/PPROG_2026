@@ -14,7 +14,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 32
+#define MAX_TESTS 34
 
 /** @brief Main function for running the Object module unit tests */
 int main(int argc, char** argv) {
@@ -35,36 +35,38 @@ int main(int argc, char** argv) {
 
   if (all || test == 1) test1_object_create();
   if (all || test == 2) test2_object_create();
-  if (all || test == 3) test1_object_set_name();
-  if (all || test == 4) test2_object_set_name();
-  if (all || test == 5) test1_object_get_name();
-  if (all || test == 6) test2_object_get_name();
-  if (all || test == 7) test1_object_get_id();
-  if (all || test == 8) test2_object_get_id();
-  if (all || test == 9) test1_object_set_description();
-  if (all || test == 10) test2_object_set_description();
-  if (all || test == 11) test1_object_get_description();
-  if (all || test == 12) test2_object_get_description();
-  if (all || test == 13) test1_object_set_gdesc();
-  if (all || test == 14) test2_object_set_gdesc();
-  if (all || test == 15) test1_object_get_gdesc();
-  if (all || test == 16) test2_object_get_gdesc();
-  if (all || test == 17) test1_object_set_health();
-  if (all || test == 18) test2_object_set_health();
-  if (all || test == 19) test1_object_get_health();
-  if (all || test == 20) test2_object_get_health();
-  if (all || test == 21) test1_object_set_movable();
-  if (all || test == 22) test2_object_set_movable();
-  if (all || test == 23) test1_object_get_movable();
-  if (all || test == 24) test2_object_get_movable();
-  if (all || test == 25) test1_object_set_dependency();
-  if (all || test == 26) test2_object_set_dependency();
-  if (all || test == 27) test1_object_get_dependency();
-  if (all || test == 28) test2_object_get_dependency();
-  if (all || test == 29) test1_object_set_open();
-  if (all || test == 30) test2_object_set_open();
-  if (all || test == 31) test1_object_get_open();
-  if (all || test == 32) test2_object_get_open();
+  if (all || test == 3) test1_object_destroy();
+  if (all || test == 4) test2_object_destroy();
+  if (all || test == 5) test1_object_set_name();
+  if (all || test == 6) test2_object_set_name();
+  if (all || test == 7) test1_object_get_name();
+  if (all || test == 8) test2_object_get_name();
+  if (all || test == 9) test1_object_get_id();
+  if (all || test == 10) test2_object_get_id();
+  if (all || test == 11) test1_object_set_description();
+  if (all || test == 12) test2_object_set_description();
+  if (all || test == 13) test1_object_get_description();
+  if (all || test == 14) test2_object_get_description();
+  if (all || test == 15) test1_object_set_gdesc();
+  if (all || test == 16) test2_object_set_gdesc();
+  if (all || test == 17) test1_object_get_gdesc();
+  if (all || test == 18) test2_object_get_gdesc();
+  if (all || test == 19) test1_object_set_health();
+  if (all || test == 20) test2_object_set_health();
+  if (all || test == 21) test1_object_get_health();
+  if (all || test == 22) test2_object_get_health();
+  if (all || test == 23) test1_object_set_movable();
+  if (all || test == 24) test2_object_set_movable();
+  if (all || test == 25) test1_object_get_movable();
+  if (all || test == 26) test2_object_get_movable();
+  if (all || test == 27) test1_object_set_dependency();
+  if (all || test == 28) test2_object_set_dependency();
+  if (all || test == 29) test1_object_get_dependency();
+  if (all || test == 30) test2_object_get_dependency();
+  if (all || test == 31) test1_object_set_open();
+  if (all || test == 32) test2_object_set_open();
+  if (all || test == 33) test1_object_get_open();
+  if (all || test == 34) test2_object_get_open();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -81,6 +83,16 @@ void test1_object_create() {
 void test2_object_create() {
   Object *o = object_create(NO_ID);
   PRINT_TEST_RESULT(o == NULL);
+}
+
+void test1_object_destroy() {
+  Object *o = object_create(1);
+  PRINT_TEST_RESULT(object_destroy(o) == OK);
+}
+
+void test2_object_destroy() {
+  Object *o = object_create(NO_ID);
+  PRINT_TEST_RESULT(object_destroy(o) == ERROR);
 }
 
 /* Tests setting the object name */

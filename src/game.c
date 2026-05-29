@@ -148,6 +148,8 @@ Status game_destroy(Game *game) {
 
   if(game_clear(game) == ERROR) return ERROR; /* clears current game data */
 
+  command_destroy(game->last_cmd); /* destroys the last command */
+
   free(game);
   return OK;
 }

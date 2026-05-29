@@ -15,7 +15,7 @@
 #include "test.h"
 
 /** @brief Maximum number of tests */
-#define MAX_TESTS 16 
+#define MAX_TESTS 19
 
 /** @brief Main function for running inventory tests */
 int main(int argc, char** argv) {
@@ -36,20 +36,23 @@ int main(int argc, char** argv) {
 
   if (all || test == 1) test1_inventory_create();
   if (all || test == 2) test2_inventory_create();
-  if (all || test == 3) test1_inventory_add_del();
-  if (all || test == 4) test1_inventory_has_object();
-  if (all || test == 5) test1_inventory_full_empty();
-  if (all || test == 6) test1_inventory_max_objs();
-  if (all || test == 7) test1_inventory_number_of_objects();
-  if (all || test == 8) test1_inventory_get_objects();
-  if (all || test == 9) test1_inventory_set_objects();
-  if (all || test == 10) test2_inventory_add_del();
-  if (all || test == 11) test2_inventory_has_object();
-  if (all || test == 12) test2_inventory_full_empty();
-  if (all || test == 13) test2_inventory_get_objects();
-  if (all || test == 14) test2_inventory_set_objects();
-  if (all || test == 15) test2_inventory_get_max_objs();
-  if (all || test == 16) test2_inventory_number_of_objects();
+  if (all || test == 3) test1_inventory_destroy();
+  if (all || test == 4) test2_inventory_destroy();
+  if (all || test == 5) test1_inventory_add_del();
+  if (all || test == 6) test2_inventory_add_del();
+  if (all || test == 7) test1_inventory_has_object();
+  if (all || test == 8) test2_inventory_has_object();
+  if (all || test == 9) test1_inventory_full_empty();
+  if (all || test == 10) test2_inventory_full_empty();
+  if (all || test == 11) test1_inventory_max_objs();
+  if (all || test == 12) test2_inventory_max_objs();
+  if (all || test == 13) test2_inventory_get_max_objs();
+  if (all || test == 14) test1_inventory_number_of_objects();
+  if (all || test == 15) test2_inventory_number_of_objects();
+  if (all || test == 16) test1_inventory_get_objects();
+  if (all || test == 17) test2_inventory_get_objects();
+  if (all || test == 18) test1_inventory_set_objects();
+  if (all || test == 19) test2_inventory_set_objects();
 
   PRINT_PASSED_PERCENTAGE;
   return 0;
@@ -68,11 +71,29 @@ void test2_inventory_create() {
   PRINT_TEST_RESULT(inv == NULL);
 }
 
+/* Tests inventory destroy */
+void test1_inventory_destroy() {
+  Inventory *inv = inventory_create(3);
+  PRINT_TEST_RESULT(inventory_destroy(inv) == OK);
+}
+
+/* Tests inventory destroy of invalid inventory */
+void test2_inventory_destroy() {
+  Inventory *inv = inventory_create(0);
+  PRINT_TEST_RESULT(inventory_destroy(inv) == ERROR);
+}
+
 /* Tests adding and removing objects from an inventory */
 void test1_inventory_add_del() {
   Inventory *inv = inventory_create(2);
   PRINT_TEST_RESULT(inventory_add_object(inv, 5) == OK && inventory_del_object(inv, 5) == OK);
   inventory_destroy(inv);
+}
+
+/* Tests adding and removing objects from an inventory with invalid inventory pointer */
+void test2_inventory_add_del() {
+  Inventory *inv = NULL;
+  PRINT_TEST_RESULT(inventory_add_object(inv, 5) == ERROR && inventory_del_object(inv, 5) == ERROR);
 }
 
 /* Tests checking whether an object is in the inventory */
@@ -81,6 +102,11 @@ void test1_inventory_has_object() {
   inventory_add_object(inv, 6);
   PRINT_TEST_RESULT(inventory_has_object(inv, 6) == TRUE && inventory_has_object(inv, NO_ID) == FALSE);
   inventory_destroy(inv);
+}
+
+/* Tests checking whether an object is in the inventory with invalid inventory pointer */
+void test2_inventory_has_object() {
+  PRINT_TEST_RESULT(inventory_has_object(NULL, 5) == FALSE && inventory_has_object(NULL, NO_ID) == FALSE);
 }
 
 /* Tests inventory fullness and emptiness */
@@ -92,13 +118,28 @@ void test1_inventory_full_empty() {
   inventory_destroy(inv);
 }
 
+/* Tests inventory fullness and emptiness with invalid inventory pointer */
+void test2_inventory_full_empty() {
+  PRINT_TEST_RESULT(inventory_is_empty(NULL) == TRUE && inventory_is_full(NULL) == FALSE);
+}
+
 /* Tests getting and setting the inventory max object capacity */
 void test1_inventory_max_objs() {
   Inventory *inv = inventory_create(2);
   PRINT_TEST_RESULT(inventory_set_max_objs(inv, 3) == OK && inventory_get_max_objs(inv) == 3);
-  inventory_set_max_objs(inv, 0);
+  inventory_destroy(inv);
+}
+
+/* Tests getting and setting the inventory max object capacity */
+void test2_inventory_max_objs() {
+  Inventory *inv = inventory_create(2);
   PRINT_TEST_RESULT(inventory_set_max_objs(inv, 0) == ERROR);
   inventory_destroy(inv);
+}
+
+/* Tests getting the inventory max object capacity with invalid inventory pointer */
+void test2_inventory_get_max_objs() {
+  PRINT_TEST_RESULT(inventory_get_max_objs(NULL) == -1);
 }
 
 /* Tests getting the number of objects in the inventory */
@@ -108,6 +149,11 @@ void test1_inventory_number_of_objects() {
   inventory_add_object(inv, 9);
   PRINT_TEST_RESULT(inventory_get_number_of_objects(inv) == 2);
   inventory_destroy(inv);
+}
+
+/* Tests getting the number of objects in the inventory with invalid inventory pointer */
+void test2_inventory_number_of_objects() {
+  PRINT_TEST_RESULT(inventory_get_number_of_objects(NULL) == -1);
 }
 
 /* Tests getting the inventory objects set pointer */
@@ -120,6 +166,11 @@ void test1_inventory_get_objects() {
   inventory_destroy(inv);
 }
 
+/* Tests getting the inventory objects set pointer with invalid inventory pointer */
+void test2_inventory_get_objects() {
+  PRINT_TEST_RESULT(inventory_get_objects(NULL) == NULL);
+}
+
 /* Tests setting inventory objects with a new set */
 void test1_inventory_set_objects() {
   Inventory *inv = inventory_create(2);
@@ -129,27 +180,6 @@ void test1_inventory_set_objects() {
   inventory_destroy(inv);
 }
 
-/* Tests adding and removing objects from an inventory with invalid inventory pointer */
-void test2_inventory_add_del() {
-  Inventory *inv = NULL;
-  PRINT_TEST_RESULT(inventory_add_object(inv, 5) == ERROR && inventory_del_object(inv, 5) == ERROR);
-}
-
-/* Tests checking whether an object is in the inventory with invalid inventory pointer */
-void test2_inventory_has_object() {
-  PRINT_TEST_RESULT(inventory_has_object(NULL, 5) == FALSE && inventory_has_object(NULL, NO_ID) == FALSE);
-}
-
-/* Tests inventory fullness and emptiness with invalid inventory pointer */
-void test2_inventory_full_empty() {
-  PRINT_TEST_RESULT(inventory_is_empty(NULL) == TRUE && inventory_is_full(NULL) == FALSE);
-}
-
-/* Tests getting the inventory objects set pointer with invalid inventory pointer */
-void test2_inventory_get_objects() {
-  PRINT_TEST_RESULT(inventory_get_objects(NULL) == NULL);
-}
-
 /* Tests setting inventory objects with invalid parameters */
 void test2_inventory_set_objects() {
   Inventory *inv = inventory_create(2);
@@ -157,14 +187,4 @@ void test2_inventory_set_objects() {
   PRINT_TEST_RESULT(inventory_set_objects(NULL, new_objs) == ERROR && inventory_set_objects(inv, NULL) == ERROR);
   set_destroy(new_objs);
   inventory_destroy(inv);
-}
-
-/* Tests getting the number of objects in the inventory with invalid inventory pointer */
-void test2_inventory_number_of_objects() {
-  PRINT_TEST_RESULT(inventory_get_number_of_objects(NULL) == -1);
-}
-
-/* Tests getting the inventory max object capacity with invalid inventory pointer */
-void test2_inventory_get_max_objs() {
-  PRINT_TEST_RESULT(inventory_get_max_objs(NULL) == -1);
 }
