@@ -37,6 +37,9 @@ struct _Game {
   Status last_status; /**< Status of the last action performed */
   Bool finished; /**< Flag indicating whether the game has finished */
   int turn; /**< Current player's turn */
+
+  int failure_count;
+  Bool must_keep_turn;
 };
 
 /**
@@ -76,6 +79,8 @@ Game *game_create() {
   game->n_characters = 0;
   game->n_objects = 0;
 
+  game->failure_count = 0;
+  game->must_keep_turn = FALSE;
   return game;
 }
 
@@ -267,6 +272,33 @@ Space *game_get_space_by_name(Game *game, const char *name) {
 
 
 
+
+
+
+
+void game_set_failure_count(Game *game, int count) {
+  if (game) game->failure_count = count;
+}
+
+int game_get_failure_count(Game *game) {
+  return game ? game->failure_count : 0;
+}
+
+void game_set_must_keep_turn(Game *game, Bool keep) {
+  if (game) game->must_keep_turn = keep;
+}
+
+Bool game_get_must_keep_turn(Game *game) {
+  return game ? game->must_keep_turn : FALSE;
+}
+
+
+
+
+
+
+
+
 /*
 PLAYER
 */
@@ -339,6 +371,20 @@ Player *game_get_player_by_name(Game *game, const char *name) {
   return NULL;
 }
 
+/* It gets a player by its id */
+Player *game_get_player_by_id(Game *game, Id id){
+  int i;
+  if (!game || id == NO_ID) return NULL;
+
+  for (i = 0; i < MAX_PLAYERS; i++) {
+    Player *p = game_get_player_by_index(game, i);
+    if (p && player_get_id(p) == id) {
+      return p;
+    }
+    if (!p) break;
+  }
+  return NULL;
+}
 
 /*
 OBJECT

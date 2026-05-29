@@ -167,12 +167,22 @@ int main(int argc, char *argv[]) {
     graphic_engine_paint_game(gengine, game); /* renders current game state */
     command_get_user_input(last_cmd); /* reads user input */
     game_actions_update(game, last_cmd); /* updates game according to input */
+
     game_rules_update(game); /* evaluates rules and random events (F15, I4) */
     graphic_engine_paint_game(gengine, game); /* shows result before turn change (F13, I3) */
     #ifndef TEST_MODE
     sleep(2);
     #endif                                 /* waits 2 seconds before next player (F13, I3) */
-    game_next_turn(game);                /* changes player's turn. Multiplayer (F11, I3) */
+    
+    if (game_get_must_keep_turn(game) == FALSE) {
+      /* game_set_last_message(game, ""); */
+      game_next_turn(game);
+    }
+    else {
+      game_set_must_keep_turn(game, FALSE);
+    }
+    
+    /* game_next_turn(game); */               /* changes player's turn. Multiplayer (F11, I3) */
     last_cmd = game_get_last_command(game); /* actualizamos al final de cada iteración */
   }
   /*graphic_engine_paint_game(gengine, game);*/

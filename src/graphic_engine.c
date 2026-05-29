@@ -188,7 +188,9 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Space *p_space = NULL;           /* F13, I3: space of each player for discovered check */
 
   Set *inv_set = NULL;
+  Set *inv_set_team = NULL;
   Id *ids = NULL;
+  Id *ids_team = NULL;
   int n = 0;
   char obj_line[512];
   char char_line[1024];
@@ -340,6 +342,31 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       }
     }
     screen_area_puts(ge->descript, obj_line);
+  }
+
+  if (player_get_team(player) != NO_ID) {
+    inv_set_team = inventory_get_objects(player_get_backpack(game_get_player_by_id(game, player_get_team(player))));
+    if(inv_set_team != NULL){/*gets number of objects in inventory */
+      n = set_get_n_ids(inv_set_team);
+    }else{
+      n = 0;/*no objects in inventory */
+    }
+
+    if (n <= 0) {
+      screen_area_puts(ge->descript, " Team-Mate has no objects");
+    } else {
+      ids_team = set_get_ids(inv_set_team);
+      strcpy(obj_line, " Team-Mate has:");
+      for (i = 0; i < n; i++) {
+        obj = game_get_object(game, ids_team[i]);
+        if (obj) {
+          strcat(obj_line, " ");
+          strcat(obj_line, object_get_name(obj));
+          if (i < n - 1) strcat(obj_line, ",");
+        }
+      }
+      screen_area_puts(ge->descript, obj_line);
+    }
   }
   screen_area_puts(ge->descript, " ");
 

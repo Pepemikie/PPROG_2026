@@ -288,7 +288,15 @@ Player *game_get_player_by_index(Game *game, int index);
  */
 Player *game_get_player_by_name(Game *game, const char *name);
 
-
+/**
+ * @brief It gets a player from the game by its id
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @param id the id of the player to retrieve
+ * @return a pointer to the Player with the given id, or NULL if not found
+ */
+Player *game_get_player_by_id(Game *game, Id id);
 
 
 /*
@@ -585,5 +593,28 @@ Link *game_get_link_by_index(Game *game, int index);
  * @param game a pointer to the Game struct
  */
 void game_print(Game *game);
+
+
+
+
+
+
+
+
+
+void game_set_failure_count(Game *game, int count);
+int game_get_failure_count(Game *game);
+void game_set_must_keep_turn(Game *game, Bool keep);
+Bool game_get_must_keep_turn(Game *game);
+
+
+
+
+
+
+
+
+
+
 #endif
 #endif

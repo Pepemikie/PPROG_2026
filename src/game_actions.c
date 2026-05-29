@@ -378,6 +378,7 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
 
 Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
+  Status st;
 
   game_set_last_message(game, ""); /*reinicio de message e inspect si hay nuevo comando*/
   game_set_last_object_description(game, "");
@@ -388,7 +389,7 @@ Status game_actions_update(Game *game, Command *command) {
 
   switch (cmd) {
     case UNKNOWN:
-      game_set_last_status(game, OK);
+      game_set_last_status(game, ERROR);
       break;
 
     case EXIT:
@@ -448,7 +449,29 @@ Status game_actions_update(Game *game, Command *command) {
       break;
 
     default:
+      game_set_last_status(game, ERROR);
       break;
+  }
+
+  st = game_get_last_status(game);
+
+  if (st == ERROR) {
+    int fallos = game_get_failure_count(game) + 1;
+    game_set_failure_count(game, fallos);
+
+    if (fallos < 3) {
+      char msg[128];
+      sprintf(msg, "Error en comando. Intento %d/3.", fallos);
+      game_set_last_message(game, msg);
+      game_set_must_keep_turn(game, TRUE);
+    } else {
+      game_set_last_message(game, "Maximo de intentos. Pasas turno.");
+      game_set_failure_count(game, 0);
+      game_set_must_keep_turn(game, FALSE);
+    }
+  } else {
+    game_set_failure_count(game, 0);
+    game_set_must_keep_turn(game, FALSE);
   }
 
   /* Log the command if logging is enabled */
