@@ -585,6 +585,42 @@ Link* game_get_link_by_name(Game *game, const char *name);
  */
 Link *game_get_link_by_index(Game *game, int index);
 
+/**
+ * @brief It sets the failure count for the game
+ * @author Jose Miguel Romero Oubina
+ *
+ * @param game a pointer to the Game struct
+ * @param count the failure count to set
+ */
+void game_set_failure_count(Game *game, int count);
+
+/**
+ * @brief It gets the failure count for the game
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return the failure count, or 0 if there was some mistake
+ */
+int game_get_failure_count(Game *game);
+
+/**
+ * @brief It sets whether the player must keep the turn after a failed action
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @param keep TRUE if the player must keep the turn, FALSE otherwise
+ */
+void game_set_must_keep_turn(Game *game, Bool keep);
+
+/**
+ * @brief It gets whether the player must keep the turn after a failed action
+ * @author Jose Miguel Romero Oubina
+ * 
+ * @param game a pointer to the Game struct
+ * @return TRUE if the player must keep the turn, FALSE otherwise, or FALSE if there was some mistake
+ */
+Bool game_get_must_keep_turn(Game *game);
+
 #ifdef DEBUG
 /**
  * @brief It prints the data of the game
@@ -593,28 +629,5 @@ Link *game_get_link_by_index(Game *game, int index);
  * @param game a pointer to the Game struct
  */
 void game_print(Game *game);
-
-
-
-
-
-
-
-
-
-void game_set_failure_count(Game *game, int count);
-int game_get_failure_count(Game *game);
-void game_set_must_keep_turn(Game *game, Bool keep);
-Bool game_get_must_keep_turn(Game *game);
-
-
-
-
-
-
-
-
-
-
 #endif
 #endif

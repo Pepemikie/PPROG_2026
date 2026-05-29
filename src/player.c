@@ -168,6 +168,10 @@ Status player_set_health(Player* player, int health) {
 /*   It modifies the health of a Player by adding the given amount */
 Status player_modify_health(Player* player, int health) {
   if (!player) return ERROR;
+  if (player_get_health(player) + health <= 0){
+    player_set_health(player, 0);
+  }
+
   return player_set_health(player, player_get_health(player) + health);
 }
 

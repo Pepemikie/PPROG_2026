@@ -208,6 +208,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   int hp_len    = 0;
   Color_attr hp_col;
 
+  Bool has_access_n = TRUE, has_access_s = TRUE;
+
   if (!ge || !game) return;
 
   turn = game_get_turn(game);
@@ -221,10 +223,17 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     id_back = game_get_connection(game, space_get_id(act), N); /* retrieves north and south neighbours */
     id_next = game_get_connection(game, space_get_id(act), S);
 
+    has_access_n = game_get_connection_status(game, id_act, N);
+    has_access_s = game_get_connection_status(game, id_act, S);
+
     if (id_back != NO_ID) {
       /* North row: show_sides=FALSE — don't reveal its E/W neighbours */
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_back), FALSE, FALSE);
-      screen_area_puts(ge->map, "                                 ^");
+
+      if (has_access_n)
+        screen_area_puts(ge->map, "                                 ^");
+      else
+        screen_area_puts(ge->map, "                                 x");
     }
     else {
       screen_area_puts(ge->map, " ");
@@ -243,8 +252,12 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     graphic_engine_paint_spaces_row(ge->map, game, act, TRUE, TRUE);
 
     if (id_next != NO_ID) {
-      screen_area_puts(ge->map, "                                 v");
-      /* South row: show_sides=FALSE — don't reveal its E/W neighbours */
+      if (has_access_s)
+        screen_area_puts(ge->map, "                                 v");
+      else
+        screen_area_puts(ge->map, "                                 x");
+
+        /* South row: show_sides=FALSE — don't reveal its E/W neighbours */
       graphic_engine_paint_spaces_row(ge->map, game, game_get_space(game, id_next), FALSE, FALSE);
     }
     else {
@@ -301,7 +314,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-/* Player — prints location, health and carried object and character recruited */
+  /* Player — prints location, health and carried object and character recruited */
   player = game_get_player(game);
   health = player_get_health(player);
   {
@@ -370,7 +383,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-/*health movable dependency*/
+  /*health movable dependency*/
   /* Objects — prints each object name and its location */
   screen_area_puts(ge->descript, " Objects:");
   for (i = 0; i < MAX_OBJECTS; i++) {
@@ -486,7 +499,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     screen_area_puts(ge->feedback, " No command inserted");
   }
 
-/* 6. Render with player color */
+  /* 6. Render with player color */
   screen_paint(turn_to_frame_color(turn));
   printf("prompt:> ");
 }
@@ -505,6 +518,11 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   Bool west_discovered = FALSE, middle_discovered = FALSE, east_discovered = FALSE;
   char floor_arrow[3];
 
+  Id id_act = NO_ID;
+  Bool has_access_w = TRUE, has_access_e = TRUE;
+  Bool has_access_u = TRUE, has_access_d = TRUE;
+
+
   if (!area || !middle) return;
 
   if (show_sides == TRUE) {
@@ -513,6 +531,13 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     up = game_get_space(game, game_get_connection(game, space_get_id(middle), U));
     down = game_get_space(game, game_get_connection(game, space_get_id(middle), D));
   }
+
+  id_act = game_get_player_location(game);
+  has_access_w = game_get_connection_status(game, id_act, W);
+  has_access_e = game_get_connection_status(game, id_act, E);
+  has_access_u = game_get_connection_status(game, id_act, U);
+  has_access_d = game_get_connection_status(game, id_act, D);
+
 
   middle_discovered = space_get_discovered(middle);
   if (west) west_discovered = space_get_discovered(west);
@@ -552,11 +577,30 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
       active_player_gdesc = "^C>";
     }
   }
-  
+
   /*Se mira si tiene up o down para imprimir una flecha*/
-  if(up && !down) strcpy(floor_arrow, "^ ");
-  else if(down && !up) strcpy(floor_arrow, "v ");
-  else if(down && up) strcpy(floor_arrow, "^v");
+  if(up && !down) {
+    if (has_access_u)
+      strcpy(floor_arrow, "^ ");
+    else
+      strcpy(floor_arrow, "x ");
+  }
+  else if(down && !up) {
+    if (has_access_d)
+      strcpy(floor_arrow, " v");
+    else
+      strcpy(floor_arrow, " x");
+  }
+  else if(down && up) {
+    if (has_access_u && has_access_d)
+      strcpy(floor_arrow, "^v");
+    else if (has_access_u && !has_access_d)
+      strcpy(floor_arrow, "^x");
+    else if (!has_access_u && has_access_d)
+      strcpy(floor_arrow, "xv");
+    else
+      strcpy(floor_arrow, "xx");
+  }
   else strcpy(floor_arrow, "  ");
 
   sprintf(middle_str, "  | %s %-9s%s%3d|  ",
@@ -624,16 +668,49 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   }
 
   if (middle_discovered == FALSE) {
-    sprintf(middle_str, " %s|%-25s|%s ",
-        west ? "<" : " ",
-        "",
-        east ? ">" : " ");
+    if (has_access_e && has_access_w)
+      sprintf(middle_str, " %s|%-25s|%s ",
+          west ? "<" : " ",
+          "",
+          east ? ">" : " ");
+    else if (has_access_e && !has_access_w)
+      sprintf(middle_str, " %s|%-25s|%s ",
+          west ? "x" : " ",
+          "",
+          east ? ">" : " ");
+    else if (!has_access_e && has_access_w)
+      sprintf(middle_str, " %s|%-25s|%s ",
+          west ? "<" : " ",
+          "",
+          east ? "x" : " ");
+    else
+      sprintf(middle_str, " %s|%-25s|%s ",
+          west ? "x" : " ",
+          "",
+          east ? "x" : " ");
   } else {
     obj_list_status = graphic_engine_get_objects_str(game, middle, obj_list);
-    sprintf(middle_str, " %s| %-24s|%s ",
-        west ? "<" : " ",
-        obj_list_status == ERROR ? "" : obj_list,
-        east ? ">" : " ");
+
+    if (has_access_e && has_access_w)
+      sprintf(middle_str, " %s| %-24s|%s ",
+          west ? "<" : " ",
+          obj_list_status == ERROR ? "" : obj_list,
+          east ? ">" : " ");
+    else if (has_access_e && !has_access_w)
+      sprintf(middle_str, " %s| %-24s|%s ",
+          west ? "x" : " ",
+          obj_list_status == ERROR ? "" : obj_list,
+          east ? ">" : " ");
+    else if (!has_access_e && has_access_w)
+      sprintf(middle_str, " %s| %-24s|%s ",
+          west ? "<" : " ",
+          obj_list_status == ERROR ? "" : obj_list,
+          east ? "x" : " ");
+    else
+      sprintf(middle_str, " %s| %-24s|%s ",
+          west ? "x" : " ",
+          obj_list_status == ERROR ? "" : obj_list,
+          east ? "x" : " ");
   }
 
   if (!east) {

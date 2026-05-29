@@ -2,8 +2,6 @@ La generación de un fichero con el registro de comandos ejecutados y los corres
 
 EL user guide
 
-Gantt y actas
-
 Preguntar si el modo de juego determinista tanbien tiene en cuenta la aleatoriedad de los ataques (GANA SIEMPRE EL PLAYER)
 
 ---
@@ -28,11 +26,7 @@ F14 falta
 - modificar los .cmd
 
 F15     **HECHO**
-
-F16
-- b
-+ UP y DOWN para los extremos
-+ X para los espacios cerrados
+F16     **HECHO**
 
 F17
 - a
@@ -40,8 +34,6 @@ F17
 - c
 - d
 - e
-
-Extra modificar museum.dat
 
 ***
 

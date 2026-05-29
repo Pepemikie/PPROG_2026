@@ -1,9 +1,20 @@
-move south
-take apple
-inspect apple
-move east
-drop apple
-attack Ghost
-chat Batman
-move north
-exit
+Move u
+Move e
+Move n
+Move d
+Move w
+Move u
+Move s
+Move e
+Move u
+Move w
+Move s
+Move d
+Move e
+Take bomb
+Move s
+Move u
+Move u
+Move u
+Move u
+Exit

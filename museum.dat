@@ -1,44 +1,46 @@
 # id name gdesc location health max_object team num_objects (objects)
-#p:1|Robber_1|$P1|11|1|7|-1|0|
-#p:2|Robber_2|$P2|111|10|3|-1|0|
+#p:1|Robber_1|$P1|11|10|5|-1|0|
+p:2|Robber_2|$P2|111|14|7|-1|0|
 
 # id name gdesc health friendly location following message
-#c:31|Batman|/(B)\ |1|0|14|-1|I'm Batman|
-#c:32|Police|(P)/=*|10|0|12|-1|HEY! YOU!|
-#c:33|Guide|(G)!> |3|0|11|-1|Welcome to the Loubre Museum|
+#c:31|Batman|/(B)\ |25|0|131|-1|I'm Batman|
+#c:32|Police|(P)/=*|12|0|12|-1|HEY! YOU!|
+#c:33|Guide|(G)!> |3|0|11|-1|Welcome to the Museum|
 #c:34|Josemi| >(:{)|8|1|11|-1|Malloc|
 #c:35|Inaki| /(:D)|5|1|14|-1|Calloc|
 #c:36|Rodri| \(Bo)|9|1|14|-1|Realloc|
-#c:37|Baby|:?!}  |18|1|18|-1|Can't escape, you needed crown|
+#c:37|Baby|:?!}  |1|1|18|-1|Can't escape, you needed crown|
 
 # id name gdesc description location health movable dependency open
+# need the bone to grab the skull, need the paperroll to grab the knife
 #o:21|Knife|-->|A sharp knife|11|4|1|37|-1|
 #o:22|Shield|\^/|A sturdy shield|14|4|1|-1|-1|
-#o:23|Sword|-[==>|A slightly broken sword|14|0|1|-1|-1|
-#o:24|Rock|0|A hard rock|112|0|1|-1|-1|
-#o:25|Skull|(:)]|A skull from an anonymous|12|0|1|-1|-1|
-#o:26|Bone|E===3|A very big bone|12|0|1|-1|-1|
-#o:27|Map|[".]|Sorry! An useless map|11|0|1|-1|-1|
-#o:28|Bomb|@|KBOOM?|112|0|1|-1|22|
+#o:23|Sword|-[==>|A slightly broken sword|14|2|1|-1|-1|
+#o:24|Vessel|(+)|An old ceramic vessel|13|0|1|-1|-1|
+#o:25|Skull|(:)]|A skull with healing properties|12|8|1|26|-1|
+#o:26|Bone|E===3|A very big bone|131|0|1|-1|-1|
+#o:27|Map|[".]|Aparently, an useless map|11|0|1|-1|-1|
+#o:28|Bomb|@|KBOOM?|10|-20|1|-1|22|
 #o:29|Crown|MM|A SHINY and PRECIOUS crown!|-1|0|1|-1|-1|
-#o:30|Gun|/=*|A killing weapon|-1|0|1|-1|-1|
-#o:31|Engine|/^^\|You don't need that|17|0|1|-1|-1|
+#o:30|Gun|/=*|A killing weapon|-1|8|1|-1|-1|
+#o:31|Engine|/^^\|Don't grab and use it, it's too heavy!|17|-6|1|-1|-1|
 #o:32|Moonrock|"0"|A rock with 1/6 Earth's Gravity|17|0|1|-1|-1|
 #o:33|Necklace|****|A shiny necklace|161|0|1|-1|-1|
-#o:34|Apple|O-`|A red apple|16|0|1|-1|-1|
-#o:35|Martini|U|Probably it's not a very good moment for that right now|16|0|1|-1|-1|
-#o:36|Rum|U*|Why not?|16|0|1|-1|-1|
+#o:34|Apple|O-`|An apple a day keeps the doctor away, but what about the police?|16|1|1|-1|-1|
+#o:35|Martini|U|Probably it's not a very good moment for that right now|16|2|1|-1|-1|
+#o:36|Rum|U*|Why not?|16|3|1|-1|-1|
 #o:37|Paperroll|[]P|Nowadays this is valuable|111|0|1|-1|-1|
 #o:38|Hieroglyphs|$%&+?|Yeah, whathever...|12|0|1|-1|-1|
-#o:39|Banana|.<7'|A banana that was glued to a wall|15|1|1|-1|-1|
-#o:40|Whip|.G|That's something harmfull|131|0|1|-1|-1|
+#o:39|Banana|.<7'|A banana that was glued to a wall|15|3|1|-1|-1|
+#o:40|Snail|G'|That's too gross to eat it|112|-3|1|-1|-1|
 #o:41|Diamond|<]|DIAMONDS!|18|0|1|-1|-1|
 #o:42|Pickaxe|--}|A pickaxe from 1870|11|0|1|-1|-1|
 #o:43|Phone|[]|A robbed phone|161|0|1|-1|-1|
-#o:44|Wallet|\$\|A wallet you "found" in someone's hands|17|0|1|-1|-1|
+#o:44|Wallet|\$\|A wallet you "found" in someone's hands|161|0|1|-1|-1|
 #o:50|Key|o-"|A rusty key|-1|0|1|-1|14|
 
 # id name discovered gdesc
+#s:10|Basement|0|         |         |         | ======= |  !   !  |
 #s:11|Entry|0|//ENTRY//|._______.|!  //   !|!__//___!|!_______!|
 #s:111|Bathroom|0|      _  |     ! ! |  ___! ! | (    .' |  )  (   |
 #s:112|Garden|0| /\ /\ /\|//\\/\\/\|//\\/\\/\| II II II |---------|
@@ -88,3 +90,6 @@
 
 #l:23|link17-18|17|18|1|U|
 #l:24|link18-17|18|17|0|D|
+
+#l:25|link10-11|10|11|1|U|
+#l:26|link11-10|11|10|1|D|

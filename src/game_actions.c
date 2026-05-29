@@ -258,7 +258,7 @@ Status handle_take_object(Game *game, Object *obj, Space *current_space) {
   space_del_object(current_space, object_id);
 
   /* Add health to player */
-  player_modify_health(game_get_player(game), object_get_health(obj));
+ /* player_modify_health(game_get_player(game), object_get_health(obj));*/
   
   return OK;
 }
@@ -379,6 +379,8 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
 Status game_actions_update(Game *game, Command *command) {
   CommandCode cmd;
   Status st;
+  int fails;
+  char fails_message[128];
 
   game_set_last_message(game, ""); /*reinicio de message e inspect si hay nuevo comando*/
   game_set_last_object_description(game, "");
@@ -456,16 +458,15 @@ Status game_actions_update(Game *game, Command *command) {
   st = game_get_last_status(game);
 
   if (st == ERROR) {
-    int fallos = game_get_failure_count(game) + 1;
-    game_set_failure_count(game, fallos);
+    fails = game_get_failure_count(game) + 1;
+    game_set_failure_count(game, fails);
 
-    if (fallos < 3) {
-      char msg[128];
-      sprintf(msg, "Error en comando. Intento %d/3.", fallos);
-      game_set_last_message(game, msg);
+    if (fails < 3) {
+      sprintf(fails_message, "Command Error. Try again %d/3.", fails);
+      game_set_last_message(game, fails_message);
       game_set_must_keep_turn(game, TRUE);
     } else {
-      game_set_last_message(game, "Maximo de intentos. Pasas turno.");
+      game_set_last_message(game, "Maximum number of attempts reached. You pass your turn.");
       game_set_failure_count(game, 0);
       game_set_must_keep_turn(game, FALSE);
     }
@@ -494,13 +495,6 @@ Status game_actions_update(Game *game, Command *command) {
   }
   return OK;
 }
-
-
-/* void game_retry_command(Game *game, int max_intentos, int intento) {
-  
-
-} */
-
 
 /*   Makes the player pick up the named object in the current space */
 Status game_actions_take(Game *game) {
@@ -1237,10 +1231,19 @@ Status game_actions_use(Game *game) {
     if (character_get_following(c) != player_get_id(p)) return ERROR;
 
     /* Apply health to the character */
+
+    if (character_get_health(c) + object_get_health(obj) <= 0){
+      character_set_health(c, 0);
+    }
     character_set_health(c, character_get_health(c) + object_get_health(obj));
+
+
   } else {
     /* Use object on the player */
     player_modify_health(p, object_get_health(obj));
+    if (player_get_health(p) <= 0){
+      game_set_finished(game, TRUE);
+    }
   }
 
   /* Remove the object from the player's inventory and the game */

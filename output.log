@@ -1,7 +1,0 @@
-Move north: ERROR (P2)
-Move west: OK (P1)
-Take sword: ERROR (P2)
-Move west: ERROR (P1)
-Drop sword: ERROR (P2)
-Inspect sword: ERROR (P1)
-Exit: OK (P2)
