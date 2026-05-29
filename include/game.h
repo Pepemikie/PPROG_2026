@@ -4,7 +4,7 @@
  * @file game.h
  * @author Profesores PPROG
  * @version 0
- * @date 27-01-2025
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -51,7 +51,7 @@ Status game_create_from_file(Game *game, char *filename);
 
 /**
  * @brief It clears the current game data, freeing all allocated memory for spaces, players, characters, objects and links, and resetting all counters and flags
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return OK, if everything goes well or ERROR if there was some mistake
@@ -116,7 +116,7 @@ Status game_set_last_command(Game *game, Command *command);
 
 /**
  * @brief It gets the index of the player who executed the last command
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return the player index of the last command issuer, or -1 if none
@@ -188,7 +188,7 @@ Status game_add_space(Game *game, Space *space);
 
 /**
  * @brief It gets the number of spaces in the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return the number of spaces in the game, or 0 if there was some mistake
@@ -197,7 +197,7 @@ int game_get_num_spaces(Game *game);
 
 /**
  * @brief It gets an spaces from the game by its index
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @param index the position of the space in the game's space array
@@ -207,7 +207,7 @@ Space *game_get_space_by_index(Game *game, int index);
 
 /**
  * @brief It gets a space by its name
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param name a string with the name of the space to retrieve
@@ -280,7 +280,7 @@ Player *game_get_player_by_index(Game *game, int index);
 
 /**
  * @brief It gets a player from the game by its name
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param name a string with the name of the player to retrieve
@@ -290,7 +290,7 @@ Player *game_get_player_by_name(Game *game, const char *name);
 
 /**
  * @brief It gets a player from the game by its id
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @param id the id of the player to retrieve
@@ -355,7 +355,7 @@ Status game_add_object(Game *game, Object *object);
 
 /**
  * @brief It gets the number of objects in the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return the number of objects in the game, or 0 if there was some mistake
@@ -364,7 +364,7 @@ int game_get_num_objects(Game *game);
 
 /**
  * @brief It sets the last object description displayed in the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @param description a string with the description to be stored
@@ -374,7 +374,7 @@ Status game_set_last_object_description(Game *game, const char *description);
 
 /**
  * @brief It gets the last object description displayed in the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return a string with the last object description stored in the game
@@ -383,7 +383,7 @@ const char *game_get_last_object_description(Game *game);
 
 /**
  * @brief It gets an object from the game by its name
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param name the name of the object to retrieve
@@ -401,7 +401,7 @@ CHARACTER
 
 /**
  * @brief It gets a character from the game by its id
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @param id the id of the character to retrieve
@@ -421,7 +421,7 @@ Character* game_get_character_by_index(Game *game, int index);
 
 /**
  * @brief It gets the location of a character by its id
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @param character_id the id of the character whose location is retrieved
@@ -451,7 +451,7 @@ Status game_add_character(Game *game, Character *character);
 
 /**
  * @brief It gets the number of characters in the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return the number of characters in the game, or 0 if there was some mistake
@@ -479,7 +479,7 @@ const char* game_get_last_message(Game* game);
 
 /**
  * @brief It gets a character from the game by its name
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param name the name of the character to retrieve
@@ -506,7 +506,7 @@ LINKS
 */
 /**
  * @brief It adds a link to the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param link a pointer to the Link to be added
@@ -516,7 +516,7 @@ Status game_add_links(Game *game, Link *link);
 
 /**
  * @brief It gets the number of links in the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return the number of links in the game, or 0 if there was some mistake
@@ -525,7 +525,7 @@ int game_get_num_links(Game *game);
 
 /**
  * @brief It gets the id of the destination space given an origin space and a direction
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param space_id the id of the origin space
@@ -536,7 +536,7 @@ Id game_get_connection(Game *game, Id space_id, Direction direction);
 
 /**
  * @brief It checks if the link in a given direction from a space is open
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param space_id the id of the origin space
@@ -577,7 +577,7 @@ Link* game_get_link_by_name(Game *game, const char *name);
 
 /**
  * @brief It gets a link from the game by its index
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param index the position of the link in the game's link array
@@ -587,7 +587,7 @@ Link *game_get_link_by_index(Game *game, int index);
 
 /**
  * @brief It sets the failure count for the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @param count the failure count to set
@@ -596,7 +596,7 @@ void game_set_failure_count(Game *game, int count);
 
 /**
  * @brief It gets the failure count for the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return the failure count, or 0 if there was some mistake
@@ -605,7 +605,7 @@ int game_get_failure_count(Game *game);
 
 /**
  * @brief It sets whether the player must keep the turn after a failed action
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param keep TRUE if the player must keep the turn, FALSE otherwise
@@ -614,7 +614,7 @@ void game_set_must_keep_turn(Game *game, Bool keep);
 
 /**
  * @brief It gets whether the player must keep the turn after a failed action
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return TRUE if the player must keep the turn, FALSE otherwise, or FALSE if there was some mistake

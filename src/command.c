@@ -2,7 +2,7 @@
  * @brief It implements the command interpreter
  *
  * @file command.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 1
  * @date 02-03-2026
  * @copyright GNU Public License

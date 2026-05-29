@@ -3,7 +3,7 @@
  * @file inventory_test.h
  * @author Iñaki López Rocha
  * @version 1.0
- * @date 11-04-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -24,13 +24,13 @@ void test2_inventory_create();
 
 /**
  * @brief Tests destroying an inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test1_inventory_destroy();
 
 /**
  * @brief Tests destroying an inventory with invalid parameters
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test2_inventory_destroy();
 

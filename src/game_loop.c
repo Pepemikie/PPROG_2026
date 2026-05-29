@@ -2,7 +2,7 @@
  * @brief It defines the game loop
  *
  * @file game_loop.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 1
  * @copyright GNU Public License
  */

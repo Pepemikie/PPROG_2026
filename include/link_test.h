@@ -3,7 +3,7 @@
  * @file link_test.h
  * @author Iñaki López Rocha
  * @version 0.0
- * @date 01-04-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -24,13 +24,13 @@ void test2_link_create();
 
 /**
  * @brief Tests destroying a link
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test1_link_destroy();
 
 /**
  * @brief Tests destroying a link with invalid parameters
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test2_link_destroy();
 
@@ -42,7 +42,7 @@ void test1_link_get_id();
 
 /**
  * @brief Tests getting the id of a link with invalid parameters
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test2_link_get_id();
 

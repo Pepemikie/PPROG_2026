@@ -64,7 +64,7 @@ const char* object_get_name(Object* object);
 
 /**
  * @brief It sets the graphical description of an Object
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param object a pointer to the Object
  * @param gdesc a string with the graphical description to store
@@ -74,7 +74,7 @@ Status object_set_gdesc(Object* object, char* gdesc);
 
 /**
  * @brief It gets the graphical description of an Object
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param object a pointer to the Object
  * @return the graphical description of the Object
@@ -179,7 +179,7 @@ Id object_get_open(Object* object);
 #ifdef DEBUG
 /**
  * @brief It prints the data of an Object
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param object a pointer to the Object
  * @return OK, if everything goes well or ERROR if there was some mistake

@@ -2,7 +2,7 @@
  * @brief It implements the screen module
  *
  * @file libscreen.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 0
  * @date 07-05-2026
  * @copyright GNU Public License

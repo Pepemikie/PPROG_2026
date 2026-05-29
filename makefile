@@ -1,6 +1,6 @@
 # @brief Compile and merge the files needed for the game.
 # @file makefile
-# @author Jose Miguel Romero Oubina
+# @author José Miguel Romero Oubiña
 # @date 23-02-2026
 # @version 4.2
 

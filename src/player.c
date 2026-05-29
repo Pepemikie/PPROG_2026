@@ -2,7 +2,7 @@
  * @brief It implements the player module
  *
  * @file player.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 2
  * @date 25-03-2026
  * @copyright GNU Public License

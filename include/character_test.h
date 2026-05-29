@@ -3,7 +3,7 @@
  * @file character_test.h
  * @author Iñaki López Rocha
  * @version 2.0
- * @date 25-03-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -24,13 +24,13 @@ void test2_character_create();
 
 /**
  * @brief Tests destroying a character
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test1_character_destroy();
 
 /**
  * @brief Tests destroying a character with invalid parameters
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test2_character_destroy();
 

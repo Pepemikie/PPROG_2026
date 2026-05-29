@@ -2,7 +2,7 @@
  * @brief It implements the link module
  *
  * @file link.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 1
  * @date 28-03-2026
  * @copyright GNU Public License

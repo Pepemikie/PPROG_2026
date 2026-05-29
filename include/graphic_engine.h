@@ -4,7 +4,7 @@
  * @file graphic_engine.h
  * @author Profesores PPROG
  * @version 0
- * @date 27-01-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -34,7 +34,7 @@ void graphic_engine_destroy(Graphic_engine *ge);
 
 /**
  * @brief It renders the current state of the game on screen
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param ge a pointer to the Graphic_engine struct
  * @param game a pointer to the Game struct to be rendered

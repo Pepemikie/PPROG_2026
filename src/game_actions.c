@@ -2,7 +2,7 @@
  * @brief It implements the game update through user actions
  *
  * @file game_actions.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 3
  * @date 01-04-2026
  * @copyright GNU Public License
@@ -24,7 +24,7 @@ extern char *cmd_to_str[N_CMD][N_CMDT];
 
 /**
  * @brief Does nothing when the command is not recognized
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  */
@@ -32,7 +32,7 @@ void game_actions_unknown(Game *game);
 
 /**
  * @brief Handles exiting the game
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  */
@@ -40,7 +40,7 @@ void game_actions_exit(Game *game);
 
 /**
  * @brief Makes the player pick up the named object in the current space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return OK if the object was picked up, ERROR otherwise
@@ -49,7 +49,7 @@ Status game_actions_take(Game *game);
 
 /**
  * @brief Makes the player drop their named carried object into the current space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return OK if the object was dropped, ERROR otherwise
@@ -58,7 +58,7 @@ Status game_actions_drop(Game *game);
 
 /**
  * @brief Makes the player attack if the character in the space is not friendly
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return OK if the attack was performed, ERROR otherwise
@@ -67,7 +67,7 @@ Status game_actions_attack(Game *game);
 
 /**
  * @brief Makes the player interact with a friendly character by chat
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return OK if the chat was performed, ERROR otherwise
@@ -76,7 +76,7 @@ Status game_actions_chat(Game *game);
 
 /**
  * @brief Moves the player to the next space in the given direction if it exists and is open
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return OK if the player moved, ERROR otherwise
@@ -85,7 +85,7 @@ Status game_actions_move(Game *game);
 
 /**
  * @brief Inspects a named object in the current space or in the player's inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
  * @return OK if the object was inspected, ERROR otherwise
@@ -94,7 +94,7 @@ Status game_actions_inspect(Game *game);
 
 /**
  * @brief Recruits a friendly character in the current space to follow the player
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return OK if the character was recruited, ERROR otherwise
@@ -103,7 +103,7 @@ Status game_actions_recruit(Game *game);
 
 /**
  * @brief Abandons the character that you have previously recruited
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return OK if the character was abandoned, ERROR otherwise
@@ -162,7 +162,7 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space);
 
 /**
  * @brief Collaborates with another player, if both players are in the same space and have recruited each other
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return OK if the collaboration was successful, ERROR otherwise 
@@ -171,7 +171,7 @@ Status game_actions_colab(Game *game);
 
 /**
  * @brief Saves the current game state to a file
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param filename the name of the file where the game state will be saved
@@ -181,7 +181,7 @@ Status save_game_state(Game *game, const char *filename);
 
 /**
  * @brief Loads a game state from a file, replacing the current game state
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param filename the name of the file from which the game state will be loaded
@@ -191,7 +191,7 @@ Status load_game_state(Game *game, const char *filename);
 
 /**
  * @brief Gets the team player of the current player, if any
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @return a pointer to the team Player, or NULL if there is no team player

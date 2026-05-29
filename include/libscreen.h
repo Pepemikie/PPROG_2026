@@ -2,7 +2,7 @@
  * @brief It defines the libscreen interface
  *
  * @file libscreen.h
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 1.2
  * @date 8-05-2026
  * @copyright GNU Public License

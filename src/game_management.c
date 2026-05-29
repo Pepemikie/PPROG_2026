@@ -2,7 +2,7 @@
  * @brief It implements the game_management interpreter
  *
  * @file game_management.c
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 1
  * @date 12-03-2026
  * @copyright GNU Public License

@@ -2,7 +2,7 @@
  * @brief It defines the player module interface
  *
  * @file player.h
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 2
  * @date 25-03-2026
  * @copyright GNU Public License
@@ -86,7 +86,7 @@ Id player_get_location(Player* player);
 
 /**
  * @brief It adds an object to the player's inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @param object the id of the object to be added
@@ -96,7 +96,7 @@ Status player_add_object(Player* player, Id object);
 
 /**
  * @brief It removes an object from the player's inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @param object the id of the object to be removed
@@ -106,7 +106,7 @@ Status player_del_object(Player* player, Id object);
 
 /**
  * @brief It checks if a Player has a specific object in their inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @param object the id of the object to check
@@ -116,7 +116,7 @@ Bool player_has_object(Player* player, Id object);
 
 /**
  * @brief It gets the id of an object in the player's inventory by its index
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @param index the position of the object in the inventory (0-based)
@@ -126,7 +126,7 @@ Id player_get_object(Player* player, int index);
 
 /**
  * @brief It gets the player's inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @return a pointer to the Inventory struct representing the player's backpack, or NULL if there was some mistake
@@ -173,7 +173,7 @@ Status player_set_gdesc(Player* player, char* gdesc);
 
 /**
  * @brief It gets the number of objects currently in the player's inventory
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * 
  * @param player a pointer to the Player
  * @return the number of objects in the player's backpack, or -1 if there was some mistake
@@ -192,7 +192,7 @@ Status player_modify_health(Player* player, int health);
 
 /**
  * @brief It sets the team mate of a Player
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @param team the id of the player that is going to be the team mate
@@ -202,7 +202,7 @@ Status player_set_team(Player* player, Id team);
 
 /**
  * @brief It gets the team mate of a Player
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
  * @return the id of the player's team mate, or NO_ID if the player has no team mate

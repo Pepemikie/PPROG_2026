@@ -2,9 +2,9 @@
  * @brief It defines the command interpreter interface
  *
  * @file command.h
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 1
- * @date 06-03-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -96,7 +96,7 @@ CommandCode command_get_code(Command* command);
 
 /**
  * @brief It gets the argument of a Command
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param command a pointer to the Command
  * @return a string with the argument stored in the Command, or NULL if there is none

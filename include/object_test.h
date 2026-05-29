@@ -3,7 +3,7 @@
  * @file object_test.h
  * @author Iñaki López Rocha
  * @version 2.0
- * @date 01-04-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -24,13 +24,13 @@ void test2_object_create();
 
 /**
  * @brief Tests destroying an object
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test1_object_destroy();
 
 /**
  * @brief Tests destroying an object with invalid parameters
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  */
 void test2_object_destroy();
 

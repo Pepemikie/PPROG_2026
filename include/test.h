@@ -2,7 +2,7 @@
  * @brief It defines the test interface
  *
  * @file test.h
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  * @version 0
  * @date 25-03-2026
  * @copyright GNU Public License

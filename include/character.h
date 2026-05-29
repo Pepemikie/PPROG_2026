@@ -4,7 +4,7 @@
  * @file character.h
  * @author Jorge Garcia Garrido
  * @version 1
- * @date 10-03-2026
+ * @date 29-05-2026
  * @copyright GNU Public License
  */
 
@@ -43,7 +43,7 @@ Status character_destroy(Character* c);
 
 /**
  * @brief It gets the id of a character
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param c a pointer to the character
  * @return the id of the character, or NO_ID if the pointer is NULL
@@ -61,7 +61,7 @@ const char* character_get_name(Character* c);
 
 /**
  * @brief It sets the name of a character
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param c a pointer to the character
  * @param name a string with the name to store
@@ -71,7 +71,7 @@ Status character_set_name(Character* c, char* name);
 
 /**
  * @brief It gets the graphic description of a character
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param c a pointer to the character
  * @return a string with the graphic description of the character, or NULL if the pointer is NULL
@@ -80,7 +80,7 @@ char* character_get_gdesc(Character* c);
 
 /**
  * @brief It sets the graphic description of a character
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param c a pointer to the character
  * @param gdesc a string with the graphic description to store

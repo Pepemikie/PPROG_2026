@@ -72,7 +72,7 @@ const char* space_get_name(Space* space);
 
 /**
  * @brief It sets the graphic description of a Space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param space a pointer to the Space
  * @param gdesc a 2D array of strings with the graphic description to store
@@ -82,7 +82,7 @@ Status space_set_gdesc(Space* space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_L
 
 /**
  * @brief It gets a line of the graphic description of a Space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param space a pointer to the Space
  * @param line the index of the graphic description line to retrieve
@@ -135,7 +135,7 @@ Status space_del_object(Space* space, Id id);
 
 /**
  * @brief It checks whether an object is in the Space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param space a pointer to the Space
  * @param id the id of the object to search for
@@ -145,7 +145,7 @@ Bool space_has_object(Space* space, Id id);
 
 /**
  * @brief It gets the array of object ids stored in the Space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param space a pointer to the Space
  * @return a pointer to the array of object ids in the Space
@@ -177,7 +177,7 @@ Status space_add_character(Space *space, Id id, Bool character_is_friendly);
 
 /**
  * @brief It gets the id of the character located in the Space
- * @author Jose Miguel Romero Oubina
+ * @author José Miguel Romero Oubiña
  *
  * @param space a pointer to the Space
  * @return a pointer to the id of the character in the Space, or NULL if there is none
