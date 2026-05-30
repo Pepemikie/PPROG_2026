@@ -79,46 +79,46 @@ int main(int argc, char** argv) {
   return 1;
 }
 
-
+/* Tests the creation of a character */
 void test1_character_create() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(c != NULL);
   character_destroy(c);
 }
 
-
+/* Tests the creation of a character with an invalid ID */
 void test2_character_create() {
   Character *c = character_create(NO_ID);
   PRINT_TEST_RESULT(c == NULL);
   character_destroy(c);
 }
 
-
+/* Tests the destruction of a character */
 void test1_character_destroy() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_destroy(c) == OK);
 }
 
-
+/* Tests the destruction of a character with an invalid ID */
 void test2_character_destroy() {
   Character *c = character_create(NO_ID);
   PRINT_TEST_RESULT(character_destroy(c) == ERROR);
 }
 
-
+/* Tests setting the name of a character */
 void test1_character_set_name() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_name(c, "Inaki") == OK);
   character_destroy(c);
 }
 
-
+/* Tests setting the name of a character with an invalid pointer */
 void test2_character_set_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_name(c, "Inaki") == ERROR);
 }
 
-
+/* Tests getting the name of a character */
 void test1_character_get_name() {
   Character *c = character_create(1);
   character_set_name(c, "Inaki");
@@ -126,26 +126,26 @@ void test1_character_get_name() {
   character_destroy(c);
 }
 
-
+/* Tests getting the name of a character with an invalid pointer */
 void test2_character_get_name() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_name(c) == NULL);
 }
 
-
+/* Tests setting the following character */
 void test1_character_set_following() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_following(c, 2) == OK);
   character_destroy(c);
 }
 
-
+/* Tests setting the following character with an invalid pointer */
 void test2_character_set_following() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_following(c, 2) == ERROR);
 }
 
-
+/* Tests getting the following character */
 void test1_character_get_following() {
   Character *c = character_create(1);
   character_set_following(c, 3);
@@ -153,26 +153,26 @@ void test1_character_get_following() {
   character_destroy(c);
 }
 
-
+/* Tests getting the following character with an invalid pointer */
 void test2_character_get_following() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_following(c) == NO_ID);
 }
 
-
+/* Tests setting the health of a character */
 void test1_character_set_health() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_health(c, 10) == OK);
   character_destroy(c);
 }
 
-
+/* Tests setting the health of a character with an invalid pointer */
 void test2_character_set_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_health(c, 10) == ERROR);
 }
 
-
+/* Tests getting the health of a character */
 void test1_character_get_health() {
   Character *c = character_create(1);
   character_set_health(c, 25);
@@ -180,26 +180,26 @@ void test1_character_get_health() {
   character_destroy(c);
 }
 
-
+/* Tests getting the health of a character with an invalid pointer */
 void test2_character_get_health() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_health(c) == -1);
 }
 
-
+/* Tests setting the friendly status of a character */
 void test1_character_set_friendly() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_friendly(c, FALSE) == OK);
   character_destroy(c);
 }
 
-
+/* Tests setting the friendly status of a character with an invalid pointer */
 void test2_character_set_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_friendly(c, FALSE) == ERROR);
 }
 
-
+/* Tests if a character is friendly */
 void test1_character_is_friendly() {
   Character *c = character_create(1);
   character_set_friendly(c, TRUE);
@@ -207,26 +207,26 @@ void test1_character_is_friendly() {
   character_destroy(c);
 }
 
-
+/* Tests if a character is friendly with an invalid pointer */
 void test2_character_is_friendly() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_is_friendly(c) == FALSE);
 }
 
-
+/* Tests setting the message of a character */
 void test1_character_set_message() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_message(c, "Hola") == OK);
   character_destroy(c);
 }
 
-
+/* Tests setting the message of a character with an invalid pointer */
 void test2_character_set_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_message(c, "Hola") == ERROR);
 }
 
-
+/* Tests getting the message of a character */
 void test1_character_get_message() {
   Character *c = character_create(1);
   character_set_message(c, "Test Message");
@@ -234,39 +234,39 @@ void test1_character_get_message() {
   character_destroy(c);
 }
 
-
+/* Tests getting the message of a character with an invalid pointer */
 void test2_character_get_message() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_message(c) == NULL);
 }
 
-
+/* Tests getting the ID of a character */
 void test1_character_get_id() {
   Character *c = character_create(3);
   PRINT_TEST_RESULT(character_get_id(c) == 3);
   character_destroy(c);
 }
 
-
+/* Tests getting the ID of a character with an invalid pointer */
 void test2_character_get_id() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_id(c) == NO_ID);
 }
 
-
+/* Tests setting the general description of a character */
 void test1_character_set_gdesc() {
   Character *c = character_create(1);
   PRINT_TEST_RESULT(character_set_gdesc(c, "HELLO ") == OK);
   character_destroy(c);
 }
 
-
+/* Tests setting the general description of a character with an invalid pointer */
 void test2_character_set_gdesc() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_set_gdesc(c, "HELLO ") == ERROR);
 }
 
-
+/* Tests getting the general description of a character */
 void test1_character_get_gdesc() {
   Character *c = character_create(1);
   character_set_gdesc(c, "HELLO ");
@@ -274,7 +274,7 @@ void test1_character_get_gdesc() {
   character_destroy(c);
 }
 
-
+/* Tests getting the general description of a character with an invalid pointer */
 void test2_character_get_gdesc() {
   Character *c = NULL;
   PRINT_TEST_RESULT(character_get_gdesc(c) == NULL);

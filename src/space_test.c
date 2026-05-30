@@ -25,7 +25,6 @@
  *   1.- No parameter -> ALL test are executed 
  *   2.- A number means a particular test (the one identified by that number) 
  *       is executed
- *  
  */
 int main(int argc, char** argv) {
 
@@ -53,8 +52,8 @@ int main(int argc, char** argv) {
   if (all || test == 7)  test3_space_set_name();
   if (all || test == 8)  test1_space_set_object();
   if (all || test == 9)  test2_space_set_object();
-  if (all || test == 10)  test1_space_get_id();
-  if (all || test == 11)  test2_space_get_id();
+  if (all || test == 10) test1_space_get_id();
+  if (all || test == 11) test2_space_get_id();
   if (all || test == 12) test1_space_get_name();
   if (all || test == 13) test2_space_get_name();
   if (all || test == 14) test1_space_get_object();
@@ -97,12 +96,14 @@ void test2_space_create() {
   PRINT_TEST_RESULT(s == NULL);
 }
 
+/* Tests the destruction of a space */
 void test1_space_destroy() {
   Space *s;
   s = space_create(5);
   PRINT_TEST_RESULT(space_destroy(s) == OK);
 }
 
+/* Tests the destruction of a space with invalid parameters */
 void test2_space_destroy() {
   Space *s;
   s = space_create(NO_ID);
@@ -263,6 +264,7 @@ void test2_space_del_character() {
   PRINT_TEST_RESULT(space_del_character(s, NO_ID) == ERROR);
   space_destroy(s);
 }
+
 /* Tests getting the id of a space */
 void test1_space_get_id() {
   Space *s;

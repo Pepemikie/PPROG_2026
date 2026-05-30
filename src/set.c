@@ -16,10 +16,10 @@
 /** @brief Structure for the Set type */
 struct _Set {
   Id ids[MAX_SET]; /**< Array of ids stored in the set */
-  int n_ids;       /**< Number of ids currently in the set */
+  int n_ids; /**< Number of ids currently in the set */
 };
 
-/*   It creates a new empty Set, allocating memory and initializing its members */
+/* It creates a new empty Set, allocating memory and initializing its members */
 Set* set_create() {
   Set *new_set = NULL;
   int i;
@@ -35,7 +35,7 @@ Set* set_create() {
   return new_set;
 }
 
-/*   It destroys a Set, freeing the allocated memory */
+/* It destroys a Set, freeing the allocated memory */
 Status set_destroy(Set* set) {
   if (!set) {
     return ERROR;
@@ -45,7 +45,7 @@ Status set_destroy(Set* set) {
   return OK;
 }
 
-/*   It adds an element to the Set if it does not already exist */
+/* It adds an element to the Set if it does not already exist */
 Status set_add(Set* set, Id id) {
   if (!set || id == NO_ID || set->n_ids >= MAX_SET) {
     return ERROR;
@@ -60,7 +60,7 @@ Status set_add(Set* set, Id id) {
   return OK;
 }
 
-/*   It removes an element from the Set */
+/* It removes an element from the Set */
 Status set_del(Set* set, Id id) {
   int i, index;
   if (!set || id == NO_ID) {
@@ -81,7 +81,7 @@ Status set_del(Set* set, Id id) {
   return OK;
 }
 
-/*   It searches for an id in the Set */
+/* It searches for an id in the Set */
 int set_find(Set* set, Id id) {
   int i;
   if (!set || id == NO_ID) {
@@ -96,7 +96,7 @@ int set_find(Set* set, Id id) {
   return -1;
 }
 
-/*   It gets the number of elements in the Set */
+/* It gets the number of elements in the Set */
 int set_get_n_ids(Set* set) {
   if (!set) {
     return -1;
@@ -104,7 +104,7 @@ int set_get_n_ids(Set* set) {
   return set->n_ids;
 }
 
-/*   It gets the id stored at a given position in the Set */
+/* It gets the id stored at a given position in the Set */
 Id set_get_id(Set *set, int array_position) {
   if (set == NULL || array_position < 0 || array_position >= set->n_ids) {
     return NO_ID;
@@ -112,7 +112,7 @@ Id set_get_id(Set *set, int array_position) {
   return set->ids[array_position];
 }
 
-/*   It gets the array of ids stored in the Set */
+/* It gets the array of ids stored in the Set */
 Id* set_get_ids(Set *set) {
   if (set == NULL || set->n_ids == 0) {
     return NULL; 
@@ -121,7 +121,7 @@ Id* set_get_ids(Set *set) {
 }
 
 #ifdef DEBUG
-/*   It prints the contents of a Set */
+/* It prints the contents of a Set */
 Status set_print(Set* set) {
   int i;
   if (!set) {

@@ -62,11 +62,13 @@ void test1_set_create() {
   set_destroy(s);
 }
 
+/* Tests the destruction of a set */
 void test1_set_destroy() {
   Set *s = set_create();
   PRINT_TEST_RESULT(set_destroy(s) == OK);
 }
 
+/* Tests the destruction of a set with invalid parameters */
 void test2_set_destroy() {
   PRINT_TEST_RESULT(set_destroy(NULL) == ERROR);
 }
@@ -82,7 +84,6 @@ void test1_set_add() {
 void test2_set_add() {
   Set *s = set_create();
   set_add(s, 100);
-  /* Según set.c, si ya existe no debería dar error, pero no añade nada nuevo */
   PRINT_TEST_RESULT(set_add(s, 100) == OK && set_get_n_ids(s) == 1);
   set_destroy(s);
 }

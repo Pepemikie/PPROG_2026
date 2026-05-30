@@ -23,22 +23,6 @@ extern FILE *g_logfile;
 extern char *cmd_to_str[N_CMD][N_CMDT];
 
 /**
- * @brief Does nothing when the command is not recognized
- * @author José Miguel Romero Oubiña
- *
- * @param game a pointer to the Game struct
- */
-void game_actions_unknown(Game *game);
-
-/**
- * @brief Handles exiting the game
- * @author José Miguel Romero Oubiña
- *
- * @param game a pointer to the Game struct
- */
-void game_actions_exit(Game *game);
-
-/**
  * @brief Makes the player pick up the named object in the current space
  * @author José Miguel Romero Oubiña
  *
@@ -190,7 +174,7 @@ Status save_game_state(Game *game, const char *filename);
 Status load_game_state(Game *game, const char *filename);
 
 /**
- * @brief Gets the team player of the current player, if any
+ * @brief Gets the team player of the current player
  * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
@@ -224,7 +208,6 @@ Player *game_player_get_team(Game *game) {
 Bool can_take_object(Game *game, Object *obj) {
   Player *aux_player = NULL;
   int i = 0;
-
 
   if (!game || !obj) return FALSE;
   
@@ -265,9 +248,6 @@ Status handle_take_object(Game *game, Object *obj, Space *current_space) {
   if (player_add_object(game_get_player(game), object_id) == ERROR) return ERROR;
   space_del_object(current_space, object_id);
 
-  /* Add health to player */
- /* player_modify_health(game_get_player(game), object_get_health(obj));*/
-  
   return OK;
 }
 
@@ -504,7 +484,7 @@ Status game_actions_update(Game *game, Command *command) {
   return OK;
 }
 
-/*   Makes the player pick up the named object in the current space */
+/* Makes the player pick up the named object in the current space */
 Status game_actions_take(Game *game) {
   Id player_location = NO_ID;
   Id object_id = NO_ID;
@@ -563,7 +543,7 @@ Status game_actions_take(Game *game) {
   return ERROR;
 }
 
-/*   Makes the player drop the named object into the current space */
+/* Makes the player drop the named object into the current space */
 Status game_actions_drop(Game *game) {
   Id player_location = NO_ID;
   Id carried_object_id = NO_ID;
@@ -614,7 +594,7 @@ Status game_actions_drop(Game *game) {
   return handle_drop_object(game, obj, current_space);
 }
 
-/*Moves the player to the space in the direction specified by the command argument if there is one */
+/* Moves the player to the space in the direction specified by the command argument if there is one */
 Status game_actions_move(Game *game) {
   Id current_space = NO_ID;
   Id next_space = NO_ID;
@@ -743,7 +723,7 @@ Status game_actions_inspect(Game *game) {
     }
   }
 
-  /*if the object is not in the current space, checks if it is in the player's inventory*/
+  /* if the object is not in the current space, checks if it is in the player's inventory*/
   inv = inventory_get_objects(player_get_backpack(game_get_player(game)));
   if (inv) {
     ids = set_get_ids(inv);
@@ -896,7 +876,7 @@ Status game_actions_attack(Game *game) {
   return OK;
 }
 
-/*   Makes the player interact with a friendly character by chat */
+/* Makes the player interact with a friendly character by chat */
 Status game_actions_chat(Game *game) {
   Character *c = NULL;
   Id player_location = NO_ID;
@@ -927,7 +907,7 @@ Status game_actions_chat(Game *game) {
   return OK;
 }
 
-/*   Recruits a friendly character in the current space to follow the player */
+/* Recruits a friendly character in the current space to follow the player */
 Status game_actions_recruit(Game *game) {
   Character *c = NULL;
   Id player_location = NO_ID;
@@ -953,7 +933,7 @@ Status game_actions_recruit(Game *game) {
   c = game_get_character_by_name(game, arg);
 
   if(!c || character_is_friendly(c) == FALSE) return ERROR;
-  /*if(character_get_following(c) != NO_ID) return ERROR;*/
+  if(character_get_following(c) != NO_ID) return ERROR;
 
   character_location = game_get_character_location(game, character_get_id(c));
   if (character_location != player_location) return ERROR;
@@ -969,7 +949,6 @@ Status game_actions_abandon(Game *game) {
   Command *last_cmd = NULL;
   char *arg = NULL;
   Player *player = NULL;
-  /*Player *mate = NULL;*/
   Id current_player_id = NO_ID;
 
   if (!game) return ERROR;
@@ -994,24 +973,11 @@ Status game_actions_abandon(Game *game) {
     character_set_following(c, NO_ID);
     return OK;
   }
-  
-  /* Then player - team mate */
-  /*
-  mate = game_get_player_by_name(game, arg);
-  if (mate) {
-    if(player_get_team(mate) == NO_ID) return ERROR;
-    if (player_get_team(mate) == current_player_id || player_get_team(player) == player_get_id(mate)) {
-      player_set_team(mate, NO_ID);
-      player_set_team(player, NO_ID);
-      return OK;
-    }
-  }
-  */
 
   return ERROR; /* No se encontró un personaje con ese nombre, o no es un seguidor del jugador */
 }
 
-/* Opens a named link with a named object in the current space, if possible (F11, I4) */
+/* Opens a named link with a named object in the current space, if possible */
 Status game_actions_open(Game *game) {
   Command *last_cmd = NULL;
   char *link_name = NULL;
@@ -1038,11 +1004,11 @@ Status game_actions_open(Game *game) {
 
   if (!game) return ERROR;
 
-  last_cmd = game_get_last_command(game);       /* We get the last command executed */
+  last_cmd = game_get_last_command(game); /* We get the last command executed */
   if (!last_cmd) return ERROR;
 
-  link_name = command_get_arg(last_cmd);        /* We get the first argument, which should be the name of the link */
-  obj_name = command_get_arg2(last_cmd);        /* We get the second argument, which should be the name of the object */
+  link_name = command_get_arg(last_cmd); /* We get the first argument, which should be the name of the link */
+  obj_name = command_get_arg2(last_cmd); /* We get the second argument, which should be the name of the object */
   if (!link_name || link_name[0] == '\0' || !obj_name || obj_name[0] == '\0')
     return ERROR;
 
@@ -1052,12 +1018,12 @@ Status game_actions_open(Game *game) {
   player_location = game_get_player_location(game); 
   if (player_location == NO_ID) return ERROR;
 
-  inv_set = inventory_get_objects(player_get_backpack(player));   /* We get the set of objects in the player's inventory */
+  inv_set = inventory_get_objects(player_get_backpack(player)); /* We get the set of objects in the player's inventory */
   if (!inv_set)
     not_inventory = TRUE;
 
-  n = set_get_n_ids(inv_set);                             /* We get the number of objects in the inventory */
-  ids = set_get_ids(inv_set);                             /* We get the array of object ids in the inventory */
+  n = set_get_n_ids(inv_set); /* We get the number of objects in the inventory */
+  ids = set_get_ids(inv_set); /* We get the array of object ids in the inventory */
 
 
   player_id = player_get_id(game_get_player(game));
@@ -1082,7 +1048,7 @@ Status game_actions_open(Game *game) {
   if (!ids || n <= 0)
     not_inventory = TRUE;
   else {
-    for (i = 0; i < n; i++) {                               /* We look for the object with the given name in the inventory */
+    for (i = 0; i < n; i++) { /* We look for the object with the given name in the inventory */
       obj = game_get_object(game, ids[i]);
       if (obj != NULL && strcasecmp(object_get_name(obj), obj_name) == 0) {
         object_id = ids[i];
@@ -1098,7 +1064,7 @@ Status game_actions_open(Game *game) {
     n = n_team;
     ids = ids_team;
 
-    for (i = 0; i < n; i++) {                               /* We look for the object with the given name in the inventory */
+    for (i = 0; i < n; i++) { /* We look for the object with the given name in the inventory */
       obj = game_get_object(game, ids[i]);
       if (obj != NULL && strcasecmp(object_get_name(obj), obj_name) == 0) {
         object_id = ids[i];
@@ -1112,19 +1078,19 @@ Status game_actions_open(Game *game) {
   /* The player has the object */
   if (object_get_open(obj) == NO_ID) return ERROR;
 
-  link = game_get_link_by_name(game, link_name);           /* We look for the link with the given name in the game */
+  link = game_get_link_by_name(game, link_name); /* We look for the link with the given name in the game */
   if (!link) return ERROR;
 
-  if (link_get_origin(link) != player_location && link_get_destination(link) != player_location)              /* We check that the link is connected to the current space */
+  if (link_get_origin(link) != player_location && link_get_destination(link) != player_location) /* We check that the link is connected to the current space */
     return ERROR;
 
-  if (object_get_open(obj) != link_get_id(link)) return ERROR;          /* We check that the object can open the link */
+  if (object_get_open(obj) != link_get_id(link)) return ERROR; /* We check that the object can open the link */
 
-  return link_set_open(link, TRUE);                        /* We open the link */
+  return link_set_open(link, TRUE); /* We open the link */
 
 }
 
-/*  Uses an object on the player or a friendly character */
+/* Uses an object on the player or a friendly character */
 Status game_actions_use(Game *game) {
   Id player_location = NO_ID;
   Id object_id = NO_ID;
@@ -1244,7 +1210,6 @@ Status game_actions_use(Game *game) {
     if (character_get_following(c) != player_get_id(p)) return ERROR;
 
     /* Apply health to the character */
-
     if (character_get_health(c) + object_get_health(obj) <= 0){
       character_set_health(c, 0);
     }

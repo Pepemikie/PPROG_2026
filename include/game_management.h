@@ -34,7 +34,7 @@ Status game_management_load_spaces(Game *game, char *filename);
 Status game_management_load_objects(Game *game, char *filename);
 
 /**
- * @brief It reads the characters from a file, creates each character with its name, description and other attributes,   and adds them to the game
+ * @brief It reads the characters from a file, creates each character with its name, description and other attributes, and adds them to the game
  * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct
@@ -54,7 +54,7 @@ Status game_management_load_characters(Game *game, char *filename);
 Status game_management_load_links(Game *game, char *filename);
 
 /**
- * @brief It reads the players from a file, creates each player and adds them to the game. Multiplayer (F11, I3)
+ * @brief It reads the players from a file, creates each player and adds them to the game
  * @author José Miguel Romero Oubiña
  *
  * @param game a pointer to the Game struct

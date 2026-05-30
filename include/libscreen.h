@@ -16,14 +16,26 @@
  */
 typedef enum {
   BLACK = 0, /**< Black color */
-  RED,       /**< Red color */
-  GREEN,     /**< Green color */
-  YELLOW,    /**< Yellow color */
-  BLUE,      /**< Blue color */
-  PURPLE,    /**< Purple color */
-  CYAN,      /**< Cyan color */
-  WHITE      /**< White color */
+  RED   = 1, /**< Red color */
+  GREEN = 2, /**< Green color */
+  YELLOW = 3, /**< Yellow color */
+  BLUE = 4, /**< Blue color */
+  PURPLE = 5, /**< Purple color */
+  CYAN = 6, /**< Cyan color */
+  WHITE = 7 /**< White color */
 } Frame_color;
+
+/**
+ * @brief Color attribute constants for use with screen_area_puts_bold_color_at.
+ */
+typedef enum {
+  COLOR_ATTR_NONE = 0, /**< No special color attribute (normal style) */
+  COLOR_ATTR_BOLD = 1, /**< Bold style (bold black on white) */
+  COLOR_ATTR_BOLD_BLUE = 2, /**< Bold blue style */
+  COLOR_ATTR_BOLD_GREEN = 3, /**< Bold green style */
+  COLOR_ATTR_BOLD_RED = 4, /**< Bold red style */
+  COLOR_ATTR_BOLD_YELLOW = 5  /**< Bold yellow style */
+} Color_attr;
 
 /**
  * @brief Opaque type representing a screen area
@@ -123,17 +135,5 @@ void screen_area_puts_bold_at(Area *area, char *str, int bold_start, int bold_le
  * @param color_attr Color attribute constant (see Color_attr)
  */
 void screen_area_puts_bold_color_at(Area *area, char *str, int bold_start, int bold_len, int color_attr);
-
-/**
- * @brief Color attribute constants for use with screen_area_puts_bold_color_at.
- */
-typedef enum {
-  COLOR_ATTR_NONE        = 0,
-  COLOR_ATTR_BOLD        = 1,
-  COLOR_ATTR_BOLD_BLUE   = 2,
-  COLOR_ATTR_BOLD_GREEN  = 3,
-  COLOR_ATTR_BOLD_RED    = 4,
-  COLOR_ATTR_BOLD_YELLOW = 5
-} Color_attr;
 
 #endif /* __LIBSCREEN_H */

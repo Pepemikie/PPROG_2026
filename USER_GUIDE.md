@@ -32,7 +32,10 @@
 ### _EXECUTION_
 - `./rob_the_museum museum.dat` -> Normal mode  
 - `./rob_the_museum museum.dat -d` -> Deterministic mode (for testing)  
-- `./rob_the_museum museum.dat -l output.log` -> With log file
+- `./rob_the_museum museum.dat -l output.log` -> With log file  
+- `./rob_the_museum museum_uniplayer.dat` -> Normal mode (Uniplayer) 
+- `./rob_the_museum museum_uniplayer.dat -d` -> Deterministic mode (for testing) (Uniplayer)
+- `./rob_the_museum museum_uniplayer.dat -l output.log` -> With log file (Uniplayer)
 
 -----------------------
 ## **COMMAND REFERENCE**
@@ -103,6 +106,7 @@
 - Init position: Entry
 - Init health points: 10
 - Max backpack: 5
+
 ### _PLAYER 2_
 - Name: Robber_2
 - Graphic Description: $P2

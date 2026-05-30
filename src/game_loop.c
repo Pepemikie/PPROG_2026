@@ -7,7 +7,6 @@
  * @copyright GNU Public License
  */
 
-
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -40,7 +39,7 @@ static int music_thread_started = 0;
 static void *music_thread() {
     char *aplay_args[] = {"aplay", "./Main_Theme_2.wav", NULL};
 
-    while (music_running) {   /*comprueba la variable en cada iteración */ 
+    while (music_running) { /*comprueba la variable en cada iteración */ 
         music_pid = fork();
         if (music_pid == 0) {
             int devnull = open("/dev/null", O_WRONLY);
@@ -57,21 +56,19 @@ static void *music_thread() {
 }
 
 static void music_stop() {
-    music_running = 0;  /* para el bucle primero */
+    music_running = 0; /* para el bucle primero */
     if (music_pid > 0) {
         kill(music_pid, SIGTERM);
     }
 }
 
 /**
- * @brief prints the Title
- * 
+ * @brief prints the Title 
  */
 void print_start();
 
 /**
  * @brief prints THE END
- * 
  */
 void print_end();
 
@@ -126,11 +123,11 @@ int main(int argc, char *argv[]) {
   }
 
   if (datafile == NULL) {
-    fprintf(stderr, "Use: %s [-l logfile] [-d] <game_data_file>\n", argv[0]); /* We add -d to the usage message (F16,I4) */
+    fprintf(stderr, "Use: %s [-l logfile] [-d] <game_data_file>\n", argv[0]); /* We add -d to the usage message */
     return 1;
   }
 
-  /* Seed the random number generator (F16,I4) */
+  /* Seed the random number generator */
   if (deterministic) {
     srand(1);
   } else {
@@ -168,24 +165,20 @@ int main(int argc, char *argv[]) {
     command_get_user_input(last_cmd); /* reads user input */
     game_actions_update(game, last_cmd); /* updates game according to input */
 
-    game_rules_update(game); /* evaluates rules and random events (F15, I4) */
-    graphic_engine_paint_game(gengine, game); /* shows result before turn change (F13, I3) */
+    game_rules_update(game); /* evaluates rules and random events */
+    graphic_engine_paint_game(gengine, game); /* shows result before turn change */
     #ifndef TEST_MODE
     sleep(2);
-    #endif                                 /* waits 2 seconds before next player (F13, I3) */
+    #endif /* waits 2 seconds before next player */
     
     if (game_get_must_keep_turn(game) == FALSE) {
-      /* game_set_last_message(game, ""); */
       game_next_turn(game);
     }
     else {
       game_set_must_keep_turn(game, FALSE);
     }
-    
-    /* game_next_turn(game); */               /* changes player's turn. Multiplayer (F11, I3) */
     last_cmd = game_get_last_command(game); /* actualizamos al final de cada iteración */
   }
-  /*graphic_engine_paint_game(gengine, game);*/
   game_loop_cleanup(game, gengine); /* frees all resources */
   if (g_logfile) {
     fclose(g_logfile);
@@ -203,14 +196,13 @@ int main(int argc, char *argv[]) {
  * @return 0 on success, 1 if game initialization failed, 2 if graphic engine creation failed
  */
 int game_loop_init(Game **game, Graphic_engine **gengine, char *file_name) {
-  /* ARREGLO F1: Creamos el objeto dinámicamente */
   *game = game_create(); 
   if (*game == NULL) return 1; /* error control */
   if (game_create_from_file(*game, file_name) == ERROR) {
     game_destroy(*game);
     return 1;
   }
-  if ((*gengine = graphic_engine_create()) == NULL) { /* error control: graphic engine creation failed */
+  if ((*gengine = graphic_engine_create()) == NULL) { /* error control */
     game_destroy(*game);
     return 2;
   }

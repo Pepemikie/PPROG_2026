@@ -75,7 +75,7 @@ const char* space_get_name(Space* space);
  * @author José Miguel Romero Oubiña
  *
  * @param space a pointer to the Space
- * @param gdesc a 2D array of strings with the graphic description to store
+ * @param gdesc an array of strings with the graphic description to store
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status space_set_gdesc(Space* space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]);
@@ -91,7 +91,7 @@ Status space_set_gdesc(Space* space, char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_L
 char* space_get_gdesc(Space* space, int line);
 
 /**
- * @brief It sets whether a Space has been discovered (F12, I3)
+ * @brief It sets whether a Space has been discovered
  * @author Rodrigo Cruz Asensio
  *
  * @param space a pointer to the Space
@@ -101,7 +101,7 @@ char* space_get_gdesc(Space* space, int line);
 Status space_set_discovered(Space *space, Bool discovered);
 
 /**
- * @brief It gets whether a Space has been discovered (F12, I3)
+ * @brief It gets whether a Space has been discovered
  * @author Rodrigo Cruz Asensio
  *
  * @param space a pointer to the Space
@@ -183,6 +183,7 @@ Status space_add_character(Space *space, Id id, Bool character_is_friendly);
  * @return a pointer to the id of the character in the Space, or NULL if there is none
  */
 Id *space_get_character(Space *space);
+
 /**
  * @brief It checks whether a character is in the Space
  * 

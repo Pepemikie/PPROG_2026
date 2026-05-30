@@ -25,7 +25,7 @@ struct _Player {
   Id team; /**< The id of the player's team mate, or NO_ID if the player has no team mate */
 };
 
-/*   It creates a new Player, allocating memory and initializing its members */
+/* It creates a new Player, allocating memory and initializing its members */
 Player* player_create(Id id) {
   Player *new_player = NULL;
   if (id == NO_ID) {
@@ -46,7 +46,7 @@ Player* player_create(Id id) {
   return new_player;
 }
 
-/*   It destroys a Player, freeing the allocated memory */
+/* It destroys a Player, freeing the allocated memory */
 Status player_destroy(Player* player) {
   if (!player) {
     return ERROR; /* error control */
@@ -59,7 +59,7 @@ Status player_destroy(Player* player) {
   return OK;
 }
 
-/*   It gets the id of a Player */
+/* It gets the id of a Player */
 Id player_get_id(Player* player) {
   if (!player) {
     return NO_ID;
@@ -67,7 +67,7 @@ Id player_get_id(Player* player) {
   return player->id;
 }
 
-/*   It sets the name of a Player */
+/* It sets the name of a Player */
 Status player_set_name(Player* player, char* name) {
   if (!player || !name) {
     return ERROR;
@@ -79,7 +79,7 @@ Status player_set_name(Player* player, char* name) {
   return OK;
 }
 
-/*   It gets the name of a Player */
+/* It gets the name of a Player */
 const char* player_get_name(Player* player) {
   if (!player) {
     return NULL;
@@ -87,7 +87,7 @@ const char* player_get_name(Player* player) {
   return player->name;
 }
 
-/*   It sets the location of a Player */
+/* It sets the location of a Player */
 Status player_set_location(Player* player, Id location) {
   if (!player) {
     return ERROR;
@@ -96,7 +96,7 @@ Status player_set_location(Player* player, Id location) {
   return OK;
 }
 
-/*   It gets the location of a Player */
+/* It gets the location of a Player */
 Id player_get_location(Player* player) {
   if (!player) {
     return NO_ID;
@@ -104,37 +104,37 @@ Id player_get_location(Player* player) {
   return player->location;
 }
 
-/*   It adds an object to the player's inventory */
+/* It adds an object to the player's inventory */
 Status player_add_object(Player* player, Id object) {
   if (!player || object == NO_ID || !player->backpack) {
-    return ERROR;/*error control*/
+    return ERROR; /* error control */
   }
 
-  /*al tener un solo elmento, antes solo asigamos. ahora añadimos un espcio y metemos el objeto*/
+  /* al tener un solo elmento, antes solo asigamos. ahora añadimos un espcio y metemos el objeto */
   return inventory_add_object(player->backpack, object);
 }
 
-/*   It removes an object from the player's inventory */
+/* It removes an object from the player's inventory */
 Status player_del_object(Player* player, Id object) {
   if (!player || object == NO_ID || !player->backpack) {
-    return ERROR;/*error control*/
+    return ERROR; /* error control */
   }
 
   return inventory_del_object(player->backpack, object);
 }
 
-/*   It checks if a Player has a specific object in their inventory */
+/* It checks if a Player has a specific object in their inventory */
 Bool player_has_object(Player* player, Id object) {
   if (!player || object == NO_ID || !player->backpack) {
-    return FALSE;/*error control*/
+    return FALSE; /* error control */
   }
   return inventory_has_object(player->backpack, object);
 }
 
-/*   It gets the id of an object in the player's inventory by its index */
+/* It gets the id of an object in the player's inventory by its index */
 Id player_get_object(Player* player, int index) {
   if (!player || index < 0 || !player->backpack) {
-    return NO_ID;/*error control*/
+    return NO_ID; /* error control */
   }
   if (index >= inventory_get_max_objs(player->backpack)) {
     return NO_ID;
@@ -142,15 +142,15 @@ Id player_get_object(Player* player, int index) {
   return set_get_id(inventory_get_objects(player->backpack), index);
 }
 
-/*   It gets the player's inventory */
+/* It gets the player's inventory */
 Inventory* player_get_backpack(Player* player) {
-  if (!player) {/*error control*/
+  if (!player) { /* error control */
     return NULL;
   }
   return player->backpack;
 }
 
-/*   It gets the health of a Player */
+/* It gets the health of a Player */
 int player_get_health(Player* player) {
   if(!player) {
     return -1;
@@ -158,14 +158,14 @@ int player_get_health(Player* player) {
   return player->health;
 }
 
-/*   It sets the health of a Player */
+/* It sets the health of a Player */
 Status player_set_health(Player* player, int health) {
   if (!player || health < 0) return ERROR;
   player->health = health; /* assigns health points to the player */
   return OK;
 }
 
-/*   It modifies the health of a Player by adding the given amount */
+/* It modifies the health of a Player by adding the given amount */
 Status player_modify_health(Player* player, int health) {
   if (!player) return ERROR;
   if (player_get_health(player) + health <= 0){
@@ -175,7 +175,7 @@ Status player_modify_health(Player* player, int health) {
   return player_set_health(player, player_get_health(player) + health);
 }
 
-/*   It sets the team mate of a Player */
+/* It sets the team mate of a Player */
 Status player_set_team(Player* player, Id team) {
   if (!player) {
     return ERROR;
@@ -184,7 +184,7 @@ Status player_set_team(Player* player, Id team) {
   return OK;
 }
 
-/*   It gets the team mate of a Player */
+/*  It gets the team mate of a Player */
 Id player_get_team(Player* player) {
   if (!player) {
     return NO_ID;
@@ -192,7 +192,7 @@ Id player_get_team(Player* player) {
   return player->team;
 }
 
-/*   It gets the graphic description of a Player */
+/*  It gets the graphic description of a Player */
 const char* player_get_gdesc(Player* player) {
   if (!player) {
     return NULL;
@@ -200,7 +200,7 @@ const char* player_get_gdesc(Player* player) {
   return player->gdesc;
 }
 
-/*   It sets the graphic description of a Player */
+/*  It sets the graphic description of a Player */
 Status player_set_gdesc(Player* player, char* gdesc) {
   if (!player || !gdesc) {
     return ERROR;
@@ -210,6 +210,7 @@ Status player_set_gdesc(Player* player, char* gdesc) {
   return OK;
 }
 
+/* It gets the number of items in the player's inventory */
 int player_get_number_of_items_in_backpack(Player* player) {
   if (!player || !player->backpack) {
     return -1; /* error control */

@@ -47,8 +47,8 @@
 
 /*
  * hp > HP_HIGH  -> green   (healthy)
- * HP_LOW < hp ≤ HP_HIGH -> yellow  (wounded)
- * hp ≤ HP_LOW  -> red     (critical)
+ * HP_LOW < hp <= HP_HIGH -> yellow  (wounded)
+ * hp <= HP_LOW  -> red     (critical)
  */
 
 /** @brief HP healty*/
@@ -77,7 +77,7 @@ struct _Graphic_engine {
  */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides);
 
-/*   It builds a string with the names of all objects in a given space */
+/* It builds a string with the names of all objects in a given space */
 /**
  * @brief It builds a string with the names of all objects in a given space
  * @param game a pointer to the Game struct
@@ -99,8 +99,8 @@ static Status graphic_engine_get_characters_str(Game *game, Space *space, char *
  * @brief Returns the Color_attr that matches a given hp value.
  *
  * hp > HP_HIGH  -> COLOR_ATTR_BOLD_GREEN
- * HP_LOW < hp ≤ HP_HIGH -> COLOR_ATTR_BOLD_YELLOW
- * hp ≤ HP_LOW  -> COLOR_ATTR_BOLD_RED
+ * HP_LOW < hp <= HP_HIGH -> COLOR_ATTR_BOLD_YELLOW
+ * hp <= HP_LOW  -> COLOR_ATTR_BOLD_RED
  */
 static Color_attr hp_to_color(int hp) {
   if (hp > HP_HIGH) return COLOR_ATTR_BOLD_GREEN;
@@ -135,7 +135,7 @@ static Color_attr turn_to_text_color(int turn) {
   return COLOR_ATTR_BOLD;
 }
 
-/*   It creates a new Graphic_engine, allocating memory and initializing its members */
+/* It creates a new Graphic_engine, allocating memory and initializing its members */
 Graphic_engine *graphic_engine_create() {
   Graphic_engine *ge = NULL;
 
@@ -154,7 +154,7 @@ Graphic_engine *graphic_engine_create() {
   return ge;
 }
 
-/*   It destroys a Graphic_engine, freeing the allocated memory */
+/* It destroys a Graphic_engine, freeing the allocated memory */
 void graphic_engine_destroy(Graphic_engine *ge) {
   if (!ge) return;
 
@@ -170,23 +170,21 @@ void graphic_engine_destroy(Graphic_engine *ge) {
   free(ge);
 }
 
-/*   It renders the current state of the game on screen */
+/* It renders the current state of the game on screen */
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   Id id_act = NO_ID, id_back = NO_ID, id_next = NO_ID;
   Id obj_loc = NO_ID, char_loc = NO_ID;
   Space *act = NULL;
-  Space *obj_space = NULL;         /* F12, I3: only show objects if space is discovered */
-  Space *char_space = NULL;        /* F12, I3: only show characters if space is discovered */
+  Space *obj_space = NULL;
+  Space *char_space = NULL;
   char str[WORD_SIZE];
   CommandCode last_cmd = UNKNOWN;
   extern char *cmd_to_str[N_CMD][N_CMDT];
-  int i;
   Player *player = NULL;
-  Player *p = NULL;                /* F13, I3: used to iterate all players */
+  Player *p = NULL;
   Character *character = NULL;
   Object *obj = NULL;
-  Space *p_space = NULL;           /* F13, I3: space of each player for discovered check */
-
+  Space *p_space = NULL;
   Set *inv_set = NULL;
   Set *inv_set_team = NULL;
   Id *ids = NULL;
@@ -200,12 +198,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   char player_label[PLAYER_ACTION];
   char player_num = '0';
   Bool cmd_ok = FALSE;
+  int i;
 
   char room_name[498];
 
   /* offsets used to highlight hp numbers inside a formatted string */
   int hp_offset = 0;
-  int hp_len    = 0;
+  int hp_len = 0;
   Color_attr hp_col;
 
   Bool has_access_n = TRUE, has_access_s = TRUE;
@@ -335,10 +334,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
 
   inv_set = inventory_get_objects(player_get_backpack(player));
-  if(inv_set != NULL){/*gets number of objects in inventory */
+  if(inv_set != NULL){ /* gets number of objects in inventory */
     n = set_get_n_ids(inv_set);
   }else{
-    n = 0;/*no objects in inventory */
+    n = 0; /* no objects in inventory */
   }
 
   if (n <= 0) {
@@ -359,10 +358,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
 
   if (player_get_team(player) != NO_ID) {
     inv_set_team = inventory_get_objects(player_get_backpack(game_get_player_by_id(game, player_get_team(player))));
-    if(inv_set_team != NULL){/*gets number of objects in inventory */
+    if(inv_set_team != NULL){ /* gets number of objects in inventory */
       n = set_get_n_ids(inv_set_team);
     }else{
-      n = 0;/*no objects in inventory */
+      n = 0; /* no objects in inventory */
     }
 
     if (n <= 0) {
@@ -383,14 +382,14 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-  /*health movable dependency*/
+  /* health movable dependency */
   /* Objects — prints each object name and its location */
   screen_area_puts(ge->descript, " Objects:");
   for (i = 0; i < MAX_OBJECTS; i++) {
     obj = game_get_object_by_index(game, i);
     if (!obj) break;
     obj_loc = game_get_object_location(game, object_get_id(obj));
-    obj_space = game_get_space(game, obj_loc);                      /* Only show objects that are in discovered spaces */
+    obj_space = game_get_space(game, obj_loc); /* Only show objects that are in discovered spaces */
     if (!obj_space || space_get_discovered(obj_space) == FALSE) continue;
 
     sprintf(str, "  %-13s   [ %s ] at %d (%d hp, %s, %s)", object_get_name(obj), object_get_gdesc(obj),(int)obj_loc, object_get_health(obj), object_get_movable(obj) ? "mov" : "fix", object_get_dependency(obj) != NO_ID ? "dep" : "indep");
@@ -405,12 +404,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
     character = game_get_character_by_index(game, i);
     if (!character) break;
     char_loc = game_get_character_location(game, character_get_id(character));
-    char_space = game_get_space(game, char_loc);                            /* Only show characters that are in discovered spaces */
+    char_space = game_get_space(game, char_loc); /* Only show characters that are in discovered spaces */
     if (!char_space || space_get_discovered(char_space) == FALSE) continue; 
     health = character_get_health(character);
     if (health > 0) {
-      /* Build the prefix up to the hp number to calculate the offset,
-        then build the full string and highlight the hp digits */
       char prefix[128];
       char hp_str[12];
       sprintf(prefix, "  %-10s: %d (", character_get_name(character), (int)char_loc);
@@ -504,8 +501,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   printf("prompt:> ");
 }
 
-/*   It paints a row of three horizontally adjacent spaces centered on the given space.
- *   If show_sides is FALSE, west and east neighbours are not rendered (treated as absent). */
+/* It paints a row of three horizontally adjacent spaces centered on the given space.
+ * If show_sides is FALSE, west and east neighbours are not shown */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides) {
   Space *west = NULL, *east = NULL, *up = NULL, *down = NULL;
   Player *active_player = NULL;
@@ -543,13 +540,13 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   if (west) west_discovered = space_get_discovered(west);
   if (east) east_discovered = space_get_discovered(east);
 
-  /* TOP LINE*/
+  /* TOP LINE */
   sprintf(str, "%s  +-------------------------+  %s",
       !west ? "                           " : "+-------------------------+",
       !east ? "                           " : "+-------------------------+");
   screen_area_puts(area, str);
 
-  /* CHARACTER + ID LINE*/
+  /* CHARACTER + ID LINE */
   if (!west) {
     sprintf(west_str, "                           ");
   } else {
@@ -578,7 +575,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     }
   }
 
-  /*Se mira si tiene up o down para imprimir una flecha*/
+  /* Se mira si tiene up o down para imprimir una flecha */
   if(up && !down) {
     if (has_access_u)
       strcpy(floor_arrow, "^ ");
@@ -631,7 +628,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     screen_area_puts(area, str);
   }
 
-  /* GDESC LINES*/
+  /* GDESC LINES */
   for (i = 0; i < SPACE_GDESC_LINES; i++) {
     wg = (!west || west_discovered == FALSE) ? NULL : space_get_gdesc(west, i);
     mg = (middle_discovered == FALSE) ? "         " : space_get_gdesc(middle, i);
@@ -655,7 +652,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
     screen_area_puts(area, str);
   }
 
-  /* OBJECTS + ARROWS LINE*/
+  /* OBJECTS + ARROWS LINE */
   if (!west) {
     sprintf(west_str, "                           ");
   } else {
@@ -734,7 +731,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
   screen_area_puts(area, str);
 }
 
-/*   It builds a string with the names of all objects in a given space */
+/* It builds a string with the names of all objects in a given space */
 static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str) {
   Id *n = NULL;
   int i, obj_cont;
@@ -763,7 +760,7 @@ static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str
   return OK;
 }
 
-/*   It builds a string with the names of all characters in a given space */
+/* It builds a string with the names of all characters in a given space */
 static Status graphic_engine_get_characters_str(Game *game, Space *space, char *str) {
   Id *n = NULL;
   int i, char_cont, written;
@@ -800,7 +797,7 @@ static Status graphic_engine_get_characters_str(Game *game, Space *space, char *
     written += name_len;
   }
 
-  /* trunca por seguridad y rellena hasta ROOM_WIDTH exacto */
+  /* se trunca por seguridad y rellena hasta ROOM_WIDTH exacto */
   car[ROOM_WIDTH] = '\0';
   while ((int)strlen(car) < ROOM_WIDTH) strcat(car, " ");
   strcpy(str, car);

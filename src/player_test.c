@@ -81,11 +81,13 @@ void test2_player_create() {
   PRINT_TEST_RESULT(p == NULL);
 }
 
+/* Tests player destruction */
 void test1_player_destroy() {
   Player *p = player_create(1);
   PRINT_TEST_RESULT(player_destroy(p) == OK);
 }
 
+/* Tests player destruction with invalid parameters */
 void test2_player_destroy() {
   Player *p = player_create(NO_ID);
   PRINT_TEST_RESULT(player_destroy(p) == ERROR);
@@ -152,6 +154,7 @@ void test1_player_add_object() {
   player_destroy(p);
 }
 
+/* Tests adding an object to the player's inventory with invalid parameters */
 void test2_player_add_object() {
   PRINT_TEST_RESULT(player_add_object(NULL, 1) == ERROR);
 }
@@ -249,16 +252,19 @@ void test1_player_get_gdesc() {
   player_destroy(p);
 }
 
+/* Tests getting the player graphic description with invalid parameters */
 void test2_player_get_gdesc() {
   PRINT_TEST_RESULT(player_get_gdesc(NULL) == NULL);
 }
 
+/* Tests setting the player team */
 void test1_player_set_team() {
   Player *p = player_create(1);
   PRINT_TEST_RESULT(player_set_team(p, 2) == OK);
   player_destroy(p);
 }
 
+/* Tests setting the player team with invalid parameters */
 void test2_player_set_team() {
   PRINT_TEST_RESULT(player_set_team(NULL, 2) == ERROR);
 }

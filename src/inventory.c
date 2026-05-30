@@ -21,7 +21,7 @@ struct _Inventory{
     int max_objs; /**< Maximum number of objects the inventory can hold */
 };
 
-/*   It creates a new Inventory, allocating memory and initializing its members */
+/* It creates a new Inventory, allocating memory and initializing its members */
 Inventory *inventory_create(int max_objects){
     Inventory *inv = NULL;
 
@@ -41,7 +41,7 @@ Inventory *inventory_create(int max_objects){
     return inv;
 }
 
-/*   It destroys an Inventory, freeing the allocated memory */
+/* It destroys an Inventory, freeing the allocated memory */
 Status inventory_destroy(Inventory *inventory){
     if (!inventory) {
         return ERROR; /* error control */
@@ -54,7 +54,7 @@ Status inventory_destroy(Inventory *inventory){
     return OK;
 }
 
-/*   It adds an object to the inventory */
+/* It adds an object to the inventory */
 Status inventory_add_object(Inventory *inventory, Id object_id){
     if (!inventory || object_id == NO_ID) return ERROR; /* error control */
     
@@ -63,7 +63,7 @@ Status inventory_add_object(Inventory *inventory, Id object_id){
     return set_add(inventory->objs, object_id);
 }
 
-/*   It removes an object from the inventory by its id */
+/* It removes an object from the inventory by its id */
 Status inventory_del_object(Inventory *inventory, Id object_id){
     if(inventory == NULL || object_id == NO_ID) {
         return ERROR; /* error control */
@@ -72,17 +72,17 @@ Status inventory_del_object(Inventory *inventory, Id object_id){
     return set_del(inventory->objs, object_id);
 }
 
-/*   It checks if an object is in the inventory by its id */
+/* It checks if an object is in the inventory by its id */
 Bool inventory_has_object(Inventory *inventory, Id object_id){
     if(inventory == NULL || object_id == NO_ID) return FALSE; /* error control */
 
     if(set_find(inventory->objs, object_id) != -1)
-        return TRUE; /*object found*/
+        return TRUE; /* object found */
 
     return FALSE; /* object not found */
 }
 
-/*   It gets the objects in the inventory */
+/* It gets the objects in the inventory */
 Set *inventory_get_objects(Inventory *inventory){
     if(inventory == NULL) return NULL; /* error control */
     
@@ -118,17 +118,17 @@ int inventory_get_max_objs(Inventory *inventory) {
     return inventory->max_objs;
 }
 
-/*   It gets the number of objects in the inventory */
+/* It gets the number of objects in the inventory */
 int inventory_get_number_of_objects(Inventory *inventory){
     if(inventory == NULL) {
         return -1; /* error control */
     }
 
-    /*devuelve el numero de elementos, no tiene porq ser el tamaño completo*/
+    /* Devuelve el numero de elementos, no tiene porq ser el tamaño completo */
     return set_get_n_ids(inventory->objs);
 }
 
-/*   It checks if the inventory is full */
+/* It checks if the inventory is full */
 Bool inventory_is_full(Inventory *inventory) {
     if (!inventory) return FALSE; /* error control */
     if (set_get_n_ids(inventory->objs) >= inventory->max_objs) {
@@ -137,7 +137,7 @@ Bool inventory_is_full(Inventory *inventory) {
     return FALSE;
 }
 
-/*   It checks if the inventory is empty */
+/* It checks if the inventory is empty */
 Bool inventory_is_empty(Inventory *inventory) {
     if (!inventory) return TRUE; /* error control */
     if (set_get_n_ids(inventory->objs) == 0) {
@@ -147,7 +147,7 @@ Bool inventory_is_empty(Inventory *inventory) {
 }
 
 #ifdef DEBUG
-/*   It prints the inventory */
+/* It prints the inventory */
 Status inventory_print(Inventory *inventory){
     int i;
     if(inventory == NULL) {

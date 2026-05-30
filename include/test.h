@@ -18,12 +18,12 @@
 #define KGRN  "\x1B[32m" /**< Green color */
 #define KYEL  "\x1B[33m" /**< Yellow color */
 #define KCYN  "\x1B[36m" /**< Cyan color */
-#define RESET "\033[0m" /**< Reset color */
+#define RESET "\033[0m"  /**< Reset color */
 #else
-#define KRED /**< Red color */
-#define KGRN /**< Green color */
-#define KYEL /**< Yellow color */
-#define KCYN /**< Cyan color */
+#define KRED  /**< Red color */
+#define KGRN  /**< Green color */
+#define KYEL  /**< Yellow color */
+#define KCYN  /**< Cyan color */
 #define RESET /**< Reset color */
 #endif
 
@@ -46,6 +46,6 @@
       
 static int __test_counter = 0; /**< number of tests */
 static int __test_passed  = 0;/**< how many test has been passed */
-static int __pass = 0;/** how many to pass */
+static int __pass = 0;/**< how many to pass */
 
 #endif

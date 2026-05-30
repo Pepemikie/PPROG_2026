@@ -14,12 +14,12 @@
 #include "types.h"
 
 /**
- * @brief Size of the graphic description string, as defined in the project statement
+ * @brief Size of the graphic description string of a character
  */
 #define GDESC_SIZE 7
 
 /**
- * @brief Opaque type representing a game character
+ * @brief It defines the Character struct
  */
 typedef struct _Character Character;
 

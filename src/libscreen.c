@@ -58,12 +58,49 @@ static unsigned char *__attrs = NULL;
 #define ATTR_BOLD_YELLOW 5 
 
 /* Private function */
+/**
+ * @brief It checks if the cursor of the area is out of bounds
+ * 
+ * @param area a pointer to the Area struct
+ * @return TRUE if the cursor is out of bounds, FALSE otherwise
+ */
 static int screen_area_cursor_is_out_of_bounds(Area *area);
+
+/** 
+ * @brief It scrolls the area up
+ * 
+ * @param area a pointer to the Area struct
+ */
 static void screen_area_scroll_up(Area *area);
+
+/**
+ * @brief It replaces special characters in a string with spaces
+ * 
+ * @param str a pointer to the string to be processed
+ */
 static void screen_utils_replaces_special_chars(char *str);
+
+/**
+ * @brief It puts a string into the area with the specified attributes
+ * 
+ * @param area a pointer to the Area struct
+ * @param str a pointer to the string to be printed
+ * @param attr the attribute for the string
+ * @param bold_start the starting position of the bold text
+ * @param bold_len the length of the bold text
+ * @param bold_attr the attribute for the bold text
+ */
 static void screen_area_puts_internal(Area *area, char *str, unsigned char attr, int bold_start, int bold_len, unsigned char bold_attr);
+
+/**
+ * @brief It converts a frame color to a string with the corresponding ANSI escape code
+ * 
+ * @param color the Frame_color to be converted
+ * @return a string with the ANSI escape code for the given color
+ */
 static char *frame_color_to_string(Frame_color color);
 
+/* Initializes the screen with the given dimensions*/
 void screen_init(int rows, int columns) {
   screen_destroy(); /* dispose if previously initialised */
 
@@ -83,6 +120,7 @@ void screen_init(int rows, int columns) {
   }
 }
 
+/* It destroys the screen, freeing the allocated memory */
 void screen_destroy(void) {
   if (__data) {
     free(__data);
@@ -94,6 +132,7 @@ void screen_destroy(void) {
   }
 }
 
+/* It paints the screen with the specified color */
 void screen_paint(Frame_color color) {
   char *src = NULL;
   unsigned char *attr_ptr = NULL;
@@ -149,8 +188,9 @@ void screen_paint(Frame_color color) {
 }
 
 /* Area management */
+/* Creates a new screen area*/
 Area *screen_area_init(int x, int y, int width, int height) {
-  int   i    = 0;
+  int i = 0;
   Area *area = NULL;
 
   area = (Area *) malloc(sizeof(struct _Area));
@@ -167,11 +207,13 @@ Area *screen_area_init(int x, int y, int width, int height) {
   return area;
 }
 
+/* It destroys the screen area, freeing the allocated memory */
 void screen_area_destroy(Area *area) {
   if (area)
     free(area);
 }
 
+/* It clears the screen area */
 void screen_area_clear(Area *area) {
   int i = 0;
 
@@ -186,37 +228,44 @@ void screen_area_clear(Area *area) {
   }
 }
 
+/* It resets the cursor of the screen area */
 void screen_area_reset_cursor(Area *area) {
   if (area)
     area->cursor = ACCESS(__data, area->x, area->y);
 }
 
 /* Text output */
+/* It puts a string into the area with the specified attributes */
 void screen_area_puts(Area *area, char *str) {
   screen_area_puts_internal(area, str, ATTR_NONE, 0, 0, ATTR_NONE);
 }
 
+/* It puts a string into the area with bold attributes */
 void screen_area_puts_bold(Area *area, char *str) {
   screen_area_puts_internal(area, str, ATTR_BOLD, 0, 0, ATTR_NONE);
 }
 
+/* It puts a string into the area with red attributes */
 void screen_area_puts_red(Area *area, char *str) {
   screen_area_puts_internal(area, str, ATTR_BOLD_RED, 0, 0, ATTR_NONE);
 }
 
+/* It puts a string into the area with yellow attributes */
 void screen_area_puts_yellow(Area *area, char *str) {
   screen_area_puts_internal(area, str, ATTR_BOLD_YELLOW, 0, 0, ATTR_NONE);
 }
 
+/* It puts a string into the area with bold attributes at a specific position */
 void screen_area_puts_bold_at(Area *area, char *str, int bold_start, int bold_len) {
   screen_area_puts_internal(area, str, ATTR_NONE, bold_start, bold_len, ATTR_BOLD_BLUE);
 }
 
+/* It puts a string into the area with bold attributes and a specific color */
 void screen_area_puts_bold_color_at(Area *area, char *str, int bold_start, int bold_len, int color_attr) {
   screen_area_puts_internal(area, str, ATTR_NONE, bold_start, bold_len, (unsigned char) color_attr);
 }
 
-
+/* It puts a string into the area with the specified attributes */
 static void screen_area_puts_internal(Area *area, char *str, unsigned char attr, int bold_start, int bold_len, unsigned char bold_attr) {
   int len = 0;
   char *ptr = NULL;
@@ -262,6 +311,7 @@ static void screen_area_puts_internal(Area *area, char *str, unsigned char attr,
   }
 }
 
+/* It scrolls the screen area up */
 static void screen_area_scroll_up(Area *area) {
   for (area->cursor = ACCESS(__data, area->x, area->y);
        area->cursor < ACCESS(__data, area->x, area->y + area->height - 1);
@@ -274,10 +324,12 @@ static void screen_area_scroll_up(Area *area) {
   }
 }
 
+/* It checks if the cursor is out of bounds */
 static int screen_area_cursor_is_out_of_bounds(Area *area) {
   return area->cursor > ACCESS(__data, area->x + area->width, area->y + area->height - 1);
 }
 
+/* It replaces special characters with their ASCII equivalents */
 static void screen_utils_replaces_special_chars(char *str) {
   char *pch = NULL;
 

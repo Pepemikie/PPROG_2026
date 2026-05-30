@@ -59,7 +59,7 @@ Status game_management_load_spaces(Game *game, char *filename) {
       }
 
 #ifdef DEBUG
-      printf("Leidos:%ld|%s\n", id, name);
+      printf("Leidos:%ld|%s|%s\n", id, name, discovered ? "discovered" : "not discovered");
 #endif
 
       space = space_create(id);
@@ -100,7 +100,7 @@ Status game_management_load_objects(Game *game, char *filename) {
 
   while (fgets(line, WORD_SIZE, file)) {
     if (strncmp("#o:", line, 3) == 0) { /* identifies object lines */
-      toks = strtok(line + 3, "|"); /* parses id, name, description, location, health, movable, dependency, open */
+      toks = strtok(line + 3, "|"); /* parses id, name, gdesc, description, location, health, movable, dependency, open */
       if (!toks) continue;
       id = atol(toks);
       toks = strtok(NULL, "|");
@@ -124,7 +124,7 @@ Status game_management_load_objects(Game *game, char *filename) {
       toks = strtok(NULL, "|");
       open = toks ? atol(toks) : NO_ID;
 #ifdef DEBUG
-      printf("Leido: o:%ld|%s|%s|%ld|%d|%d|%ld|%ld\n", id, name, gdesc, description, space_id, health, movable, dependency, open);
+      printf("Leido: o:%ld|%s|%s|%s|%ld|%d|%d|%ld|%ld\n", id, name, gdesc, description, space_id, health, movable, dependency, open);
 #endif
       if ((obj = object_create(id))) { /* sets object attributes and places it in the game */
         object_set_name(obj, name);
@@ -231,7 +231,7 @@ Status game_management_load_links(Game *game, char *filename) {
 
   while (fgets(line, WORD_SIZE, file)) {
     if (strncmp("#l:", line, 3) == 0) { /* identifies link lines */
-      toks = strtok(line + 3, "|"); /* parses id, name, origin, destination, direction, open */
+      toks = strtok(line + 3, "|"); /* parses id, name, origin, destination, open, direction */
       id = atol(toks);
       toks = strtok(NULL, "|");
       strcpy(name, toks);
@@ -258,7 +258,7 @@ Status game_management_load_links(Game *game, char *filename) {
       direction = UNKNOWN_DIR;
 
 #ifdef DEBUG
-      printf("Leido: l:%ld|%s|%ld|%ld|%d|%d\n", id, name, origin, destination, direction, open);
+      printf("Leido: l:%ld|%s|%ld|%ld|%d|%d\n", id, name, origin, destination, open, direction);
 #endif
       if ((link = link_create(id))) { /* sets all link attributes and adds it to the game */
         link_set_name(link, name);

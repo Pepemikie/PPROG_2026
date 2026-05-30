@@ -22,34 +22,31 @@
 
 /**
  * @brief Lookup table mapping each CommandCode to its short and long string representations
- *
- * Indexed by CommandCode (offset by 1 due to UNKNOWN = 0). Each entry contains
- * the short form at index CMDS and the long form at index CMDL.
  */
 char *cmd_to_str[N_CMD][N_CMDT] = {
   {"",  "Unknown"}, /**< UNKNOWN */
-  {"e", "Exit"},    /**< EXIT */
-  {"t", "Take"},    /**< TAKE */
-  {"d", "Drop"},    /**< DROP */
-  {"a", "Attack"},  /**< ATTACK */
-  {"c", "Chat"},    /**< CHAT */
-  {"m", "Move"},    /**< MOVE */
+  {"e", "Exit"}, /**< EXIT */
+  {"t", "Take"}, /**< TAKE */
+  {"d", "Drop"}, /**< DROP */
+  {"a", "Attack"}, /**< ATTACK */
+  {"c", "Chat"}, /**< CHAT */
+  {"m", "Move"}, /**< MOVE */
   {"i", "Inspect"}, /**< INSPECT */
   {"r", "Recruit"}, /**< RECRUIT */
   {"b", "Abandon"}, /**< ABANDON */
-  {"o", "Open"},    /**< OPEN */
-  {"u", "Use"},     /**< USE */
-  {"s", "Save"},    /**< SAVE */
-  {"l", "Load"},    /**< LOAD */
-  {"k", "Colab"}    /**< COLAB */
+  {"o", "Open"}, /**< OPEN */
+  {"u", "Use"}, /**< USE */
+  {"s", "Save"}, /**< SAVE */
+  {"l", "Load"}, /**< LOAD */
+  {"k", "Colab"} /**< COLAB */
 };
 
 /**
  * @brief Stores all the information related to a command
  */
 struct _Command {
-  char *arg;       /**< Optional argument provided alongside the command */
-  char *arg2;      /**< Optional second argument for commands like USE */
+  char *arg; /**< Optional argument provided alongside the command */
+  char *arg2; /**< Optional second argument for commands like USE */
   CommandCode code; /**< Code identifying the type of command */
 };
 
@@ -158,13 +155,13 @@ Status command_get_user_input(Command* command) {
       /* Handle second argument for commands like USE (over <character>) or OPEN (with <object>) */
       token = strtok(NULL, " \n");
       if (token) {
-        if ((cmd == USE && !strcasecmp(token, "over")) ||      /* USE over <character> */
-            (cmd == OPEN && !strcasecmp(token, "with"))) {     /* OPEN with <object> (I4, F11) */
+        if ((cmd == USE && !strcasecmp(token, "over")) || /* USE over <character> */
+            (cmd == OPEN && !strcasecmp(token, "with"))) { /* OPEN with <object>*/
           token = strtok(NULL, " \n");
           if (token) {
-            command->arg2 = (char*)malloc(strlen(token) + 1);  /* Allocate memory for the second argument */
+            command->arg2 = (char*)malloc(strlen(token) + 1); /* Allocate memory for the second argument */
             if (command->arg2)
-              strcpy(command->arg2, token);                    /* Store the second argument if allocation was successful */
+              strcpy(command->arg2, token); /* Store the second argument if allocation was successful */
           }
         }
       }

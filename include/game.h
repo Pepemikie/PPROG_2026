@@ -50,7 +50,7 @@ Game* game_create();
 Status game_create_from_file(Game *game, char *filename);
 
 /**
- * @brief It clears the current game data, freeing all allocated memory for spaces, players, characters, objects and links, and resetting all counters and flags
+ * @brief It clears the current game data, freeing all allocated memory that is not the game itself
  * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
@@ -269,7 +269,7 @@ Id game_get_player_location(Game *game);
 Status game_set_player_location(Game *game, Id id);
 
 /**
- * @brief It gets a player from the game by its index (F13, I3)
+ * @brief It gets a player from the game by its index
  * @author Rodrigo Cruz Asensio
  *
  * @param game a pointer to the Game struct
@@ -431,6 +431,7 @@ Id game_get_character_location(Game *game, Id character_id);
 
 /**
  * @brief It sets the location of a character in the game
+ * @author José Miguel Romero Oubiña
  * 
  * @param game a pointer to the Game struct
  * @param space_id the id of the space where the character is going to be placed

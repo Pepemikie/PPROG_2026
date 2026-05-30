@@ -85,11 +85,13 @@ void test2_object_create() {
   PRINT_TEST_RESULT(o == NULL);
 }
 
+/* Tests object destruction */
 void test1_object_destroy() {
   Object *o = object_create(1);
   PRINT_TEST_RESULT(object_destroy(o) == OK);
 }
 
+/* Tests object destruction with invalid parameters */
 void test2_object_destroy() {
   Object *o = object_create(NO_ID);
   PRINT_TEST_RESULT(object_destroy(o) == ERROR);

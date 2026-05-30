@@ -119,7 +119,7 @@ Bool player_has_object(Player* player, Id object);
  * @author José Miguel Romero Oubiña
  *
  * @param player a pointer to the Player
- * @param index the position of the object in the inventory (0-based)
+ * @param index the position of the object in the inventory
  * @return the id of the object at the given index, or NO_ID if there was some mistake
  */
 Id player_get_object(Player* player, int index);
