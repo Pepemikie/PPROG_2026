@@ -324,14 +324,6 @@ Status game_management_load_players(Game *game, char *filename) {
         player_set_team(player, team);
         /* now the objects can be readed from the save file, so It has to be added to the backpack */
         inventory_set_max_objs(player_get_backpack(player), max_objs);
-        for (i = 0; i < objects; i++) {
-          toks = strtok(NULL, "|");
-          object_id = toks ? atol(toks) : NO_ID;
-          if (object_id != NO_ID) {
-            player_add_object(player, object_id);
-          }
-        }
-        game_add_player(game, player);
 
         /* the same with the last space recorded in the file */
         if (init_space == NULL) {
@@ -340,6 +332,17 @@ Status game_management_load_players(Game *game, char *filename) {
         if (init_space != NULL) {
           space_set_discovered(init_space, TRUE); 
         }
+
+        for (i = 0; i < objects; i++) {
+          toks = strtok(NULL, "|");
+          object_id = toks ? atol(toks) : NO_ID;
+          if (object_id != NO_ID) {
+            player_add_object(player, object_id);
+            space_del_object(init_space, object_id);
+          }
+        }
+
+        game_add_player(game, player);
       }
     }
   }
@@ -350,7 +353,7 @@ Status game_management_load_players(Game *game, char *filename) {
   return status;
 }
 
-
+/* It saves the current state of the game to a file, including the spaces, objects, characters, links and players */
 Status game_management_save(Game *game, char *filename) {
   FILE *file = NULL;
   Player *player = NULL;
@@ -456,6 +459,7 @@ Status game_management_save(Game *game, char *filename) {
   return OK;
 }
 
+/* It loads the game data from a file, including spaces, objects, characters, links and players */
 Status game_management_load(Game *game, char *filename){
   FILE *file = NULL;
 
@@ -469,9 +473,9 @@ Status game_management_load(Game *game, char *filename){
 
   /* load new game data from file */
   if (game_management_load_spaces(game, filename) == ERROR) return ERROR;
+  if (game_management_load_objects(game, filename) == ERROR) return ERROR;
   if (game_management_load_players(game, filename) == ERROR) return ERROR;
   if (game_management_load_characters(game, filename) == ERROR) return ERROR;
-  if (game_management_load_objects(game, filename) == ERROR) return ERROR;
   if (game_management_load_links(game, filename) == ERROR) return ERROR;
 
   return OK;

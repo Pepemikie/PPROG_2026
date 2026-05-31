@@ -292,7 +292,7 @@ Bool game_get_must_keep_turn(Game *game) {
 PLAYER
 */
 
-/* It gets the ACTUAL player of the game */
+/* It gets the actual player of the game */
 Player *game_get_player(Game *game) {
   if (!game || game->n_players == 0) return NULL;
   return game->players[game->turn]; /* returns the actual player */

@@ -1109,6 +1109,7 @@ Status game_actions_use(Game *game) {
 
   Id player_id = NO_ID;
   Player *aux_player = NULL;
+  Player *object_owner = NULL;
   Bool has_team = FALSE;
   Set *inv_team = NULL;
   Id *ids_team = NULL;
@@ -1130,7 +1131,6 @@ Status game_actions_use(Game *game) {
   arg = command_get_arg(last_cmd);
   if (!arg || arg[0] == '\0') return ERROR;
 
-  
   player_id = player_get_id(game_get_player(game));
 
   for (i = 0; i < MAX_PLAYERS; i++) {
@@ -1146,6 +1146,7 @@ Status game_actions_use(Game *game) {
           n_team = set_get_n_ids(inv_team);
         }
         has_team = TRUE;
+        break;
       }
     }
   }
@@ -1166,6 +1167,7 @@ Status game_actions_use(Game *game) {
       obj = game_get_object(game, ids[i]);
       if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
         object_id = ids[i];
+        object_owner = p;
         break;
       }
     }
@@ -1182,12 +1184,13 @@ Status game_actions_use(Game *game) {
       obj = game_get_object(game, ids[i]);
       if (obj && strcasecmp(object_get_name(obj), arg) == 0) {
         object_id = ids[i];
+        object_owner = aux_player;
         break;
       }
     }
   }
 
-  if (object_id == NO_ID || !obj) return ERROR;
+  if (object_id == NO_ID || !obj || !object_owner) return ERROR;
 
   /* Check if object is usable (health != 0) */
   if (object_get_health(obj) == 0) return ERROR;
@@ -1214,8 +1217,8 @@ Status game_actions_use(Game *game) {
     if (character_get_health(c) + object_get_health(obj) <= 0){
       character_set_health(c, 0);
     }
-    character_set_health(c, character_get_health(c) + object_get_health(obj));
-
+    else
+      character_set_health(c, character_get_health(c) + object_get_health(obj));
 
   } else {
     /* Use object on the player */
@@ -1225,8 +1228,8 @@ Status game_actions_use(Game *game) {
     }
   }
 
-  /* Remove the object from the player's inventory and the game */
-  player_del_object(p, object_id);
+  /* Remove the object from the owner's inventory and the game */
+  player_del_object(object_owner, object_id);
 
   return OK;
 }
