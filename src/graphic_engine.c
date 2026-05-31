@@ -455,11 +455,16 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       if (character_is_friendly(character) == TRUE) {
         strcat(char_line, "Ally");
         strcat(char_line, "]");
-        if (character_get_following(character) == player_get_id(player)) {
-          strcat(char_line, " (Recruited)");
-        } else {
+
+        if (character_get_following(character) == NO_ID){
           strcat(char_line, " (Not Recruited)");
         }
+        else {
+          strcat(char_line, " (Recruited by ");
+          strcat(char_line, player_get_name(game_get_player_by_id(game, character_get_following(character))));
+          strcat(char_line, ")");
+        }
+
       } else {
         strcat(char_line, "Enemy");
         strcat(char_line, "]");
