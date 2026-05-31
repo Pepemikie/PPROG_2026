@@ -1,8 +1,9 @@
 /**
  * @brief It declares the tests for the Player module
+ * 
  * @file player_test.h
  * @author Iñaki López Rocha
- * @version 2.0
+ * @version 2
  * @date 02-04-2026
  * @copyright GNU Public License
  */
@@ -190,4 +191,4 @@ void test1_player_set_team();
  */
 void test2_player_set_team();
 
-#endif
+#endif /* PLAYER_TEST_H */

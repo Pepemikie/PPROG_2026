@@ -14,16 +14,18 @@
 #include "types.h"
 #include "set.h"
 
-#define SPACE_GDESC_LINES   5 /**< Number of lines in the graphic description of a Space */
-#define SPACE_GDESC_LENGTH  9 /**< Maximum length of each line in the graphic description of a Space */
+#define SPACE_GDESC_LINES 5 /**< Number of lines in the graphic description of a Space */
+#define SPACE_GDESC_LENGTH 9 /**< Maximum length of each line in the graphic description of a Space */
 
-/** @brief It defines the Space struct */
+/**
+ * @brief It defines the Space struct
+*/
 typedef struct _Space Space;
-
 
 /*
 SPACE
 */
+
 /**
  * @brief It creates a new Space, allocating memory and initializing its members
  * @author Profesores PPROG
@@ -109,10 +111,10 @@ Status space_set_discovered(Space *space, Bool discovered);
  */
 Bool space_get_discovered(Space *space);
 
-
 /*
 OBJECTS
 */
+
 /**
  * @brief It adds an object to the Space
  * @author Profesores PPROG
@@ -161,10 +163,10 @@ Id* space_get_objects(Space* space);
  */
 int space_get_number_of_objects(Space* space);
 
-
 /*
 CHARACTERS
 */
+
 /**
  * @brief It adds a character to the Space
  * 
@@ -221,4 +223,5 @@ Status space_del_character(Space *space, Id id);
  */
 Status space_print(Space* space);
 #endif
-#endif
+
+#endif /* SPACE_H */

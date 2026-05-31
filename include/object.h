@@ -3,7 +3,7 @@
  *
  * @file object.h
  * @author Profesores PPROG
- * @version 0
+ * @version 1
  * @date 27-01-2026
  * @copyright GNU Public License
  */
@@ -13,7 +13,9 @@
 
 #include "types.h"
 
-/** @brief It defines the Object struct */
+/**
+ * @brief It defines the Object struct
+*/
 typedef struct _Object Object;
 
 /**
@@ -186,4 +188,5 @@ Id object_get_open(Object* object);
  */
 Status object_print(Object* object);
 #endif
-#endif
+
+#endif /* OBJECT_H */

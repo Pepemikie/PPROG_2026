@@ -1,8 +1,9 @@
 /**
  * @brief It declares the tests for the Object module
+ * 
  * @file object_test.h
  * @author Iñaki López Rocha
- * @version 2.0
+ * @version 2
  * @date 29-05-2026
  * @copyright GNU Public License
  */
@@ -75,16 +76,19 @@ void test2_object_get_id();
  * @author Iñaki López Rocha
  */
 void test1_object_set_description();
+
 /**
  * @brief Tests setting the object description with invalid parameters
  * @author Iñaki López Rocha
  */
 void test2_object_set_description();
+
 /**
  * @brief Tests getting the object description
  * @author Iñaki López Rocha
  */
 void test1_object_get_description();
+
 /**
  * @brief Tests getting the object description with invalid parameters
  * @author Iñaki López Rocha
@@ -211,4 +215,4 @@ void test1_object_get_open();
  */
 void test2_object_get_open();
 
-#endif
+#endif /* OBJECT_TEST_H */

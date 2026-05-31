@@ -3,7 +3,7 @@
  *
  * @file libscreen.h
  * @author José Miguel Romero Oubiña
- * @version 1.2
+ * @version 2
  * @date 8-05-2026
  * @copyright GNU Public License
  */
@@ -16,7 +16,7 @@
  */
 typedef enum {
   BLACK = 0, /**< Black color */
-  RED   = 1, /**< Red color */
+  RED = 1, /**< Red color */
   GREEN = 2, /**< Green color */
   YELLOW = 3, /**< Yellow color */
   BLUE = 4, /**< Blue color */
@@ -34,7 +34,7 @@ typedef enum {
   COLOR_ATTR_BOLD_BLUE = 2, /**< Bold blue style */
   COLOR_ATTR_BOLD_GREEN = 3, /**< Bold green style */
   COLOR_ATTR_BOLD_RED = 4, /**< Bold red style */
-  COLOR_ATTR_BOLD_YELLOW = 5  /**< Bold yellow style */
+  COLOR_ATTR_BOLD_YELLOW = 5 /**< Bold yellow style */
 } Color_attr;
 
 /**
@@ -91,28 +91,28 @@ void screen_area_reset_cursor(Area *area);
 /**
  * @brief Writes a string in normal style (black on white).
  * @param area Target area
- * @param str  String to write
+ * @param str String to write
  */
 void screen_area_puts(Area *area, char *str);
 
 /**
  * @brief Writes a string in bold style (bold black on white).
  * @param area Target area
- * @param str  String to write
+ * @param str String to write
  */
 void screen_area_puts_bold(Area *area, char *str);
 
 /**
  * @brief Writes a string in bright red on white (entire line).
  * @param area Target area
- * @param str  String to write
+ * @param str String to write
  */
 void screen_area_puts_red(Area *area, char *str);
 
 /**
  * @brief Writes a string in bright yellow on white (entire line).
  * @param area Target area
- * @param str  String to write
+ * @param str String to write
  */
 void screen_area_puts_yellow(Area *area, char *str);
 

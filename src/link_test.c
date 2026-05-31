@@ -14,10 +14,14 @@
 #include "test.h"
 #include "game.h"
 
-/** @brief Maximum number of tests */
+/**
+ * @brief Maximum number of tests
+*/
 #define MAX_TESTS 18
 
-/** @brief Main function for running the Link module unit tests */
+/**
+ * @brief Main function for running the Link module unit tests
+*/
 int main(int argc, char** argv) {
   int test = 0;
   int all = 1;

@@ -1,8 +1,9 @@
 /**
  * @brief It implements the unit tests for the Character module
+ * 
  * @file character_test.c
  * @author Iñaki López Rocha
- * @version 1.0
+ * @version 1
  * @date 25-03-2026
  * @copyright GNU Public License
  */

@@ -14,7 +14,9 @@
 
 #include "object.h"
 
-/** @brief Structure for the Object type */
+/**
+ * @brief Structure for the Object type
+*/
 struct _Object {
   Id id; /**< The unique identifier of the object */
   char name[WORD_SIZE]; /**< The name of the object */

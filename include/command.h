@@ -28,29 +28,29 @@
  */
 typedef enum {
   CMDS, /**< Short version of the command ("e") */
-  CMDL  /**< Long version of the command ("Exit") */
+  CMDL /**< Long version of the command ("Exit") */
 } CommandType;
 
 /**
  * @brief Identifies each possible command in the game
  */
 typedef enum {
-  NO_CMD  = -1, /**< No command assigned */
-  UNKNOWN,      /**< Unknown or unrecognized command */
-  EXIT,         /**< Exit the game */
-  TAKE,         /**< Take an object */
-  DROP,         /**< Drop an object */
-  ATTACK,       /**< Attack a character */
-  CHAT,         /**< Chat with a character */
-  MOVE,         /**< Move to an adjacent space */
-  INSPECT,      /**< Inspect a space or object */
-  RECRUIT,      /**< Recruit a character to follow the player */
-  ABANDON,      /**< Abandon a character following the player */
-  OPEN,         /**< Open a link with an object */  
-  USE,          /**< Use an object on the player or a friendly character */
-  SAVE,         /**< Save the game state to a file */
-  LOAD,          /**< Load the game state from a file */
-  COLAB          /**< Collaborate with another player */
+  NO_CMD = -1, /**< No command assigned */
+  UNKNOWN, /**< Unknown or unrecognized command */
+  EXIT, /**< Exit the game */
+  TAKE, /**< Take an object */
+  DROP, /**< Drop an object */
+  ATTACK, /**< Attack a character */
+  CHAT, /**< Chat with a character */
+  MOVE, /**< Move to an adjacent space */
+  INSPECT, /**< Inspect a space or object */
+  RECRUIT, /**< Recruit a character to follow the player */
+  ABANDON, /**< Abandon a character following the player */
+  OPEN, /**< Open a link with an object */  
+  USE, /**< Use an object on the player or a friendly character */
+  SAVE, /**< Save the game state to a file */
+  LOAD, /**< Load the game state from a file */
+  COLAB /**< Collaborate with another player */
 } CommandCode;
 
 /**

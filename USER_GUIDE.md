@@ -37,6 +37,16 @@
 - `./rob_the_museum museum_uniplayer.dat -d` -> Deterministic mode (for testing) (Uniplayer)
 - `./rob_the_museum museum_uniplayer.dat -l output.log` -> With log file (Uniplayer)
 
+### _VISUAL GUIDE_
+- Map: Top left
+- Character's Information: Under the map
+- Message: Under Character's Information
+- Room's Name: Top right
+- Player's Information: Under Room's Name
+- Object's Information: Under Player's Information
+- Inspect: Under Object's Information
+- Command's Guide: Bottom
+
 -----------------------
 ## **COMMAND REFERENCE**
 
@@ -46,6 +56,7 @@
       - Move trough rooms.     
       - `<dir>` refers to north, south, east, west, up and down.
 - `colab <player> or k <player> `  
+      - Makes a team with another player  
       - `<player>` refers to the team mate's name.
 
 ### _OBJECT COMMANDS_
@@ -63,7 +74,7 @@
       - `<link>` refers to the link's name  
       - `<obj>` refers to the object's name
 - `use <obj> over <char>`  
-      -  Uses an object to gain or loose health points, over character is optional,   
+      -  Uses an object to gain or loose health points, over character is optional,
       if you don't specify, you will use it for yourself  
       - `<obj>` refers to the object's name  
       - `<char>` refers to the ally's name
@@ -303,7 +314,8 @@ Piso -1
 [Basement 10](Bomb)         
 ```
 **Note_1: The link West from 12 to 131 (Door) is LOCKED and requires the Key.**  
-**Note_2: The link North from 171 to 161 (Security_lock) is LOCKED and requires the Bomb.**
+**Note_2: The link North from 171 to 161 (Security_lock) is LOCKED and requires the Bomb.**  
+**Note_3: The char X means that the link is closed**
 
 -----------------------
 ## **COMPLETE WALKTHROUGH**
@@ -363,3 +375,5 @@ move east
 move south
 move up
 ```
+
+_Author: José Miguel Romero Oubiña_

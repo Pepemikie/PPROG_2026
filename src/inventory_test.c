@@ -14,10 +14,14 @@
 #include "set.h"
 #include "test.h"
 
-/** @brief Maximum number of tests */
+/**
+ * @brief Maximum number of tests
+*/
 #define MAX_TESTS 19
 
-/** @brief Main function for running inventory tests */
+/**
+ * @brief Main function for running inventory tests
+*/
 int main(int argc, char** argv) {
   int test = 0;
   int all = 1;

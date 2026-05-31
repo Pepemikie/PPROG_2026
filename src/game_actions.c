@@ -16,10 +16,14 @@
 #include <string.h>
 #include <strings.h>
 
-/** @brief Pointer to the log file */
+/**
+ * @brief Pointer to the log file
+*/
 extern FILE *g_logfile;
 
-/** @brief Command string table */
+/**
+ * @brief Command string table
+*/
 extern char *cmd_to_str[N_CMD][N_CMDT];
 
 /**
@@ -184,6 +188,7 @@ Player *game_player_get_team(Game *game);
 
 /* Implementation of auxiliary functions */
 
+/* Gets the team player of the current player */
 Player *game_player_get_team(Game *game) {
   Id player_id = NO_ID;
   Player *aux_player = NULL;
@@ -202,7 +207,6 @@ Player *game_player_get_team(Game *game) {
   }
   return NULL;
 }
-
 
 /* Checks if an object can be taken by the player */
 Bool can_take_object(Game *game, Object *obj) {
@@ -281,7 +285,6 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
   
   n = set_get_n_ids(inv_set);
   ids = set_get_ids(inv_set);
-  /* if (!ids || n <= 0) return OK; */
 
   /* Count dependent objects */
   for (i = 0; i < n; i++) {
@@ -311,10 +314,10 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
   }
 
   num_to_drop = num_to_drop1 + num_to_drop2;
-  printf("Number of dependent objects to drop: %d = %d in player + %d in team\n", num_to_drop, num_to_drop1, num_to_drop2);
 
-  if (num_to_drop == 0) return OK;
-  printf("Number of dependent objects to drop: %d\n", num_to_drop);
+  if (num_to_drop == 0){
+    return OK;
+  }
   
   to_drop = (Id*)malloc(sizeof(Id) * num_to_drop);
   if (!to_drop) return OK; /* Memory error, but object was dropped */
@@ -344,7 +347,6 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
     player_del_object(game_get_player(game), object_id);
     space_add_object(current_space, object_id);
     game_set_object_location(game, player_location, to_drop[i]);
-    printf("Dropped: %ld to space: %ld\n", to_drop[i], player_location);
   }
 
   /* Drop dependent objects in team player */
@@ -352,11 +354,11 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
     for (i = num_to_drop1; i < num_to_drop; i++) {
       object_id = to_drop[i];
       player_del_object(team, object_id);
-      printf("Deleting object %ld from team player %s\n", object_id, player_get_name(team));
       space_add_object(current_space, object_id);
-      printf("Added object %ld to space %ld\n", object_id, space_get_id(current_space));
       game_set_object_location(game, player_location, to_drop[i]);
-      printf("Dropped from team: %ld to space: %ld\n", to_drop[i], player_location);
+
+      if (i == num_to_drop-1) break;
+
     }
   }
 
@@ -370,7 +372,7 @@ Status game_actions_update(Game *game, Command *command) {
   int fails;
   char fails_message[128];
 
-  game_set_last_message(game, ""); /*reinicio de message e inspect si hay nuevo comando*/
+  game_set_last_message(game, ""); /* Reinicio de message e inspect si hay nuevo comando */
   game_set_last_object_description(game, "");
 
   game_set_last_command(game, command);
@@ -472,7 +474,7 @@ Status game_actions_update(Game *game, Command *command) {
       strcpy(arg, command_get_arg(command));
     }
 
-    sprintf(player_str, "P%d", game_get_turn(game) + 1);  /* P1, P2, P3... */
+    sprintf(player_str, "P%d", game_get_turn(game) + 1); /* P1, P2, P3... */
 
     if (arg[0] != '\0') {
       fprintf(g_logfile, "%s %s: %s (%s)\n", cmd_to_str[cmd][CMDL], arg, game_get_last_status(game) == OK ? "OK" : "ERROR", player_str);
@@ -662,7 +664,7 @@ Status game_actions_move(Game *game) {
     aux_player = game_get_player_by_index(game, i);
     if (!aux_player) break;
 
-    if (aux_player == game_get_player(game)) continue; /* no mover al jugador activo otra vez */
+    if (aux_player == game_get_player(game)) continue; /* No mover al jugador activo otra vez */
 
     if (player_get_team(aux_player) == player_id || player_get_team(game_get_player(game)) == player_get_id(aux_player)) {
       player_set_location(aux_player, next_space);
@@ -679,7 +681,6 @@ Status game_actions_move(Game *game) {
       }
     }
   }
-
   return OK;
 }
 
@@ -699,7 +700,7 @@ Status game_actions_inspect(Game *game) {
   Id player_id = NO_ID;
   Player *aux_player = NULL;
 
-  if (!game) return ERROR; /*error control*/
+  if (!game) return ERROR; /* Error control */
 
   cmd = game_get_last_command(game);
   if (!cmd) return ERROR;
@@ -707,11 +708,11 @@ Status game_actions_inspect(Game *game) {
   arg = command_get_arg(cmd);
   if (!arg) return ERROR;
 
-  /*get player location*/
+  /* Gets player location */
   current_space = game_get_space(game, game_get_player_location(game));
   if (!current_space) return ERROR;
 
-  /*gets the description of the object is it is located in the current space*/
+  /* Gets the description of the object if it is located in the current space */
   n_objs = space_get_number_of_objects(current_space);
   objs = space_get_objects(current_space);
 
@@ -723,7 +724,7 @@ Status game_actions_inspect(Game *game) {
     }
   }
 
-  /* if the object is not in the current space, checks if it is in the player's inventory*/
+  /* If the object is not in the current space, checks if it is in the player's inventory */
   inv = inventory_get_objects(player_get_backpack(game_get_player(game)));
   if (inv) {
     ids = set_get_ids(inv);
@@ -738,7 +739,7 @@ Status game_actions_inspect(Game *game) {
     }
   }
   
-  /* if the object is not in the player's inventory, check if it is in the team's inventory */
+  /* If the object is not in the player's inventory, check if it is in the team's inventory */
   player_id = player_get_id(game_get_player(game));
 
   for (i = 0; i < MAX_PLAYERS; i++) {
@@ -765,13 +766,13 @@ Status game_actions_inspect(Game *game) {
     }
   }
 
-  return ERROR; /*did not find the object neither in the space nor in the inventory*/
+  return ERROR; /* Did not find the object neither in the space nor in the inventory */
 }
 
-/*   Makes the player attack the enemy character in the current space */
+/* Makes the player attack the enemy character in the current space */
 Status game_actions_attack(Game *game) {
   Player *p = NULL;
-  Player *mate[2];
+  Player *mate[MAX_PLAYERS];
   Character *c = NULL;
   Character *follower = NULL;
   Character *followers[MAX_CHARACTERS];
@@ -786,7 +787,7 @@ Status game_actions_attack(Game *game) {
   int damage = 0;
 
   if (!game) return ERROR;
-
+  
   cmd = game_get_last_command(game);
   if (!cmd) return ERROR;
 
@@ -810,7 +811,7 @@ Status game_actions_attack(Game *game) {
   /* No se puede atacar a personajes amigos o muertos */
   if (character_is_friendly(c) || character_get_health(c) <= 0) return ERROR;
 
-  /* Buscar automáticamente si hay un follower */
+  /* Buscar si hay un follower */
   for (i = 0; i < MAX_CHARACTERS; i++) {
     aux = game_get_character_by_index(game, i);
     if(!aux) break;
@@ -828,14 +829,14 @@ Status game_actions_attack(Game *game) {
       follower = followers[rand() % n_followers];
       /* Daño al follower del jugador actual que toca*/
       character_set_health(follower, character_get_health(follower) - 1);
+
+
     } else {
       /* Daño al jugador */
       if (player_get_team(p) != NO_ID) {
-
         for (i = 0; i < MAX_PLAYERS; i++) {
           aux_player = game_get_player_by_index(game, i);
           if (!aux_player) break;
-
           if (aux_player != game_get_player(game)) {
             if (player_get_team(aux_player) == player_id || player_get_team(game_get_player(game)) == player_get_id(aux_player)) {
               mate[0] = p;
@@ -848,8 +849,9 @@ Status game_actions_attack(Game *game) {
           }
         }
       }
-      else
+      else {
         player_set_health(p, player_get_health(p) - 1);
+      }
     }
 
     /* Si el jugador muere, fin del juego */
@@ -863,15 +865,15 @@ Status game_actions_attack(Game *game) {
     }
   } else {
     /* Gana el jugador: el follower del jugador actual ayuda si existe */
-      damage = 1 + n_followers;
-      
-      if (player_get_team(p) != NO_ID) damage++; /* Bonus por tener team */
+    damage = 1 + n_followers;
+    
+    if (player_get_team(p) != NO_ID) damage++; /* Bonus por tener team */
 
-      if (character_get_health(c) < damage)
-        damage = character_get_health(c);
+    if (character_get_health(c) < damage)
+      damage = character_get_health(c);
 
-      character_set_health(c, character_get_health(c) - damage);
-    }
+    character_set_health(c, character_get_health(c) - damage);
+  }
 
   return OK;
 }
@@ -1001,29 +1003,28 @@ Status game_actions_open(Game *game) {
 
   Bool not_inventory = FALSE;
 
-
   if (!game) return ERROR;
 
-  last_cmd = game_get_last_command(game); /* We get the last command executed */
+  last_cmd = game_get_last_command(game);
   if (!last_cmd) return ERROR;
 
-  link_name = command_get_arg(last_cmd); /* We get the first argument, which should be the name of the link */
-  obj_name = command_get_arg2(last_cmd); /* We get the second argument, which should be the name of the object */
+  link_name = command_get_arg(last_cmd);
+  obj_name = command_get_arg2(last_cmd);
   if (!link_name || link_name[0] == '\0' || !obj_name || obj_name[0] == '\0')
     return ERROR;
 
-  player = game_get_player(game);               
+  player = game_get_player(game);
   if (!player) return ERROR;
 
   player_location = game_get_player_location(game); 
   if (player_location == NO_ID) return ERROR;
 
-  inv_set = inventory_get_objects(player_get_backpack(player)); /* We get the set of objects in the player's inventory */
+  inv_set = inventory_get_objects(player_get_backpack(player));
   if (!inv_set)
     not_inventory = TRUE;
 
-  n = set_get_n_ids(inv_set); /* We get the number of objects in the inventory */
-  ids = set_get_ids(inv_set); /* We get the array of object ids in the inventory */
+  n = set_get_n_ids(inv_set);
+  ids = set_get_ids(inv_set);
 
 
   player_id = player_get_id(game_get_player(game));
@@ -1048,7 +1049,7 @@ Status game_actions_open(Game *game) {
   if (!ids || n <= 0)
     not_inventory = TRUE;
   else {
-    for (i = 0; i < n; i++) { /* We look for the object with the given name in the inventory */
+    for (i = 0; i < n; i++) { 
       obj = game_get_object(game, ids[i]);
       if (obj != NULL && strcasecmp(object_get_name(obj), obj_name) == 0) {
         object_id = ids[i];
@@ -1064,7 +1065,7 @@ Status game_actions_open(Game *game) {
     n = n_team;
     ids = ids_team;
 
-    for (i = 0; i < n; i++) { /* We look for the object with the given name in the inventory */
+    for (i = 0; i < n; i++) {
       obj = game_get_object(game, ids[i]);
       if (obj != NULL && strcasecmp(object_get_name(obj), obj_name) == 0) {
         object_id = ids[i];
@@ -1078,15 +1079,15 @@ Status game_actions_open(Game *game) {
   /* The player has the object */
   if (object_get_open(obj) == NO_ID) return ERROR;
 
-  link = game_get_link_by_name(game, link_name); /* We look for the link with the given name in the game */
+  link = game_get_link_by_name(game, link_name);
   if (!link) return ERROR;
 
-  if (link_get_origin(link) != player_location && link_get_destination(link) != player_location) /* We check that the link is connected to the current space */
+  if (link_get_origin(link) != player_location && link_get_destination(link) != player_location)
     return ERROR;
 
-  if (object_get_open(obj) != link_get_id(link)) return ERROR; /* We check that the object can open the link */
+  if (object_get_open(obj) != link_get_id(link)) return ERROR;
 
-  return link_set_open(link, TRUE); /* We open the link */
+  return link_set_open(link, TRUE);
 
 }
 
@@ -1191,7 +1192,7 @@ Status game_actions_use(Game *game) {
   /* Check if object is usable (health != 0) */
   if (object_get_health(obj) == 0) return ERROR;
 
-  /* Get the optional second argument (character name) */
+  /* Get the optional second argument */
   arg2 = command_get_arg2(last_cmd);
 
   /* Determine who will be affected by the object */
@@ -1234,7 +1235,7 @@ Status game_actions_colab(Game *game) {
   Player *player1 = NULL;
   Player *player2 = NULL;
   Command *last_cmd = NULL;
-  char *arg = NULL;  
+  char *arg = NULL;
 
   if (!game) return ERROR;
 

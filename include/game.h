@@ -23,14 +23,17 @@
 #define MAX_OBJECTS 30 /**< Maximum number of objects in the game */
 #define MAX_CHARACTERS 8 /**< Maximum number of characters in the game */
 #define MAX_LINKS 400 /**< Maximum number of links in the game */
-#define MAX_PLAYERS 4 /**< Maximum number of players in the game */
+#define MAX_PLAYERS 2 /**< Maximum number of players in the game */
 
-/** @brief It defines the Game struct */
+/**
+ * @brief It defines the Game struct
+ */
 typedef struct _Game Game;
 
 /*
 GAME
 */
+
 /**
  * @brief It creates a new Game, allocating memory and initializing its members
  * @author Profesores PPROG
@@ -161,7 +164,6 @@ Bool game_get_finished(Game *game);
  */
 Status game_set_finished(Game *game, Bool finished);
 
-
 /*
 SPACE
 */
@@ -215,12 +217,10 @@ Space *game_get_space_by_index(Game *game, int index);
  */
 Space *game_get_space_by_name(Game *game, const char *name);
 
-
-
-
 /*
 PLAYER
 */
+
 /**
  * @brief It gets the actual player of the game
  * @author Profesores PPROG
@@ -298,10 +298,10 @@ Player *game_get_player_by_name(Game *game, const char *name);
  */
 Player *game_get_player_by_id(Game *game, Id id);
 
-
 /*
 OBJECT
 */
+
 /**
  * @brief It gets an object from the game by its id
  * @author Profesores PPROG
@@ -390,10 +390,6 @@ const char *game_get_last_object_description(Game *game);
  * @return a pointer to the Object with the given name, or NULL if not found
  */
 Object *game_get_object_by_name(Game *game, const char *name);
-
-
-
-
 
 /*
 CHARACTER
@@ -498,13 +494,10 @@ Character *game_get_character_by_name(Game *game, const char *name);
  */
 Character* game_get_character_in_space(Game* game, Id space_id);
 
-
-
-
-
 /*
 LINKS
 */
+
 /**
  * @brief It adds a link to the game
  * @author José Miguel Romero Oubiña
@@ -631,4 +624,5 @@ Bool game_get_must_keep_turn(Game *game);
  */
 void game_print(Game *game);
 #endif
-#endif
+
+#endif /* GAME_H */

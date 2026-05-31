@@ -83,10 +83,10 @@ Game *game_create() {
   return game;
 }
 
-
 /*
 GAME & SPACES
 */
+
 /* It creates a Game and loads its data from a file */
 Status game_create_from_file(Game *game, char *filename) {
   int i;
@@ -288,10 +288,10 @@ Bool game_get_must_keep_turn(Game *game) {
   return game ? game->must_keep_turn : FALSE;
 }
 
-
 /*
 PLAYER
 */
+
 /* It gets the ACTUAL player of the game */
 Player *game_get_player(Game *game) {
   if (!game || game->n_players == 0) return NULL;
@@ -379,12 +379,13 @@ Player *game_get_player_by_id(Game *game, Id id){
 /*
 OBJECT
 */
+
 /* It adds an object to the game */
 Status game_add_object(Game *game, Object *object) {
 
   if (!game || !object || game->n_objects >= MAX_OBJECTS) return ERROR;
 
-  game->objects[game->n_objects] = object; /* stores space in the next available slot */
+  game->objects[game->n_objects] = object; /* stores object in the next available slot */
   game->n_objects++;
 
   return OK;
@@ -476,16 +477,16 @@ Object *game_get_object_by_name(Game *game, const char *name) {
   return NULL;
 }
 
-
 /*
 CHARACTER
 */
+
 /* It adds a character to the game */
 Status game_add_character(Game *game, Character *character) {
 
   if (!game || !character || game->n_characters >= MAX_CHARACTERS) return ERROR;
 
-  game->characters[game->n_characters] = character; /* stores space in the next available slot */
+  game->characters[game->n_characters] = character; /* stores character in the next available slot */
   game->n_characters++;
   
   return OK;
@@ -592,10 +593,10 @@ Character *game_get_character_by_name(Game *game, const char *name) {
   return NULL;
 }
 
-
 /*
 LINK
 */
+
 /* It adds a link to the game */
 Status game_add_links(Game *game, Link *link) {
 
@@ -613,11 +614,11 @@ int game_get_num_links(Game *game) {
   return game->n_links;
 }
 
-/*  It gets the id of the space connected to a given space in a specific direction */
+/* It gets the id of the space connected to a given space in a specific direction */
 Id game_get_connection(Game *game, Id space_id, Direction direction) {
   int i;
 
-  if (!game || space_id == NO_ID || direction == UNKNOWN_DIR) return NO_ID; /*error control*/
+  if (!game || space_id == NO_ID || direction == UNKNOWN_DIR) return NO_ID; /* error control */
 
   for (i = 0; i < game->n_links; i++) {
     if (game->links[i] != NULL && link_get_origin(game->links[i]) == space_id && link_get_direction(game->links[i]) == direction) {
@@ -667,11 +668,11 @@ Link* game_get_link(Game *game, Id id) {
   return NULL;
 }
 
-/* It gets a link from the game by its name (F11, I4) */
+/* It gets a link from the game by its name */
 Link *game_get_link_by_name(Game *game, const char *name) {
   int i;
 
-  if (!game || !name) return NULL;     
+  if (!game || !name) return NULL;
 
   for (i = 0; i < game->n_links; i++) { /* Iterates until matching name is found (the one passed as argument) */ 
     if (game->links[i] != NULL && strcasecmp(link_get_name(game->links[i]), name) == 0)
@@ -687,6 +688,15 @@ Link *game_get_link_by_index(Game *game, int index) {
   return game->links[index];
 }
 
+/**
+  Implementation of private functions
+*/
+
+/* Gets the id of the space at a given position in the spaces array */
+Id game_get_space_id_at(Game *game, int position) {
+  if (!game || position < 0 || position >= game->n_spaces) return NO_ID;
+  return space_get_id(game->spaces[position]);
+}
 
 #ifdef DEBUG
 /* It prints the data of the game */
@@ -706,12 +716,3 @@ void game_print(Game *game) {
   printf("=> Player location: %ld\n", game_get_player_location(game));
 }
 #endif
-
-/**
-   Implementation of private functions
-*/
-
-Id game_get_space_id_at(Game *game, int position) {
-  if (!game || position < 0 || position >= game->n_spaces) return NO_ID;
-  return space_get_id(game->spaces[position]);
-}

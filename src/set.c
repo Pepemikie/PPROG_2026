@@ -2,7 +2,7 @@
  * @brief It implements the set module
  *
  * @file set.c
- * @author  Jorge Garcia Garrido
+ * @author Jorge Garcia Garrido
  * @version 0
  * @date 18-02-2026
  * @copyright GNU Public License
@@ -13,7 +13,9 @@
 
 #include "set.h"
 
-/** @brief Structure for the Set type */
+/**
+ * @brief Structure for the Set type
+*/
 struct _Set {
   Id ids[MAX_SET]; /**< Array of ids stored in the set */
   int n_ids; /**< Number of ids currently in the set */

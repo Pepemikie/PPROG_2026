@@ -18,13 +18,13 @@
  * @brief Stores all the information related to a game character
  */
 struct _Character {
-  Id id;                   /**< The unique identifier of the character */
-  char name[WORD_SIZE];    /**< The name of the character */
-  char gdesc[GDESC_SIZE];  /**< Graphic description: a string of 6 characters plus null terminator */
-  int health;              /**< Life points of the character */
-  Bool friendly;           /**< Whether the character is friendly towards the player */
+  Id id; /**< The unique identifier of the character */
+  char name[WORD_SIZE]; /**< The name of the character */
+  char gdesc[GDESC_SIZE]; /**< Graphic description: a string of 6 characters plus null terminator */
+  int health; /**< Life points of the character */
+  Bool friendly; /**< Whether the character is friendly towards the player */
   char message[WORD_SIZE]; /**< Message displayed when the player interacts with the character */
-  Id following;            /**< The ID of the player that this character is following, or NO_ID if not following anyone */
+  Id following; /**< The ID of the player that this character is following, or NO_ID if not following anyone */
 };
 
 Character* character_create(Id id) {

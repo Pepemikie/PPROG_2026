@@ -3,7 +3,7 @@
  * 
  * @file set_test.c
  * @author Profesores Pprog
- * @version 0.0 
+ * @version 0
  * @date 17-02-2026
  * @copyright GNU Public License
  */
@@ -15,10 +15,14 @@
 #include "set_test.h"
 #include "test.h"
 
-/** @brief Maximum number of tests */
+/**
+ * @brief Maximum number of tests
+*/
 #define MAX_TESTS 19
 
-/** @brief Main function for running the Set module unit tests */
+/**
+ * @brief Main function for running the Set module unit tests
+*/
 int main(int argc, char** argv) {
   int test = 0;
   int all = 1;

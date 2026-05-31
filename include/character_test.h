@@ -1,8 +1,9 @@
 /**
  * @brief It declares the tests for the Character module
+ * 
  * @file character_test.h
  * @author Iñaki López Rocha
- * @version 2.0
+ * @version 2
  * @date 29-05-2026
  * @copyright GNU Public License
  */
@@ -80,6 +81,7 @@ void test1_character_set_health();
  * @author Iñaki López Rocha
  */
 void test2_character_set_health();
+
 /**
  * @brief Tests getting the health of a character
  * @author Iñaki López Rocha
@@ -103,6 +105,7 @@ void test1_character_set_friendly();
  * @author Iñaki López Rocha
  */
 void test2_character_set_friendly();
+
 /**
  * @brief Tests checking if a character is friendly
  * @author Iñaki López Rocha
@@ -126,6 +129,7 @@ void test1_character_set_message();
  * @author Iñaki López Rocha
  */
 void test2_character_set_message();
+
 /**
  * @brief Tests getting the message of a character
  * @author Iñaki López Rocha

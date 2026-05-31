@@ -14,7 +14,9 @@
 #include "types.h"
 #include "space.h"
 
-/** @brief It defines the Link struct */
+/**
+ * @brief It defines the Link struct
+*/
 typedef struct _Link Link;
 
 /**
@@ -141,12 +143,13 @@ Bool link_get_open(Link* link);
 
 #ifdef DEBUG
 /**
- * @brief It prints the data of a Link (only for debugging purposes)
+ * @brief It prints the data of a Link
  * @author José Miguel Romero Oubiña
  *
- * @param link a pointer to the Link
+ * @param link a pointer to the Link to print
  * @return OK, if everything goes well or ERROR if there was some mistake
  */
 Status link_print(Link* link);
 #endif
-#endif
+
+#endif /* LINK_H */

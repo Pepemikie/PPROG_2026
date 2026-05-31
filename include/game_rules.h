@@ -24,4 +24,4 @@
  */
 void game_rules_update(Game *game);
 
-#endif
+#endif /* GAME_RULES_H */

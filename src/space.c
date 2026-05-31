@@ -14,14 +14,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-/** @brief Structure for the Space type */
+/**
+ * @brief Structure for the Space type
+*/
 struct _Space {
   Id id; /**< The unique identifier of the space */
   char name[WORD_SIZE + 1]; /**< The name of the space */
   Set *objects; /**< The set of objects in the space */
   Set *characters; /**< The id of the character located in the space */
   char gdesc[SPACE_GDESC_LINES][SPACE_GDESC_LENGTH + 1]; /**< The graphic description of the space */
-  Bool discovered;  /**< If a space has been discovered */
+  Bool discovered; /**< If a space has been discovered */
   Bool has_enemy; /**< If a space has an enemy character */
 };
 
@@ -47,7 +49,7 @@ Space *space_create(Id id) {
     return NULL;
   }
   
-  newSpace->characters = set_create(); /* creates the object set */
+  newSpace->characters = set_create(); /* creates the character set */
   if (!newSpace->characters) {
     free(newSpace);
     return NULL;
@@ -124,7 +126,7 @@ int space_get_number_of_objects(Space *space) {
 
 /* It adds a character to the Space */
 Status space_add_character(Space *space, Id id, Bool character_is_friendly) {
-  if (!space || id == NO_ID) return ERROR;  
+  if (!space || id == NO_ID) return ERROR;
 
   if (space->has_enemy && character_is_friendly == FALSE) return ERROR;
 
@@ -144,7 +146,7 @@ Id *space_get_character(Space *space) {
 /* It checks whether a character is in the Space */
 Bool space_has_character(Space *space, Id character_id) {
   if (!space || character_id == NO_ID) return FALSE;
-if (set_find(space->characters, character_id) == -1)  return FALSE; /* not found */
+if (set_find(space->characters, character_id) == -1) return FALSE; /* not found */
 return TRUE;
 }
 

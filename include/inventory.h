@@ -3,7 +3,7 @@
  *
  * @file inventory.h
  * @author José Miguel Romero Oubiña
- * @version 1.2
+ * @version 2
  * @date 29-05-2026
  * @copyright GNU Public License
  */
@@ -15,7 +15,9 @@
 #include "types.h"
 #include "set.h"
 
-/** @brief It defines the Inventory struct */
+/**
+ * @brief It defines the Inventory struct
+*/
 typedef struct _Inventory Inventory;
 
 /**
@@ -141,4 +143,5 @@ Bool inventory_is_empty(Inventory *inventory);
  */
 Status inventory_print(Inventory *inventory);
 #endif
-#endif
+
+#endif /* INVENTORY_H */

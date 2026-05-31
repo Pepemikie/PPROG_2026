@@ -28,4 +28,4 @@
  */
 Status game_actions_update(Game *game, Command *cmd);
 
-#endif
+#endif /* GAME_ACTIONS_H */

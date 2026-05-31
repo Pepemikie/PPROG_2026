@@ -13,7 +13,9 @@
 
 #include "game.h"
 
-/** @brief It defines the Graphic_engine struct */
+/**
+ * @brief It defines the Graphic_engine struct
+*/
 typedef struct _Graphic_engine Graphic_engine;
 
 /**
@@ -41,4 +43,4 @@ void graphic_engine_destroy(Graphic_engine *ge);
  */
 void graphic_engine_paint_game(Graphic_engine *ge, Game *game);
 
-#endif
+#endif /* GRAPHIC_ENGINE_H */

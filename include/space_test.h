@@ -3,10 +3,11 @@
  * 
  * @file space_test.h
  * @author Profesores Pprog
- * @version 2.0 
+ * @version 2
  * @date 17-02-2026
  * @copyright GNU Public License
  */
+
 #ifndef SPACE_TEST_H
 #define SPACE_TEST_H
 
@@ -190,4 +191,4 @@ void test1_space_del_character();
  */
 void test2_space_del_character();
 
-#endif
+#endif /* SPACE_TEST_H */

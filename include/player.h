@@ -7,16 +7,19 @@
  * @date 25-03-2026
  * @copyright GNU Public License
  */
+
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#define P_GDESC_SIZE 7/**< Maximum size of the player's description */
-#define MAX_BACKPACK_SIZE 15/**< Maximum size of the player's backpack */
+#define P_GDESC_SIZE 7 /**< Maximum size of the player's description */
+#define MAX_BACKPACK_SIZE 15 /**< Maximum size of the player's backpack */
 
 #include "types.h"
 #include "inventory.h"
 
-/** @brief It defines the Player struct */
+/**
+ * @brief It defines the Player struct
+*/
 typedef struct _Player Player;
 
 /**
@@ -219,4 +222,5 @@ Id player_get_team(Player* player);
  */
 Status player_print(Player* player);
 #endif
-#endif
+
+#endif /* PLAYER_H */

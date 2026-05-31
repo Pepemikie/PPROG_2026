@@ -24,39 +24,75 @@
 #include "object.h"
 #include "game.h"
 
-/** @brief Width of the map area */
-#define WIDTH_MAP 85 
-/** @brief Width of the description area */
+/**
+ * @brief Width of the map area
+*/
+#define WIDTH_MAP 85
+
+/**
+ * @brief Width of the description area
+*/
 #define WIDTH_DES 65
-/** @brief Width of the banner area */
+
+/**
+ * @brief Width of the banner area
+*/
 #define WIDTH_BAN 25
-/** @brief Height of the map area */
-#define HEIGHT_MAP 29 /*en total deben ser 54, hasta que se quiten los characters de la derecha para que no colapse*/
-/** @brief Height of the banner area */
+
+/**
+ * @brief Height of the map area
+*/
+#define HEIGHT_MAP 29 /* en total deben ser 54, hasta que se quiten los characters de la derecha para que no colapse */
+
+/**
+ * @brief Height of the banner area
+*/
 #define HEIGHT_BAN 1
-/** @brief Height of the help area */
+
+/**
+ * @brief Height of the help area
+*/
 #define HEIGHT_HLP 4
-/** @brief Height of the feedback area */
+
+/**
+ * @brief Height of the feedback area
+*/
 #define HEIGHT_FDB 3
-/** @brief Width of each room in the map */
+
+/**
+ * @brief Width of each room in the map
+*/
 #define ROOM_WIDTH 15
-/** @brief Number of char for the P1 and P2 specification*/
+
+/**
+ * @brief Number of char for the P1 and P2 specification
+*/
 #define PLAYER_ACTION 3
-/** @brief Width of the character information that is under the map */
+
+/**
+ * @brief Width of the character information that is under the map
+*/
 #define HEIGHT_CHAR 11
 
 /*
- * hp > HP_HIGH  -> green   (healthy)
- * HP_LOW < hp <= HP_HIGH -> yellow  (wounded)
- * hp <= HP_LOW  -> red     (critical)
+ * hp > HP_HIGH -> green (healthy)
+ * HP_LOW < hp <= HP_HIGH -> yellow (wounded)
+ * hp <= HP_LOW -> red (critical)
  */
 
-/** @brief HP healty*/
+/**
+ * @brief HP healty
+*/
 #define HP_HIGH 6
-/** @brief HP critial */
+
+/**
+ * @brief HP critial
+*/
 #define HP_LOW  3
 
-/** @brief Structure representing the graphic engine */
+/**
+ * @brief Structure representing the graphic engine
+*/
 struct _Graphic_engine {
   Area *map, /**< Map area */
    *descript, /**< Description area */
@@ -77,7 +113,6 @@ struct _Graphic_engine {
  */
 static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middle, Bool is_act, Bool show_sides);
 
-/* It builds a string with the names of all objects in a given space */
 /**
  * @brief It builds a string with the names of all objects in a given space
  * @param game a pointer to the Game struct
@@ -86,6 +121,7 @@ static void graphic_engine_paint_spaces_row(Area *area, Game *game, Space *middl
  * @return Status of the operation
  */
 static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str);
+
 /**
  * @brief It builds a string with the names of all characters in a given space
  * @param game a pointer to the Game struct
@@ -104,7 +140,7 @@ static Status graphic_engine_get_characters_str(Game *game, Space *space, char *
  */
 static Color_attr hp_to_color(int hp) {
   if (hp > HP_HIGH) return COLOR_ATTR_BOLD_GREEN;
-  if (hp > HP_LOW)  return COLOR_ATTR_BOLD_YELLOW;
+  if (hp > HP_LOW) return COLOR_ATTR_BOLD_YELLOW;
   return COLOR_ATTR_BOLD_RED;
 }
 
@@ -144,11 +180,11 @@ Graphic_engine *graphic_engine_create() {
   if (ge == NULL) return NULL;
 
   /* initializes each display area with its position and dimensions */
-  ge->map      = screen_area_init(1, 1, WIDTH_MAP, HEIGHT_MAP);
+  ge->map = screen_area_init(1, 1, WIDTH_MAP, HEIGHT_MAP);
   ge->descript = screen_area_init(WIDTH_MAP + 2, 1, WIDTH_DES, HEIGHT_MAP + HEIGHT_CHAR + 1);
   ge->char_info = screen_area_init(1, HEIGHT_MAP + 2, WIDTH_MAP, HEIGHT_CHAR);
-  ge->banner   = screen_area_init((int)((WIDTH_MAP + WIDTH_DES + 1 - WIDTH_BAN) / 2), HEIGHT_MAP + HEIGHT_CHAR + 3, WIDTH_BAN, HEIGHT_BAN);
-  ge->help     = screen_area_init(1, HEIGHT_MAP + HEIGHT_CHAR + HEIGHT_BAN + 3, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_HLP);
+  ge->banner = screen_area_init((int)((WIDTH_MAP + WIDTH_DES + 1 - WIDTH_BAN) / 2), HEIGHT_MAP + HEIGHT_CHAR + 3, WIDTH_BAN, HEIGHT_BAN);
+  ge->help = screen_area_init(1, HEIGHT_MAP + HEIGHT_CHAR + HEIGHT_BAN + 3, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_HLP);
   ge->feedback = screen_area_init(1, HEIGHT_MAP + HEIGHT_CHAR + HEIGHT_BAN + HEIGHT_HLP + 4, WIDTH_MAP + WIDTH_DES + 1, HEIGHT_FDB);
   
   return ge;
@@ -279,13 +315,13 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_puts(ge->descript, " ");
   screen_area_puts(ge->char_info, " ");
 
-  /*Players Room name Location*/
+  /* Players Room name Location*/
   strcpy(room_name, space_get_name(game_get_space(game, game_get_player_location(game))));
   sprintf(str, " Room's name: %s", room_name);
   screen_area_puts(ge->descript, str);
   screen_area_puts(ge->descript, " ");
 
-  /* Players — prints each player name, location and health */
+  /* Prints each player name, location and health */
   screen_area_puts(ge->descript, " Players:");
   for (i = 0; i < game_get_num_players(game); i++) {
     p = game_get_player_by_index(game, i);
@@ -313,7 +349,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-  /* Player — prints location, health and carried object and character recruited */
+  /* Prints location, health and carried object and character recruited */
   player = game_get_player(game);
   health = player_get_health(player);
   {
@@ -383,7 +419,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   screen_area_puts(ge->descript, " ");
 
   /* health movable dependency */
-  /* Objects — prints each object name and its location */
+  /* Prints each object name and its location */
   screen_area_puts(ge->descript, " Objects:");
   for (i = 0; i < MAX_OBJECTS; i++) {
     obj = game_get_object_by_index(game, i);
@@ -398,7 +434,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->descript, " ");
 
-  /* Characters — prints each character name, location and health (hp coloured green/yellow/red) */
+  /* Prints each character name, location and health (hp coloured green/yellow/red) */
   screen_area_puts(ge->char_info, " Characters:");
   for (i = 0; i < MAX_CHARACTERS; i++) {
     character = game_get_character_by_index(game, i);
@@ -444,17 +480,16 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
   }
   screen_area_puts(ge->char_info, " ");
 
-  /* Chat message — displays and clears last message if present */
+  /* Displays and clears last message if present */
   if (game_get_last_message(game) && game_get_last_message(game)[0] != '\0') {
     sprintf(str, " Message: %s", game_get_last_message(game));
     screen_area_puts(ge->char_info, str);
   }
-  /* Inspect message — displays and clears last message if present */
+  /* Displays and clears last message if present */
   if (game_get_last_object_description(game) && game_get_last_object_description(game)[0] != '\0') {
     sprintf(str, " Description: %s", game_get_last_object_description(game));
     screen_area_puts(ge->descript, str);
   }
-
 
   /* 3. BANNER — coloured with active player's colour */
   {
@@ -755,7 +790,7 @@ static Status graphic_engine_get_objects_str(Game *game, Space *space, char *str
     if (i < obj_cont - 1) strcat(car, ", ");
   }
 
-  while ((int)strlen(car) < ROOM_WIDTH) strcat(car, " "); /* pads string to fixed width */
+  while ((int)strlen(car) < ROOM_WIDTH) strcat(car, " ");
   strcpy(str, car);
   return OK;
 }

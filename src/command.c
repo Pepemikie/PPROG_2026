@@ -24,7 +24,7 @@
  * @brief Lookup table mapping each CommandCode to its short and long string representations
  */
 char *cmd_to_str[N_CMD][N_CMDT] = {
-  {"",  "Unknown"}, /**< UNKNOWN */
+  {"", "Unknown"}, /**< UNKNOWN */
   {"e", "Exit"}, /**< EXIT */
   {"t", "Take"}, /**< TAKE */
   {"d", "Drop"}, /**< DROP */
@@ -59,7 +59,7 @@ Command* command_create() {
   }
 
   newCommand->code = NO_CMD;
-  newCommand->arg  = NULL;
+  newCommand->arg = NULL;
   newCommand->arg2 = NULL;
 
   return newCommand;

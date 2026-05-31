@@ -15,7 +15,9 @@
 #include "space_test.h"
 #include "test.h"
 
-/** @brief Maximum number of tests */
+/**
+ * @brief Maximum number of tests
+*/
 #define MAX_TESTS 30
 
 /** 
@@ -43,15 +45,15 @@ int main(int argc, char** argv) {
     }
   }
 
-  if (all || test == 1)  test1_space_create();
-  if (all || test == 2)  test2_space_create();
-  if (all || test == 3)  test1_space_destroy();
-  if (all || test == 4)  test2_space_destroy();
-  if (all || test == 5)  test1_space_set_name();
-  if (all || test == 6)  test2_space_set_name();
-  if (all || test == 7)  test3_space_set_name();
-  if (all || test == 8)  test1_space_set_object();
-  if (all || test == 9)  test2_space_set_object();
+  if (all || test == 1) test1_space_create();
+  if (all || test == 2) test2_space_create();
+  if (all || test == 3) test1_space_destroy();
+  if (all || test == 4) test2_space_destroy();
+  if (all || test == 5) test1_space_set_name();
+  if (all || test == 6) test2_space_set_name();
+  if (all || test == 7) test3_space_set_name();
+  if (all || test == 8) test1_space_set_object();
+  if (all || test == 9) test2_space_set_object();
   if (all || test == 10) test1_space_get_id();
   if (all || test == 11) test2_space_get_id();
   if (all || test == 12) test1_space_get_name();

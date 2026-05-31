@@ -1,8 +1,9 @@
 /**
  * @brief It declares the tests for the Inventory module
+ * 
  * @file inventory_test.h
  * @author Iñaki López Rocha
- * @version 1.0
+ * @version 1
  * @date 29-05-2026
  * @copyright GNU Public License
  */
@@ -77,7 +78,7 @@ void test2_inventory_full_empty();
 void test1_inventory_max_objs();
 
 /**
- * @brief Tests getting and setting the inventory max object capacity  with invalid parameters
+ * @brief Tests getting and setting the inventory max object capacity with invalid parameters
  * @author Iñaki López Rocha
  */
 void test2_inventory_max_objs();
@@ -124,4 +125,4 @@ void test1_inventory_set_objects();
  */
 void test2_inventory_set_objects();
 
-#endif
+#endif /* INVENTORY_TEST_H */

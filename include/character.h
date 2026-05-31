@@ -162,7 +162,6 @@ Status character_set_following(Character* c, Id player_id);
  */
 Id character_get_following(Character* c);
 
-
 #ifdef DEBUG
 /**
  * @brief It prints the data of a character to the standard output

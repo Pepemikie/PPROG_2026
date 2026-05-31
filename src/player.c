@@ -14,12 +14,14 @@
 
 #include "player.h"
 
-/** @brief Structure for the Player type */
+/**
+ * @brief Structure for the Player type
+*/
 struct _Player {
   Id id; /**< The unique identifier of the player */
   char name[WORD_SIZE]; /**< The name of the player */
   Id location; /**< The id of the space where the player is located */
-  Inventory *backpack;  /**< The inventory of the player, containing the objects they carry */
+  Inventory *backpack; /**< The inventory of the player, containing the objects they carry */
   int health; /**< The health points of the player */
   char gdesc[P_GDESC_SIZE]; /**< Graphic description: a string of 4 characters plus null terminator */
   Id team; /**< The id of the player's team mate, or NO_ID if the player has no team mate */
@@ -35,7 +37,7 @@ Player* player_create(Id id) {
   if (new_player == NULL) {
     return NULL;
   }
-/* initializes all fields by default */
+  /* initializes all fields by default */
   new_player->id = id;
   new_player->name[0] = '\0';
   new_player->location = NO_ID;
@@ -184,7 +186,7 @@ Status player_set_team(Player* player, Id team) {
   return OK;
 }
 
-/*  It gets the team mate of a Player */
+/* It gets the team mate of a Player */
 Id player_get_team(Player* player) {
   if (!player) {
     return NO_ID;
@@ -192,7 +194,7 @@ Id player_get_team(Player* player) {
   return player->team;
 }
 
-/*  It gets the graphic description of a Player */
+/* It gets the graphic description of a Player */
 const char* player_get_gdesc(Player* player) {
   if (!player) {
     return NULL;
@@ -200,7 +202,7 @@ const char* player_get_gdesc(Player* player) {
   return player->gdesc;
 }
 
-/*  It sets the graphic description of a Player */
+/* It sets the graphic description of a Player */
 Status player_set_gdesc(Player* player, char* gdesc) {
   if (!player || !gdesc) {
     return ERROR;

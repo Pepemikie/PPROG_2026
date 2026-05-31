@@ -2,7 +2,7 @@
  * @brief It declares the tests for the Set module
  * @file set_test.h
  * @author Profesores Pprog
- * @version 2.0
+ * @version 2
  * @date 17-02-2026
  * @copyright GNU Public License
  */
@@ -95,7 +95,7 @@ void test2_set_get_id();
 void test2_set_get_n_ids();
 
 /**
- * @brief Tests getting the array of ids in a set with invalid or empty parameters
+ * @brief Tests getting the array of ids in a set with invalid parameters
  * @author Iñaki López Rocha
  */
 void test2_set_get_ids();
@@ -124,4 +124,4 @@ void test3_set_find();
  */
 void test1_set_get_ids();
 
-#endif
+#endif /* SET_TEST_H */

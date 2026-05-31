@@ -26,7 +26,6 @@ Regla 7. Si matas a la guia te dará la llave para poder pasar de la 12 a la 131
 Regla 8. Solo ganas el juego si entras a la sala de la corona con la corona
 */
 
-
 void game_rules_update(Game *game) {
     Player *current_player = NULL;
     int random_chance = 0;
@@ -48,7 +47,7 @@ void game_rules_update(Game *game) {
     if (!game) return;
 
     /* Generate a random number between 0 and 99 */
-    random_chance = rand() % 100;       
+    random_chance = rand() % 100;
     
     /* Get the current player */
     current_player = game_get_player(game); 
@@ -83,9 +82,8 @@ void game_rules_update(Game *game) {
     /* Rule 3. The door that opens with key, closes automatically with a 10% chance */
     else if (random_chance >= 20 && random_chance < 30) {
         door = game_get_link_by_name(game, "Door");
-        if (door) {
+        if (door && link_get_open(door) == TRUE)
             link_set_open(door, FALSE); /* Closes the door automatically */
-        }
     }
 
     /* Rule 4. You gain, with a 30% chance, 1 point of health if you are in the Lunchroom */
@@ -137,5 +135,4 @@ void game_rules_update(Game *game) {
             game_set_finished(game, TRUE);
         }
     }
-
 }

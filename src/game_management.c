@@ -47,7 +47,7 @@ Status game_management_load_spaces(Game *game, char *filename) {
       toks = strtok(NULL, "|");
       discovered = toks ? (Bool)atoi(toks) : FALSE;
 
-      /* Read gdesc lines — 5 lines of up to 9 chars */
+      /* Read gdesc lines - 5 lines of up to 9 chars */
       for (i = 0; i < SPACE_GDESC_LINES; i++) {
         toks = strtok(NULL, "|");
         if (toks) {
@@ -288,7 +288,7 @@ Status game_management_load_players(Game *game, char *filename) {
   int health = 0, max_objs = 0, objects = 0, i;
   Player *player = NULL;
   Status status = OK;
-  Space *init_space = NULL;/*save and load initial space */
+  Space *init_space = NULL;/* save and load initial space */
 
   if (!game || !filename) return ERROR; /* error control */
 
@@ -299,20 +299,20 @@ Status game_management_load_players(Game *game, char *filename) {
     if (strncmp("#p:", line, 3) == 0) { /* identifies player lines */
       toks = strtok(line + 3, "|"); /* parses id */ 
       id = atol(toks);
-      toks = strtok(NULL, "|");     /* name */
+      toks = strtok(NULL, "|"); /* name */
       strcpy(name, toks);
-      toks = strtok(NULL, "|");     /* gdesc */
+      toks = strtok(NULL, "|"); /* gdesc */
       strncpy(gdesc, toks, P_GDESC_SIZE - 1);
       gdesc[P_GDESC_SIZE - 1] = '\0';
-      toks = strtok(NULL, "|");     /* location */
+      toks = strtok(NULL, "|"); /* location */
       location_id = atol(toks);
-      toks = strtok(NULL, "|");     /* health */
+      toks = strtok(NULL, "|"); /* health */
       health = atoi(toks);
-      toks = strtok(NULL, "|");     /* max_objs */
+      toks = strtok(NULL, "|"); /* max_objs */
       max_objs = atoi(toks);
-      toks = strtok(NULL, "|");     /* team */
+      toks = strtok(NULL, "|"); /* team */
       team = atol(toks);
-      toks = strtok(NULL, "|");     /* objects */
+      toks = strtok(NULL, "|"); /* objects */
       objects = atoi(toks);
 
       player = player_create(id);
@@ -322,7 +322,7 @@ Status game_management_load_players(Game *game, char *filename) {
         player_set_location(player, location_id);
         player_set_health(player, health);
         player_set_team(player, team);
-        /*now the objects can be readed from the save file, so It has to be added to the backpack*/
+        /* now the objects can be readed from the save file, so It has to be added to the backpack */
         inventory_set_max_objs(player_get_backpack(player), max_objs);
         for (i = 0; i < objects; i++) {
           toks = strtok(NULL, "|");
@@ -333,7 +333,7 @@ Status game_management_load_players(Game *game, char *filename) {
         }
         game_add_player(game, player);
 
-        /*the same with the last space recorded in the file*/
+        /* the same with the last space recorded in the file */
         if (init_space == NULL) {
           init_space = game_get_space(game, location_id);
         }
@@ -370,7 +370,7 @@ Status game_management_save(Game *game, char *filename) {
 
   for(i=0; i<game_get_num_players(game); i++) {
     player = game_get_player_by_index(game, i);
-    if (player) {/*id name gdesc location health max_objs*/
+    if (player) { /*id name gdesc location health max_objs*/
       fprintf(file, "#p:%ld|%s|%s|%ld|%d|%d|%ld|%d|", player_get_id(player), player_get_name(player), player_get_gdesc(player), player_get_location(player), player_get_health(player), inventory_get_max_objs(player_get_backpack(player)), player_get_team(player), player_get_number_of_items_in_backpack(player));
 
       for(j=0; j < player_get_number_of_items_in_backpack(player); j++) {
@@ -381,12 +381,13 @@ Status game_management_save(Game *game, char *filename) {
   }
   
   fprintf(file, "\n");
+
   /*CHARACTERS*/
   if(game_get_num_characters(game) < 0) return ERROR;
 
   for(i=0; i < game_get_num_characters(game); i++){
     character = game_get_character_by_index(game,i);
-    if (character) {/* parses id, name, gdesc, health, friendly, location, message and following */
+    if (character) { /* parses id, name, gdesc, health, friendly, location, message and following */
       fprintf(file, "#c:%ld|%s|%s|%d|%d|%ld|%ld|%s|\n", 
         character_get_id(character),character_get_name(character),
         character_get_gdesc(character), character_get_health(character),
@@ -396,12 +397,13 @@ Status game_management_save(Game *game, char *filename) {
   }
 
   fprintf(file, "\n");
+
   /*OBJECTS*/
   if(game_get_num_objects(game) < 0) return ERROR;
 
   for(i=0; i < game_get_num_objects(game); i++){
     object = game_get_object_by_index(game,i);
-    if (object) {/* parses id, name, gdesc, description, location, health, movable, dependency, open */
+    if (object) { /* parses id, name, gdesc, description, location, health, movable, dependency, open */
       fprintf(file, "#o:%ld|%s|%s|%s|%ld|%d|%d|%ld|%ld|\n", 
         object_get_id(object), object_get_name(object), 
         object_get_gdesc(object), object_get_description(object), 
@@ -412,12 +414,13 @@ Status game_management_save(Game *game, char *filename) {
   }
     
   fprintf(file, "\n");
+
   /*SPACES*/
   if(game_get_num_spaces(game) < 0) return ERROR;
 
   for(i=0; i < game_get_num_spaces(game); i++){
     space = game_get_space_by_index(game,i);
-    if (space) {/*id, name, discovered, gdesc*/
+    if (space) { /*id, name, discovered, gdesc*/
       fprintf(file, "#s:%ld|%s|%d|", space_get_id(space), space_get_name(space), space_get_discovered(space));
       for (j = 0; j < SPACE_GDESC_LINES; j++) {
         fprintf(file, "%s|", space_get_gdesc(space, j));
@@ -427,12 +430,13 @@ Status game_management_save(Game *game, char *filename) {
   } 
 
   fprintf(file, "\n");
+
   /*LINKS*/
   if(game_get_num_links(game) < 0) return ERROR;
     
     for(i=0; i < game_get_num_links(game); i++){
       link = game_get_link_by_index(game,i);
-      if (link) {/* parses id, name, origin, destination, direction, open */
+      if (link) { /* parses id, name, origin, destination, direction, open */
         fprintf(file,"#l:%ld|%s|%ld|%ld|%d|", 
           link_get_id(link), link_get_name(link), 
           link_get_origin(link), link_get_destination(link), 
@@ -448,7 +452,7 @@ Status game_management_save(Game *game, char *filename) {
         }
       }
     }
-  fclose(file);     
+  fclose(file);
   return OK;
 }
 

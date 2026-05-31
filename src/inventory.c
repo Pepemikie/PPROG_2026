@@ -3,7 +3,7 @@
  *
  * @file inventory.c
  * @author José Miguel Romero Oubiña
- * @version 1.2
+ * @version 2
  * @date 25-03-2026
  * @copyright GNU Public License
  */
@@ -15,7 +15,9 @@
 #include "inventory.h"
 #include "set.h"
 
-/** @brief Structure for the Inventory type */
+/**
+ * @brief Structure for the Inventory type
+*/
 struct _Inventory{
     Set *objs; /**< Set of object ids currently in the inventory */
     int max_objs; /**< Maximum number of objects the inventory can hold */
@@ -124,7 +126,7 @@ int inventory_get_number_of_objects(Inventory *inventory){
         return -1; /* error control */
     }
 
-    /* Devuelve el numero de elementos, no tiene porq ser el tamaño completo */
+    /* Devuelve el número de elementos, no tiene por qué ser el tamaño completo */
     return set_get_n_ids(inventory->objs);
 }
 

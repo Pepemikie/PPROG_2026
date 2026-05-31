@@ -1,8 +1,9 @@
 /**
  * @brief It declares the tests for the Link module
+ * 
  * @file link_test.h
  * @author Iñaki López Rocha
- * @version 1.0
+ * @version 1
  * @date 29-05-2026
  * @copyright GNU Public License
  */
@@ -119,4 +120,4 @@ void test2_link_open();
  */
 void test2_link_get_open();
 
-#endif
+#endif /* LINK_TEST_H */

@@ -20,13 +20,24 @@
 int ROWS = 23; /**< Number of rows in the screen */
 int COLUMNS = 80; /**< Number of columns in the screen */
 
-/** @brief Total data size for the screen buffer */
-#define TOTAL_DATA ((ROWS * COLUMNS) + 1) 
-/** @brief Background character */
-#define BG_CHAR '~' 
-/** @brief Foreground character */
-#define FG_CHAR ' ' 
-/** @brief Macro to access a specific position in the screen buffer */
+/**
+ * @brief Total data size for the screen buffer
+*/
+#define TOTAL_DATA ((ROWS * COLUMNS) + 1)
+
+/**
+ * @brief Background character
+*/
+#define BG_CHAR '~'
+
+/**
+ * @brief Foreground character
+*/
+#define FG_CHAR ' '
+
+/**
+ * @brief Macro to access a specific position in the screen buffer
+*/
 #define ACCESS(d, x, y) ((d) + ((y) * COLUMNS) + (x)) 
 
 /**
@@ -40,21 +51,38 @@ struct _Area {
   char *cursor; /**< pointer to the current write position */
 };
 
-static char *__data  = NULL;
+static char *__data = NULL;
 static unsigned char *__attrs = NULL;
 
 /* Attribute constants */
-/** @brief No attribute */
-#define ATTR_NONE 0 
-/** @brief Bold attribute */
+/**
+ * @brief No attribute
+*/
+#define ATTR_NONE 0
+
+/**
+ * @brief Bold attribute
+*/
 #define ATTR_BOLD 1 
-/** @brief Bold blue attribute */
+
+/**
+ * @brief Bold blue attribute
+*/
 #define ATTR_BOLD_BLUE 2 
-/** @brief Bold green attribute */
+
+/**
+ * @brief Bold green attribute
+*/
 #define ATTR_BOLD_GREEN 3 
-/** @brief Bold red attribute */
+
+/**
+ * @brief Bold red attribute
+*/
 #define ATTR_BOLD_RED 4 
-/** @brief Bold yellow attribute */
+
+/**
+ * @brief Bold yellow attribute
+*/
 #define ATTR_BOLD_YELLOW 5 
 
 /* Private function */
@@ -112,7 +140,7 @@ void screen_init(int rows, int columns) {
 
   if (__data) {
     memset(__data, (int) BG_CHAR, (size_t) TOTAL_DATA);
-    __data[TOTAL_DATA - 1] = '\0'; /* NULL-terminated string */
+    __data[TOTAL_DATA - 1] = '\0'; /* NULL terminated string */
   }
 
   if (__attrs) {
@@ -201,7 +229,7 @@ Area *screen_area_init(int x, int y, int width, int height) {
 
   for (i = 0; i < area->height; i++) {
     memset(ACCESS(area->cursor, 0, i), (int) FG_CHAR, (size_t) area->width);
-    memset(ACCESS(__attrs, x, y + i),  ATTR_NONE, (size_t) area->width);
+    memset(ACCESS(__attrs, x, y + i), ATTR_NONE, (size_t) area->width);
   }
 
   return area;
@@ -318,8 +346,8 @@ static void screen_area_scroll_up(Area *area) {
        area->cursor += COLUMNS)
   {
     unsigned char *dest_attr = ACCESS(__attrs, area->x, (int)((area->cursor - __data) / COLUMNS));
-    unsigned char *src_attr  = ACCESS(__attrs, area->x, (int)((area->cursor - __data) / COLUMNS) + 1);
-    memcpy(area->cursor,  area->cursor + COLUMNS, (size_t) area->width);
+    unsigned char *src_attr = ACCESS(__attrs, area->x, (int)((area->cursor - __data) / COLUMNS) + 1);
+    memcpy(area->cursor, area->cursor + COLUMNS, (size_t) area->width);
     memcpy(dest_attr, src_attr, (size_t) area->width);
   }
 }

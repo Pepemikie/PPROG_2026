@@ -16,7 +16,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/** @brief Structure for the Link type */
+/**
+ * @brief Structure for the Link type
+*/
 struct _Link {
   Id id; /**< The unique identifier of the link */
   char name[WORD_SIZE + 1]; /**< The name of the link */

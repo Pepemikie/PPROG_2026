@@ -83,4 +83,4 @@ Status game_management_save(Game *game, char *filename);
  */
 Status game_management_load(Game *game, char *filename);
 
-#endif
+#endif /* GAME_MANAGEMENT_H */
