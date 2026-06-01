@@ -14,17 +14,8 @@
 #include "inventory.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
-/*
-Regla 1. La corona aparece cuando Batman muere
-Regla 2. Si estás en la sala 12, tienes un 10% más de probabilidad de ganar en un ataque a Batman
-Regla 3. La puerta que se abre con la llave se cierra automáticamente con un 10% de probabilidad
-Regla 4. Recuperas, con una probabilidad del 30%, 1 de vida si estás en el Lunchroom (ID 16)
-Regla 5. Hay un 5% de probabilidad de que cuando se entre en el Art Room (ID 15), se caiga y pierda 1 de vida
-Regla 6. Si matas al policia de la sala 12, consigues una pistola que te da más vida al usarla
-Regla 7. Si matas a la guia te dará la llave para poder pasar de la 12 a la 131 e ir a por BATMAN mas facil
-Regla 8. Solo ganas el juego si entras a la sala de la corona con la corona
-*/
 
 void game_rules_update(Game *game) {
     Player *current_player = NULL;
@@ -42,6 +33,8 @@ void game_rules_update(Game *game) {
     Character *police = NULL;
     Character *guide = NULL;
 
+    char message[WORD_SIZE];
+
     int batman_surprise_attack = 3;
 
     if (!game) return;
@@ -54,6 +47,7 @@ void game_rules_update(Game *game) {
     if (!current_player) return;
 
     player_loc = player_get_location(current_player); /* Get the player's current location */
+    message[0] = '\0';
 
     /* Rule 1. The crown appears when Batman dies */
     batman = game_get_character_by_name(game, "Batman");
@@ -62,9 +56,11 @@ void game_rules_update(Game *game) {
         (inventory_has_object(player_get_backpack(current_player), object_get_id(game_get_object_by_name(game, "Crown"))) == FALSE)) {
     
         crown = game_get_object_by_name(game, "Crown");
+        if(!crown) return;
         space_id = game_get_character_location(game, character_get_id(batman));
         if (space_id != NO_ID && crown) {
             game_set_object_location(game, space_id, object_get_id(crown));
+            game_set_last_message(game, "Batman defeated. He dropped the Crown");
         }
     }
 
@@ -74,16 +70,21 @@ void game_rules_update(Game *game) {
         if (player_get_health(current_player) < batman_surprise_attack) {
             batman_surprise_attack = player_get_health(current_player);
         }
-        else {
             player_set_health(current_player, player_get_health(current_player) - batman_surprise_attack);
-        }
+
+            strcpy(message, "Batman has made a surprise attack to ");
+            strcat(message, player_get_name(current_player));
+            game_set_last_message(game, message);
     }
 
     /* Rule 3. The door that opens with key, closes automatically with a 10% chance */
     else if (random_chance >= 20 && random_chance < 30) {
         door = game_get_link_by_name(game, "Door");
-        if (door && link_get_open(door) == TRUE)
+        if(!door) return;
+        if (door && link_get_open(door) == TRUE){
             link_set_open(door, FALSE); /* Closes the door automatically */
+            game_set_last_message(game, "The Door has closed automatically");
+        }
     }
 
     /* Rule 4. You gain, with a 30% chance, 1 point of health if you are in the Lunchroom */
@@ -92,6 +93,7 @@ void game_rules_update(Game *game) {
             /* Prevent health from increasing infinitely */
             if (player_get_health(current_player) < 10) {
                 player_set_health(current_player, player_get_health(current_player) + 1);
+                game_set_last_message(game, "You have gained 1 HP because you rested");
             }
         }
     }
@@ -100,6 +102,7 @@ void game_rules_update(Game *game) {
     else if (random_chance >= 60 && random_chance < 70) {
         if (player_loc == space_get_id(game_get_space_by_name(game, "Art Room"))) {
             player_set_health(current_player, player_get_health(current_player) - 1);
+            game_set_last_message(game, "You have lost 1 HP because you slipped");
         }
     }
 
@@ -110,9 +113,11 @@ void game_rules_update(Game *game) {
         (inventory_has_object(player_get_backpack(current_player), object_get_id(game_get_object_by_name(game, "Gun"))) == FALSE)) {
     
         gun = game_get_object_by_name(game, "Gun");
+        if(!gun) return;
         space_id = game_get_character_location(game, character_get_id(police));
         if (space_id != NO_ID && gun) {
             game_set_object_location(game, space_id, object_get_id(gun));
+            game_set_last_message(game, "Police defeated. He dropped his Gun");
         }
     }
 
@@ -123,16 +128,21 @@ void game_rules_update(Game *game) {
         (inventory_has_object(player_get_backpack(current_player), object_get_id(game_get_object_by_name(game, "Key"))) == FALSE)) {
     
         key = game_get_object_by_name(game, "Key");
+        if(!key) return;
         space_id = game_get_character_location(game, character_get_id(guide));
         if (space_id != NO_ID && key) {
             game_set_object_location(game, space_id, object_get_id(key));
+            game_set_last_message(game, "Guide defeated. She dropped the Key");
         }
     }
 
     /* Rule 8. You only win if you enter in the crwon room while you have the crown in your inventory */
-    if (player_has_object(current_player, object_get_id(game_get_object_by_name(game, "Crown"))) == TRUE){
-        if(player_get_location(current_player) == space_get_id(game_get_space_by_name(game, "Crown Room"))){
+    if ((player_has_object(current_player, object_get_id(game_get_object_by_name(game, "Crown"))) == TRUE) || 
+        player_has_object(game_get_player_by_id(game, player_get_team(current_player)), object_get_id(game_get_object_by_name(game, "Crown"))) == TRUE){
+        if((player_get_location(current_player) == space_get_id(game_get_space_by_name(game, "Crown Room"))) || 
+            player_get_location(game_get_player_by_id(game, player_get_team(current_player))) == space_get_id(game_get_space_by_name(game, "Crown Room"))){
+            game_set_last_message(game, "YOU WON THE GAME!");
             game_set_finished(game, TRUE);
         }
-    }
+    }   
 }

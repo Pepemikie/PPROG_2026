@@ -244,20 +244,27 @@ Bool can_take_object(Game *game, Object *obj) {
 /* It handles the logic of taking an object, including dependencies and links */
 Status handle_take_object(Game *game, Object *obj, Space *current_space) {
   Id object_id;
+  char message[WORD_SIZE];
   
   if (!game || !obj || !current_space) return ERROR;
-  
+
   object_id = object_get_id(obj);
   
   if (player_add_object(game_get_player(game), object_id) == ERROR) return ERROR;
   space_del_object(current_space, object_id);
+
+  message[0] = '\0';
+  strcpy(message, player_get_name(game_get_player(game)));
+  strcat(message, " has taken ");
+  strcat(message, object_get_name(obj));
+  game_set_last_message(game, message);
 
   return OK;
 }
 
 /* It handles the logic of dropping an object, including dependent objects */
 Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
-  Id object_id, player_location;
+  Id object_id = NO_ID, player_location = NO_ID;
   Set *inv_set = NULL;
   Id *ids = NULL;
   int n = 0, i = 0, num_to_drop = 0, num_to_drop1 = 0, num_to_drop2 = 0, j = 0;
@@ -268,6 +275,8 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
   Id *ids_team = NULL;
   int n_team = 0;
   Bool team_drop = FALSE;
+  char message[WORD_SIZE];
+  char dep_mess[WORD_SIZE];
 
   if (!game || !obj || !current_space) return ERROR;
   
@@ -297,7 +306,6 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
   /* Count dependent objects in team player */
   team = game_player_get_team(game);
   if (team) {
-    team_drop = TRUE;
     inv_team = inventory_get_objects(player_get_backpack(team));
     if (inv_team) {
       n_team = set_get_n_ids(inv_team);
@@ -307,6 +315,7 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
           dep_obj = game_get_object(game, ids_team[i]);
           if (dep_obj && object_get_dependency(dep_obj) == object_id) {
             num_to_drop2++;
+            team_drop = TRUE;
           }
         }
       }
@@ -315,16 +324,25 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
 
   num_to_drop = num_to_drop1 + num_to_drop2;
 
+  message[0] = '\0';
+  strcpy(message, player_get_name(game_get_player(game)));
+  strcat(message, " has dropped ");
+  strcat(message, object_get_name(obj));
+
   if (num_to_drop == 0){
+    game_set_last_message(game, message);
     return OK;
   }
   
-  to_drop = (Id*)malloc(sizeof(Id) * num_to_drop);
-  if (!to_drop) return OK; /* Memory error, but object was dropped */
-  
+  to_drop = (Id*)calloc(sizeof(Id), num_to_drop);
+  if (!to_drop){
+    game_set_last_message(game, message);
+    return ERROR; 
+  }
+
   /* Collect ids of dependent objects */
   j = 0;
-  for (i = 0; i < num_to_drop1; i++) {
+  for (i = 0; j < num_to_drop1; i++) {
     dep_obj = game_get_object(game, ids[i]);
     if (dep_obj && object_get_dependency(dep_obj) == object_id) {
       to_drop[j++] = ids[i];
@@ -333,7 +351,7 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
 
   /* Collect ids of dependent objects in team player */
   if (team_drop) {
-    for (i = 0; i < num_to_drop2; i++) {
+    for (i = 0; j < num_to_drop2; i++) {
       dep_obj = game_get_object(game, ids_team[i]);
       if (dep_obj && object_get_dependency(dep_obj) == object_id) {
         to_drop[j++] = ids_team[i];
@@ -341,12 +359,17 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
     }
   }
 
+  dep_mess[0] = '\0';
+
   /* Drop dependent objects */
   for (i = 0; i < num_to_drop1; i++) {
     object_id = to_drop[i];
     player_del_object(game_get_player(game), object_id);
     space_add_object(current_space, object_id);
     game_set_object_location(game, player_location, to_drop[i]);
+
+    strcpy(dep_mess, ", ");
+    strcat(dep_mess, object_get_name(game_get_object(game, object_id)));      
   }
 
   /* Drop dependent objects in team player */
@@ -357,11 +380,16 @@ Status handle_drop_object(Game *game, Object *obj, Space *current_space) {
       space_add_object(current_space, object_id);
       game_set_object_location(game, player_location, to_drop[i]);
 
-      if (i == num_to_drop-1) break;
+      strcpy(dep_mess, ", ");
+      strcat(dep_mess, object_get_name(game_get_object(game, object_id)));      
+      if (i == num_to_drop - 1) break;
 
     }
   }
 
+  strcat(message, dep_mess);
+
+  game_set_last_message(game, message);
   free(to_drop);
   return OK;
 }
@@ -785,6 +813,8 @@ Status game_actions_attack(Game *game) {
   int i = 0;
   int n_followers = 0;
   int damage = 0;
+  char message[WORD_SIZE];
+  char HP_char[WORD_SIZE];
 
   if (!game) return ERROR;
   
@@ -823,6 +853,8 @@ Status game_actions_attack(Game *game) {
   player_enemy = rand() % 10; /* 0-9 */
   player_character = rand() % 2; /* 0 o 1 */
 
+  message[0] = '\0';
+
   if (player_enemy <= 4) {
     /* Gana el enemigo: inflige daño al jugador o al follower (50/50) */
     if (n_followers > 0 && player_character == 1) {
@@ -830,6 +862,14 @@ Status game_actions_attack(Game *game) {
       /* Daño al follower del jugador actual que toca*/
       character_set_health(follower, character_get_health(follower) - 1);
 
+      strcpy(message, character_get_name(c));
+      strcat(message, " has attacked ");
+      strcat(message, character_get_name(follower));
+      HP_char[0] = '\0';
+      strcat(message, " (");
+      sprintf(HP_char, "-1");
+      strcat(message, HP_char);
+      strcat(message, " HP)");
 
     } else {
       /* Daño al jugador */
@@ -842,7 +882,6 @@ Status game_actions_attack(Game *game) {
               mate[0] = p;
               mate[1] = aux_player;
               p = mate[rand() % 2];
-
               player_set_health(p, player_get_health(p) - 1);
               break;
             }
@@ -852,6 +891,16 @@ Status game_actions_attack(Game *game) {
       else {
         player_set_health(p, player_get_health(p) - 1);
       }
+
+      strcpy(message, character_get_name(c));
+      strcat(message, " has attacked ");
+      strcat(message, player_get_name(p));
+      strcat(message, " (");
+      HP_char[0] = '\0';
+      sprintf(HP_char, "-1");
+      strcat(message, HP_char);
+      strcat(message, " HP)");
+
     }
 
     /* Si el jugador muere, fin del juego */
@@ -873,8 +922,18 @@ Status game_actions_attack(Game *game) {
       damage = character_get_health(c);
 
     character_set_health(c, character_get_health(c) - damage);
+
+    strcpy(message, player_get_name(game_get_player(game)));
+    strcat(message, " has attacked ");
+    strcat(message, character_get_name(c));
+    strcat(message, " (-");
+    HP_char[0] = '\0';
+    sprintf(HP_char, "%d", damage);
+    strcat(message, HP_char);
+    strcat(message, " HP)");
   }
 
+  game_set_last_message(game, message);
   return OK;
 }
 
@@ -917,6 +976,7 @@ Status game_actions_recruit(Game *game) {
   Id character_location = NO_ID;
   Id current_player_id = NO_ID;
   char *arg = NULL;
+  char message[WORD_SIZE];
 
   if (!game) return ERROR;
 
@@ -942,6 +1002,12 @@ Status game_actions_recruit(Game *game) {
 
   character_set_following(c, player_get_id(game_get_player(game)));
 
+  message[0] = '\0';
+  strcpy(message, player_get_name(game_get_player(game)));
+  strcat(message, " has recruited ");
+  strcat(message, character_get_name(c));
+  game_set_last_message(game, message);
+
   return OK;
 }
 
@@ -952,6 +1018,7 @@ Status game_actions_abandon(Game *game) {
   char *arg = NULL;
   Player *player = NULL;
   Id current_player_id = NO_ID;
+  char message[WORD_SIZE];
 
   if (!game) return ERROR;
 
@@ -973,6 +1040,13 @@ Status game_actions_abandon(Game *game) {
     if (character_get_following(c) == NO_ID) return ERROR;
     if (character_get_following(c) != current_player_id) return ERROR;
     character_set_following(c, NO_ID);
+
+    message[0] = '\0';
+    strcpy(message, player_get_name(player));
+    strcat(message, " has abandoned ");
+    strcat(message, character_get_name(c));
+    game_set_last_message(game, message);
+
     return OK;
   }
 
@@ -1002,6 +1076,7 @@ Status game_actions_open(Game *game) {
   int n_team = 0;
 
   Bool not_inventory = FALSE;
+  char message[WORD_SIZE];
 
   if (!game) return ERROR;
 
@@ -1087,8 +1162,15 @@ Status game_actions_open(Game *game) {
 
   if (object_get_open(obj) != link_get_id(link)) return ERROR;
 
+  message[0] = '\0';
+  strcpy(message, player_get_name(game_get_player(game)));
+  strcat(message, " has opened ");
+  strcat(message, link_name);
+  strcat(message, " with ");
+  strcat(message, object_get_name(obj));
+  game_set_last_message(game, message);
+  
   return link_set_open(link, TRUE);
-
 }
 
 /* Uses an object on the player or a friendly character */
@@ -1116,6 +1198,7 @@ Status game_actions_use(Game *game) {
   int n_team = 0;
   
   Bool not_inventory = FALSE;
+  char message[WORD_SIZE];
 
   if (!game) return ERROR;
 
@@ -1198,6 +1281,8 @@ Status game_actions_use(Game *game) {
   /* Get the optional second argument */
   arg2 = command_get_arg2(last_cmd);
 
+  message[0] = '\0';
+
   /* Determine who will be affected by the object */
   if (arg2 && arg2[0] != '\0') {
     /* Use object on a character */
@@ -1220,16 +1305,26 @@ Status game_actions_use(Game *game) {
     else
       character_set_health(c, character_get_health(c) + object_get_health(obj));
 
+    strcpy(message, player_get_name(p));
+    strcat(message, " has used ");
+    strcat(message, object_get_name(obj));
+    strcat(message, " over ");
+    strcat(message, character_get_name(c));
   } else {
     /* Use object on the player */
     player_modify_health(p, object_get_health(obj));
     if (player_get_health(p) <= 0){
       game_set_finished(game, TRUE);
     }
+
+    strcpy(message, player_get_name(p));
+    strcat(message, " has used ");
+    strcat(message, object_get_name(obj));
   }
 
   /* Remove the object from the owner's inventory and the game */
   player_del_object(object_owner, object_id);
+  game_set_last_message(game, message);
 
   return OK;
 }
@@ -1239,6 +1334,7 @@ Status game_actions_colab(Game *game) {
   Player *player2 = NULL;
   Command *last_cmd = NULL;
   char *arg = NULL;
+  char message[WORD_SIZE];
 
   if (!game) return ERROR;
 
@@ -1264,6 +1360,13 @@ Status game_actions_colab(Game *game) {
   player_set_team(player2, player_get_id(player1));
 
   if (player_get_team(player1) == NO_ID || player_get_team(player2) == NO_ID) return ERROR;
+
+  message[0] = '\0';
+  strcpy(message, player_get_name(player1));
+  strcat(message, " and ");
+  strcat(message, player_get_name(player2));
+  strcat(message, " are now a team");
+  game_set_last_message(game, message);
 
   return OK;
 }
