@@ -88,56 +88,110 @@ else
 
     FAILED=0
 
-    for TEST in $INTEGRATION_TESTS_UNIPLAYER; do
+    if [ "$MODE" = "0" ]; then
+
+        for TEST in $INTEGRATION_TESTS_UNIPLAYER; do
+
+            echo ""
+            echo "Running integration test $TEST..."
+
+            rm -f ${TEST}.log
+
+            ./rob_the_museum museum_uniplayer.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
+
+            diff ${TEST}.log tests/${TEST}.expected > /dev/null
+
+            if [ $? -eq 0 ]; then
+                echo "[PASS] $TEST"
+            else
+                echo "[FAIL] $TEST"
+                FAILED=1
+
+                echo "Differences found:"
+                diff output.log tests/${TEST}.expected
+            fi
+        done
+
+        for TEST in $INTEGRATION_TESTS_MULTIPLAYER; do
+
+            echo ""
+            echo "Running integration test $TEST..."
+
+            rm -f ${TEST}.log
+
+            ./rob_the_museum museum.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
+
+            diff ${TEST}.log tests/${TEST}.expected > /dev/null
+
+            if [ $? -eq 0 ]; then
+                echo "[PASS] $TEST"
+            else
+                echo "[FAIL] $TEST"
+                FAILED=1
+
+                echo "Differences found:"
+                diff output.log tests/${TEST}.expected
+            fi
+        done
 
         echo ""
-        echo "Running integration test $TEST..."
 
-        rm -f ${TEST}.log
-
-        ./rob_the_museum museum_uniplayer.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
-
-        diff ${TEST}.log tests/${TEST}.expected > /dev/null
-
-        if [ $? -eq 0 ]; then
-            echo "[PASS] $TEST"
+        if [ $FAILED -eq 0 ]; then
+            echo "ALL INTEGRATION TESTS PASSED"
         else
-            echo "[FAIL] $TEST"
-            FAILED=1
-
-            echo "Differences found:"
-            diff output.log tests/${TEST}.expected
+            echo "SOME INTEGRATION TESTS FAILED"
         fi
-    done
-
-    for TEST in $INTEGRATION_TESTS_MULTIPLAYER; do
-
-        echo ""
-        echo "Running integration test $TEST..."
-
-        rm -f ${TEST}.log
-
-        ./rob_the_museum museum.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
-
-        diff ${TEST}.log tests/${TEST}.expected > /dev/null
-
-        if [ $? -eq 0 ]; then
-            echo "[PASS] $TEST"
-        else
-            echo "[FAIL] $TEST"
-            FAILED=1
-
-            echo "Differences found:"
-            diff output.log tests/${TEST}.expected
-        fi
-    done
-
-    echo ""
-
-    if [ $FAILED -eq 0 ]; then
-        echo "ALL INTEGRATION TESTS PASSED"
     else
-        echo "SOME INTEGRATION TESTS FAILED"
+        for TEST in $INTEGRATION_TESTS_UNIPLAYER; do
+
+            echo ""
+            echo "Running integration test $TEST..."
+
+            rm -f ${TEST}.log
+
+            valgrind --leak-check=full -s --track-origins=yes ./rob_the_museum museum_uniplayer.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
+
+            diff ${TEST}.log tests/${TEST}.expected > /dev/null
+
+            if [ $? -eq 0 ]; then
+                echo "[PASS] $TEST"
+            else
+                echo "[FAIL] $TEST"
+                FAILED=1
+
+                echo "Differences found:"
+                diff output.log tests/${TEST}.expected
+            fi
+        done
+
+        for TEST in $INTEGRATION_TESTS_MULTIPLAYER; do
+
+            echo ""
+            echo "Running integration test $TEST..."
+
+            rm -f ${TEST}.log
+
+            valgrind --leak-check=full -s --track-origins=yes ./rob_the_museum museum.dat -l ${TEST}.log -d < ${TEST}.cmd > /dev/null
+
+            diff ${TEST}.log tests/${TEST}.expected > /dev/null
+
+            if [ $? -eq 0 ]; then
+                echo "[PASS] $TEST"
+            else
+                echo "[FAIL] $TEST"
+                FAILED=1
+
+                echo "Differences found:"
+                diff output.log tests/${TEST}.expected
+            fi
+        done
+
+        echo ""
+
+        if [ $FAILED -eq 0 ]; then
+            echo "ALL INTEGRATION TESTS PASSED"
+        else
+            echo "SOME INTEGRATION TESTS FAILED"
+        fi
     fi
 fi
-

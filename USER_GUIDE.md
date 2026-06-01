@@ -107,7 +107,7 @@
 - Use short forms (in parentheses) for faster typing
 - Type command names in lowercase or uppercase
 - Most commands are case-insensitive
-- Save the game with the name of "slot1"
+- Save the game with the name of "slot"
 
 -----------------------
 ## **PLAYERS**

@@ -331,7 +331,7 @@ opendoxyfile:
 #CLEANING
 #files cleaning
 clean:
-	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST) slot* *.log
+	rm -rf obj/ $(EXE) $(EXE_DEBUG) $(EXE_TEST) $(EXE_SET_TEST) $(EXE_CHARACTER_TEST) $(EXE_SPACE_TEST) $(EXE_PLAYER_TEST) $(EXE_OBJECT_TEST) $(EXE_LINK_TEST) $(EXE_INVENTORY_TEST) *.log
 
 #Documentation from Doxygen cleaning
 cleandoxyfile:
@@ -342,8 +342,11 @@ cleanlibs:
 	rm -rf lib/libscreen.a 
 	@echo "<<<< You deleted libscreen.a, use make to compile again"
 
+cleanslot:
+	rm -rf slot*
+
 #All cleaning
-cleanall: clean cleandoxyfile
+cleanall: clean cleandoxyfile cleanslot
 
 #DOCUMENTATION
 doxyfile:

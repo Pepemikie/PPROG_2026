@@ -339,9 +339,10 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game) {
       sprintf(hp_str2, "%d", health);
       hp_len2 = (int)strlen(hp_str2);
 
-      sprintf(str, "  %-8s: %-3d (%d hp) [%s]",
+      sprintf(str, "  %-8s: %-3d (%d hp) [%s] (%d/%d inv)",
               player_get_name(p), (int)player_get_location(p),
-              health, player_get_gdesc(p));
+              health, player_get_gdesc(p), player_get_number_of_items_in_backpack(p),
+              inventory_get_max_objs(player_get_backpack(p)));
 
       hp_col = hp_to_color(health);
       screen_area_puts_bold_color_at(ge->descript, str, hp_off2, hp_len2, hp_col);
